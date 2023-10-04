@@ -1,0 +1,14 @@
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\bin\Debug\net6.0\DentalLabManagement.DataTier.deps.json
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\bin\Debug\net6.0\DentalLabManagement.DataTier.runtimeconfig.json
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\bin\Debug\net6.0\DentalLabManagement.DataTier.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\bin\Debug\net6.0\DentalLabManagement.DataTier.pdb
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.csproj.AssemblyReference.cache
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.GeneratedMSBuildEditorConfig.editorconfig
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.AssemblyInfoInputs.cache
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.AssemblyInfo.cs
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.csproj.CoreCompileInputs.cache
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\refint\DentalLabManagement.DataTier.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.pdb
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\DentalLabManagement.DataTier.genruntimeconfig.cache
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.DataTier\obj\Debug\net6.0\ref\DentalLabManagement.DataTier.dll
