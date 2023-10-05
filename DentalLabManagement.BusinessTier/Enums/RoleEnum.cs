@@ -8,7 +8,6 @@ namespace DentalLabManagement.BusinessTier.Enums
 {
     public enum RoleEnum
     {
-
         ADMIN,
         STAFF,
         DENTAL

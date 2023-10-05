@@ -6,6 +6,8 @@ using DentalLabManagement.BusinessTier.Payload.Login;
 using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using static DentalLabManagement.API.Constants.ApiEndPointConstant;
+using DentalLabManagement.DataTier.Paginate;
+using DentalLabManagement.API.Validators;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -38,10 +40,9 @@ namespace DentalLabManagement.API.Controllers
             return Ok(loginResponse);
         }
 
-        [Authorize]
+        [CustomAuthorize(RoleEnum.ADMIN)]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
-
         public async Task<IActionResult> CreateAccount(CreateNewAccountRequest createNewAccountRequest)
         {
             var response = await _accountService.CreateNewAccount(createNewAccountRequest);
@@ -50,6 +51,15 @@ namespace DentalLabManagement.API.Controllers
                 return BadRequest(NotFound());
             }
             return Ok( response);
+        }
+
+      
+        [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
+        [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        {
+            var accounts = await _accountService.GetAccounts(name, page, size);
+            return Ok(accounts);
         }
 
     }

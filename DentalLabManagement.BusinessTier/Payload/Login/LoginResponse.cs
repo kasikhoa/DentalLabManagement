@@ -1,4 +1,6 @@
 ﻿
+using DentalLabManagement.BusinessTier.Enums;
+
 namespace DentalLabManagement.BusinessTier.Payload.Login;
 
 public class LoginResponse

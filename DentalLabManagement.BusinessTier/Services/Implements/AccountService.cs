@@ -4,6 +4,7 @@ using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
+using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
     {
         public AccountService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<AccountService> logger ) : base(unitOfWork, logger)
         {
+
         }
-
-
 
         public async Task<LoginResponse> Login(LoginRequest loginRequest)
         {
@@ -69,5 +69,16 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return null;
         }
 
+        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, int page, int size)
+        {
+            searchUsername = searchUsername?.Trim().ToLower();
+            IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
+                selector: x => new GetAccountsResponse(x.AccountId, x.UserName, x.FullName, x.Role, x.PhoneNumber),
+                predicate: string.IsNullOrEmpty(searchUsername) ? x => true : x => x.UserName.ToLower().Contains(searchUsername),
+                page: page,
+                size: size
+                );
+            return accounts;
+        }
     }
 }

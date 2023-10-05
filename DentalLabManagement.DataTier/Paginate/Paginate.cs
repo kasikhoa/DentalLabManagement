@@ -16,6 +16,7 @@ public class Paginate<TResult> : IPaginate<TResult>
             throw new ArgumentException($"Page ({page}) must be greater or equal than firstPage ({firstPage})");
         }
 
+
         if (source is IQueryable<TResult> queryable)
         {
             Page = page;
