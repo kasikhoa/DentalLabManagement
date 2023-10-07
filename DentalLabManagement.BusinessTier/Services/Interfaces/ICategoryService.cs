@@ -15,5 +15,7 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
         public Task<Category?> CreateCategory(CategoryRequest categoryRequest);
 
         public Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size);
+
+        public Task<GetCategoriesResponse> GetCategoryById(int id);
     }
 }

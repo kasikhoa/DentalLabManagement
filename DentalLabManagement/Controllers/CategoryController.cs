@@ -20,8 +20,8 @@ namespace DentalLabManagement.API.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpPost(ApiEndPointConstant.Category.CategoryEndpoint)]
-        [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
+        [HttpPost(ApiEndPointConstant.Category.CreateCategoryEndpoint)]
+        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateCategory(CategoryRequest categoryRequest)
         {
@@ -34,12 +34,21 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoriesEndpoint)]
-        [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IPaginate<GetCategoriesResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> ViewAllCategories([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
         {
             var categories = await _categoryService.GetCategories(name, page, size);
             return Ok(categories);
+        }
+
+        [HttpGet(ApiEndPointConstant.Category.CategoryEndpoint)]
+        [ProducesResponseType(typeof(GetCategoriesResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetCategoryById(int id)
+        {
+            var category = await _categoryService.GetCategoryById(id);
+            return Ok(category);
         }
     }
 }

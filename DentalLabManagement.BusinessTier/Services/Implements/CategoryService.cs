@@ -5,6 +5,7 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,17 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return categories;
         }
 
+        public async Task<GetCategoriesResponse> GetCategoryById(int categoryId)
+        {
+            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
 
+            Category category = await _unitOfWork.GetRepository<Category>()
+                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
+            if (category == null) throw new HttpRequestException("Category not found");
+            GetCategoriesResponse response = new GetCategoriesResponse(category.Id, category.CategoryName);
+            return response;
+
+
+        }
     }
 }
