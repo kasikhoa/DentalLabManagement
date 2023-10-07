@@ -17,7 +17,6 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public string TeethId { get; set; } = null!;
         public int CategoryId { get; set; }
-        public string PositionId { get; set; } = null!;
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<GroupStage> GroupStages { get; set; }

@@ -231,10 +231,6 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.PositionId)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
                 entity.Property(e => e.TeethId)
                     .HasMaxLength(20)
                     .IsFixedLength();

@@ -31,6 +31,7 @@ namespace DentalLabManagement.API.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
         }
 

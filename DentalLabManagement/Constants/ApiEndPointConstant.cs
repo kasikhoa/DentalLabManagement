@@ -17,6 +17,12 @@ public static class ApiEndPointConstant
         public const string Login = AuthenticationEndpoint + "/login";
     }
 
+    public static class Category
+    {
+        public const string CategoryEndpoint = ApiEndpoint + "/category";
+        public const string CategoriesEndpoint = ApiEndpoint + "/categories";
+    }
+
 
     public static class Brand
     {
@@ -46,13 +52,13 @@ public static class ApiEndPointConstant
         public const string AccountEndpoint = AccountsEndpoint + "/{id}";
     }
 
-    public static class Category
-    {
-        public const string CategoriesEndpoint = ApiEndpoint + "/categories";
-        public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
-        public const string ExtraCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/extra-categories";
-        public const string ProductsInCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/products";
-    }
+    //public static class Category
+    //{
+    //    public const string CategoriesEndpoint = ApiEndpoint + "/categories";
+    //    public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
+    //    public const string ExtraCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/extra-categories";
+    //    public const string ProductsInCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/products";
+    //}
 
     public static class Collection
     {

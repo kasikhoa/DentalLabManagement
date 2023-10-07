@@ -19,7 +19,6 @@ namespace DentalLabManagement.BusinessTier.Services
         }
 
 
-
         //Use for employee and store manage
     }
 }
