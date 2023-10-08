@@ -7,7 +7,7 @@ namespace DentalLabManagement.DataTier.Models
     {
         public WarrantyCard()
         {
-            TeethProducts = new HashSet<TeethProduct>();
+            OrderItems = new HashSet<OrderItem>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace DentalLabManagement.DataTier.Models
         public int PatientId { get; set; }
 
         public virtual Patient Patient { get; set; } = null!;
-        public virtual ICollection<TeethProduct> TeethProducts { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

@@ -13,6 +13,8 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
@@ -21,6 +23,7 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Identity.Client.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
@@ -70,6 +73,3 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll

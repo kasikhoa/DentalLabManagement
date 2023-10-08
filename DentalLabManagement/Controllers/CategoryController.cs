@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Services.Implements;
 using DentalLabManagement.DataTier.Paginate;
+using DentalLabManagement.BusinessTier.Payload.Category;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -50,5 +51,20 @@ namespace DentalLabManagement.API.Controllers
             var category = await _categoryService.GetCategoryById(id);
             return Ok(category);
         }
+
+        [HttpPut(ApiEndPointConstant.Category.CategoryEndpoint)]
+        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateCategoryInformation(int id, UpdateCategoryRequest updateCategoryRequest)
+        {
+            var response = await _categoryService.UpdateCategoryInformation(id, updateCategoryRequest);
+
+            if (response == null)
+            {
+                return BadRequest(NotFound());
+            }
+            return Ok(response);
+        }
+
     }
 }

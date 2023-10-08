@@ -32,6 +32,7 @@ namespace DentalLabManagement.API.Extensions
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
             return services;
         }
 

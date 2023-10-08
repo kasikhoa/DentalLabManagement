@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using static DentalLabManagement.API.Constants.ApiEndPointConstant;
 using DentalLabManagement.DataTier.Paginate;
-using DentalLabManagement.API.Validators;
+using DentalLabManagement.BusinessTier.Validators;
 
 namespace DentalLabManagement.API.Controllers
 {

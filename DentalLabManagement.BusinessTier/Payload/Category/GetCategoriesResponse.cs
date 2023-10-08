@@ -11,11 +11,13 @@ namespace DentalLabManagement.BusinessTier.Payload.NewFolder
         public int Id { get; set; }
 
         public string CategoryName { get; set; }
+        public string Description { get; set; }
 
-        public GetCategoriesResponse(int id, string categoryName)
+        public GetCategoriesResponse(int id, string categoryName, string description)
         {
             Id = id;
             CategoryName = categoryName;
+            Description = description;
         }
     }
 }

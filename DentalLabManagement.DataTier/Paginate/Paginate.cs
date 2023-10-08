@@ -11,6 +11,7 @@ public class Paginate<TResult> : IPaginate<TResult>
     public Paginate(IEnumerable<TResult> source, int page, int size, int firstPage)
     {
         var enumerable = source as TResult[] ?? source.ToArray();
+
         if (firstPage > page)
         {
             throw new ArgumentException($"Page ({page}) must be greater or equal than firstPage ({firstPage})");
@@ -34,6 +35,7 @@ public class Paginate<TResult> : IPaginate<TResult>
             TotalPages = (int)Math.Ceiling(Total / (double)Size);
         }
     }
+
 
     public Paginate()
     {

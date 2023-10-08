@@ -8,18 +8,17 @@ namespace DentalLabManagement.DataTier.Models
         public Product()
         {
             GroupStages = new HashSet<GroupStage>();
-            TeethProducts = new HashSet<TeethProduct>();
+            OrderItems = new HashSet<OrderItem>();
         }
 
         public int Id { get; set; }
-        public double SellingPrice { get; set; }
-        public double CostPrice { get; set; }
+        public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string TeethId { get; set; } = null!;
+        public double CostPrice { get; set; }
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<GroupStage> GroupStages { get; set; }
-        public virtual ICollection<TeethProduct> TeethProducts { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

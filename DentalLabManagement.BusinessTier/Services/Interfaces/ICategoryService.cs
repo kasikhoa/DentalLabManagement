@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Payload.Account;
+using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -17,5 +18,6 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
         public Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size);
 
         public Task<GetCategoriesResponse> GetCategoryById(int id);
+        public Task<Category> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
     }
 }

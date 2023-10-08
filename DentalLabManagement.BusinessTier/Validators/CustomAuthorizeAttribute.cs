@@ -2,7 +2,7 @@
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Utils;
 
-namespace DentalLabManagement.API.Validators;
+namespace DentalLabManagement.BusinessTier.Validators;
 
 public class CustomAuthorizeAttribute : AuthorizeAttribute
 {

@@ -7,13 +7,13 @@ namespace DentalLabManagement.DataTier.Models
     {
         public TeethPosition()
         {
-            TeethProducts = new HashSet<TeethProduct>();
+            OrderItems = new HashSet<OrderItem>();
         }
 
         public int Id { get; set; }
         public string Position { get; set; } = null!;
         public string ProductId { get; set; } = null!;
 
-        public virtual ICollection<TeethProduct> TeethProducts { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

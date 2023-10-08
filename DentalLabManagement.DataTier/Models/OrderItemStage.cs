@@ -19,7 +19,7 @@ namespace DentalLabManagement.DataTier.Models
         public string? Note { get; set; }
         public byte[]? Image { get; set; }
 
-        public virtual TeethProduct TeethProduct { get; set; } = null!;
+        public virtual OrderItem TeethProduct { get; set; } = null!;
         public virtual ICollection<ProductStage> ProductStages { get; set; }
     }
 }
