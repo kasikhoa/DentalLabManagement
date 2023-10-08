@@ -75,6 +75,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             updateCategoryRequest.TrimString();
             category.CategoryName = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.CategoryName : updateCategoryRequest.CategoryName;
             category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
+           
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful)
