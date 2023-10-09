@@ -23,7 +23,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         }
 
-        public async Task<Category?> CreateCategory(CategoryRequest categoryRequest)
+        public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
                 (predicate: x => x.CategoryName.Equals(categoryRequest.CategoryName));
@@ -38,11 +38,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (isSuccessful)
-            {
-                return newCategory;
-            }
-            return null;
+            if (!isSuccessful) return null;
+            return new CategoryResponse(newCategory.Id, newCategory.CategoryName, newCategory.Description);
         }
 
         public async Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size)
@@ -67,7 +64,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return response;
         }     
 
-        public async Task<Category> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
+        public async Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
         {
             if (categoryId < 1) throw new HttpRequestException("Id is not valid");
             Category category = await _unitOfWork.GetRepository<Category>()
@@ -79,28 +76,9 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
            
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (isSuccessful)
-            {
-                return category;
-            }
-            return null;
+            if (!isSuccessful) return null;
+            return new CategoryResponse(categoryId, category.CategoryName, category.Description);
         }
-
-        public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)
-        {
-            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
-            Category category = await _unitOfWork.GetRepository<Category>()
-                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException("Category not found!");
-
-            IPaginate<GetProductsInCategory> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new GetProductsInCategory(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
-                predicate: x => x.CategoryId == categoryId,
-                page: page,
-                size: size,
-                orderBy: x => x.OrderBy(x => x.CostPrice)
-               );
-            return productsResponse;
-        }
+       
     }
 }

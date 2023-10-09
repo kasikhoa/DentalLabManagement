@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.BusinessTier.Payload.NewFolder;
+﻿using DentalLabManagement.BusinessTier.Payload.Category;
+using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -16,5 +17,6 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
         public Task<IPaginate<GetProductsResponse>> GetProducts(string? searchProductName, int page, int size);
         public Task<ProductResponse> GetProductById(int productId);
         public Task<ProductResponse> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
+        public Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size);
     }
 }

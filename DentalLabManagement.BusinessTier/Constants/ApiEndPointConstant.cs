@@ -21,7 +21,6 @@ public static class ApiEndPointConstant
     {
         public const string CategoriesEndpoint = ApiEndpoint + "/categories";
         public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
-        public const string ProductsInCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/products";
     }
 
 
@@ -71,11 +70,7 @@ public static class ApiEndPointConstant
     {
         public const string ProductsEndPoint = ApiEndpoint + "/products";
         public const string ProductEndPoint = ProductsEndPoint + "/{id}";
-        public const string ProductsInBrandEndPoint = Brand.BrandEndpoint + "/products";
-        public const string GroupProductsInBrandEndPoint = Brand.BrandEndpoint + "/groupProducts";
-        public const string GroupProductInBrandEndPoint = Brand.BrandsEndpoint + "/{brandId}/groupProducts/{id}";
-        public const string GroupProductOfComboEndPoint = Brand.BrandsEndpoint + "/{brandId}/products/{id}/groupProducts";
-        public const string ProductInGroupEndPoint = ApiEndpoint + "/groupProducts/{groupProductId}/productInGroup/{id}";
+        public const string ProductsInCategory = ProductsEndPoint + "/category/{categoryId}";
     }
 
     public static class Menu

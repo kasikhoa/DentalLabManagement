@@ -13,12 +13,12 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
 {
     public interface ICategoryService
     {
-        public Task<Category?> CreateCategory(CategoryRequest categoryRequest);
+        public Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
 
         public Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size);
 
         public Task<GetCategoriesResponse> GetCategoryById(int id);
-        public Task<Category> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
-        public Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size);
+        public Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
+        
     }
 }
