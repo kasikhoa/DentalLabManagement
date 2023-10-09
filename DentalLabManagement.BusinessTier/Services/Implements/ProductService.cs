@@ -1,6 +1,4 @@
 ﻿using DentalLabManagement.API.Constants;
-using DentalLabManagement.BusinessTier.Payload.Category;
-using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
@@ -38,7 +36,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 (predicate: x => x.Id.Equals(productRequest.CategoryId));
             if (category == null)
             {
-                throw new HttpRequestException( "Category does not exist");
+                //throw new HttpRequestException("Category does not exist");
+                throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             }
             Product newProduct = new Product()
             {
