@@ -1,10 +1,10 @@
 ﻿using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.NewFolder;
+using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -64,7 +64,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (category == null) throw new HttpRequestException("Category not found!");
             GetCategoriesResponse response = new GetCategoriesResponse(category.Id, category.CategoryName, category.Description);
             return response;
-        }
+        }     
 
         public async Task<Category> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
         {
@@ -83,6 +83,23 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 return category;
             }
             return null;
+        }
+
+        public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)
+        {
+            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
+            Category category = await _unitOfWork.GetRepository<Category>()
+                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
+            if (category == null) throw new HttpRequestException("Category not found!");
+
+            IPaginate<GetProductsInCategory> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
+                selector: x => new GetProductsInCategory(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
+                predicate: x => x.CategoryId == categoryId,
+                page: page,
+                size: size,
+                orderBy: x => x.OrderBy(x => x.CostPrice)
+               );
+            return productsResponse;
         }
     }
 }

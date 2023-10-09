@@ -21,7 +21,7 @@ namespace DentalLabManagement.API.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpPost(ApiEndPointConstant.Category.CreateCategoryEndpoint)]
+        [HttpPost(ApiEndPointConstant.Category.CategoriesEndpoint)]
         [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateCategory(CategoryRequest categoryRequest)
@@ -66,5 +66,12 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet(ApiEndPointConstant.Category.ProductsInCategoryEndpoint)]
+        [ProducesResponseType(typeof(IPaginate<GetProductsInCategory>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProductsInCategory(int categoryId, [FromQuery] int page, [FromQuery] int size)
+        {
+            var categories = await _categoryService.GetProductsInCategory(categoryId, page, size);
+            return Ok(categories);
+        }
     }
 }
