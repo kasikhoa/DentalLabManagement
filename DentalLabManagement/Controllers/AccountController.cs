@@ -40,7 +40,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(loginResponse);
         }
 
-        [CustomAuthorize(RoleEnum.ADMIN)]
+        [Authorize]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateAccount(CreateNewAccountRequest createNewAccountRequest)
@@ -53,7 +53,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok( response);
         }
 
-      
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]

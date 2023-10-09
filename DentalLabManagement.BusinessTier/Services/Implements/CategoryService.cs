@@ -33,7 +33,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             }
             Category newCategory = new Category()
             {
-                CategoryName = categoryRequest.CategoryName
+                CategoryName = categoryRequest.CategoryName,
+                Description = categoryRequest.Description,
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
