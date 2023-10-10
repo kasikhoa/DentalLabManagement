@@ -1,4 +1,4 @@
-using DentalLabManagement.API.Constants;
+using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.API.Converter;
 using DentalLabManagement.API.Middlewares;
 using DentalLabManagement.API.Extensions;

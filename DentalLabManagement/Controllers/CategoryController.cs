@@ -1,7 +1,6 @@
-﻿using DentalLabManagement.API.Constants;
+﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
-using static DentalLabManagement.API.Constants.ApiEndPointConstant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Payload.Account;

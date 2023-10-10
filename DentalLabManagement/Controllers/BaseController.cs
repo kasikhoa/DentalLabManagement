@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DentalLabManagement.API.Constants;
+using DentalLabManagement.BusinessTier.Constants;
 
 namespace DentalLabManagement.API.Controllers
 {

@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DentalLabManagement.API.Extensions
 {
-    using DentalLabManagement.API.Constants;
+
     using DentalLabManagement.BusinessTier.Services.Implements;
     using DentalLabManagement.BusinessTier.Services.Interfaces;
     using DentalLabManagement.DataTier.Models;

@@ -1,4 +1,4 @@
-﻿using DentalLabManagement.API.Constants;
+﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.BusinessTier.Services.Interfaces;

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace DentalLabManagement.API.Constants;
+namespace DentalLabManagement.BusinessTier.Constants;
 
 public static class MessageConstant
 {
