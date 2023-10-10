@@ -31,13 +31,12 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 (predicate: x => x.Name.Equals(productRequest.Name));
             if (product != null)
             {
-                throw new HttpRequestException("Product is already exist");
+                throw new HttpRequestException(MessageConstant.Product.ProductNameExisted);
             }
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
                 (predicate: x => x.Id.Equals(productRequest.CategoryId));
             if (category == null)
             {
-                //throw new HttpRequestException("Category does not exist");
                 throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             }
             Product newProduct = new Product()
@@ -69,28 +68,24 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<ProductResponse> GetProductById(int productId)
         {
-            if (productId < 1) throw new HttpRequestException("Id is not valid");
+            if (productId < 1) throw new HttpRequestException(MessageConstant.Product.EmptyProductIdMessage);
             Product product = await _unitOfWork.GetRepository<Product>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(productId));
-            if (product == null) throw new HttpRequestException("Product not found!");
-            ProductResponse response = new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.CategoryId);
-            return response;
+            if (product == null) throw new HttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
+            return new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.CategoryId);
         }
 
         public async Task<ProductResponse> UpdateProduct(int productId, UpdateProductRequest updateProductRequest)
         {
-            if (productId < 1) throw new HttpRequestException("Id is not valid");
-            Product product = await _unitOfWork.GetRepository<Product>()
-                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(productId));
-            if (product == null) throw new HttpRequestException("Product not found!");
-            updateProductRequest.TrimString();
+            if (productId < 1) throw new HttpRequestException(MessageConstant.Product.EmptyProductIdMessage);         
 
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
-               (predicate: x => x.Id.Equals(updateProductRequest.CategoryId));
-            if (category == null) throw new HttpRequestException("Category does not exist");
+                (predicate: x => x.Id.Equals(updateProductRequest.CategoryId));
+            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
             Product updateProduct = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(productId));
             if (updateProduct == null) throw new HttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
+            updateProductRequest.TrimString();
 
             updateProduct.Name = updateProductRequest.Name;
             updateProduct.Description = updateProductRequest.Description;
@@ -99,17 +94,17 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
             _unitOfWork.GetRepository<Product>().UpdateAsync(updateProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) return null;
+            if (!isSuccessful) throw new HttpRequestException(MessageConstant.Product.UpdateProductFailedMessage);
             return new ProductResponse
                 (updateProduct.Id, updateProduct.Name, updateProduct.Description, updateProduct.CostPrice, updateProduct.CategoryId);
         }
 
         public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)
         {
-            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
+            if (categoryId < 1) throw new HttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException("Category not found!");
+            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
             IPaginate<GetProductsInCategory> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
                 selector: x => new GetProductsInCategory(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),

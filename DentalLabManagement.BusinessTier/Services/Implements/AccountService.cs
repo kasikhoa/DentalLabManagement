@@ -1,4 +1,4 @@
-﻿using DentalLabManagement.BusinessTier.Enums;
+﻿using DentalLabManagement.API.Constants;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
@@ -50,7 +50,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
             if (account != null)
             {
-                throw new HttpRequestException("Account is already exist");
+                throw new HttpRequestException(MessageConstant.Account.AccountExisted);
             }
             Account newAccount = new Account()
             {
@@ -66,7 +66,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             {
                 return newAccount;
             }
-            return null;
+            throw new HttpRequestException(MessageConstant.Account.CreateAccountFailed);
         }
 
         public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, int page, int size)

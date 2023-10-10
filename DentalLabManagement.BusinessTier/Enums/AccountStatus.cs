@@ -1,7 +1,7 @@
-﻿namespace Pos_System.API.Enums;
-
+﻿namespace DentalLabManagement.BusinessTier.Enums;
+	
 public enum AccountStatus
 {
 	Active,
 	Deactivate
-}
+}	

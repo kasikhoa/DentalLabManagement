@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.BusinessTier.Payload.Category;
+﻿using DentalLabManagement.API.Constants;
+using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
@@ -29,7 +30,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 (predicate: x => x.CategoryName.Equals(categoryRequest.CategoryName));
             if (category != null)
             {
-                throw new HttpRequestException("Category is already exist");
+                throw new HttpRequestException(MessageConstant.Category.CategoryNameExisted);
             }
             Category newCategory = new Category()
             {
@@ -56,20 +57,20 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<GetCategoriesResponse> GetCategoryById(int categoryId)
         {
-            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
+            if (categoryId < 1) throw new HttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException("Category not found!");
+            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             GetCategoriesResponse response = new GetCategoriesResponse(category.Id, category.CategoryName, category.Description);
             return response;
         }     
 
         public async Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
         {
-            if (categoryId < 1) throw new HttpRequestException("Id is not valid");
+            if (categoryId < 1) throw new HttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException("Category not found!");
+            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             updateCategoryRequest.TrimString();
             category.CategoryName = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.CategoryName : updateCategoryRequest.CategoryName;
             category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
