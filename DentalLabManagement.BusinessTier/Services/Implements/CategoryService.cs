@@ -1,6 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.Category;
-using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;

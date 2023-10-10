@@ -1,5 +1,4 @@
 ﻿using DentalLabManagement.BusinessTier.Payload.Category;
-using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;

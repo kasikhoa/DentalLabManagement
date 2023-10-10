@@ -1,6 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Category;
-using DentalLabManagement.BusinessTier.Payload.NewFolder;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using System;

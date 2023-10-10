@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Payload.NewFolder
+namespace DentalLabManagement.BusinessTier.Payload.Category
 {
     public class CategoryRequest
     {
