@@ -30,7 +30,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductStage> ProductStages { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
-        public virtual DbSet<Stage> Stages { get; set; } = null!;
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
@@ -99,7 +98,7 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.Dentists)
                     .HasForeignKey(d => d.DentalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Dentist_Dental");
+                    .HasConstraintName("FK_Dentist_Dental1");
             });
 
             modelBuilder.Entity<Employee>(entity =>
@@ -121,14 +120,15 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("GroupStage");
 
-                entity.Property(e => e.StageId)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.GroupStages)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_GroupStage_Product1");
+
+                entity.HasOne(d => d.Stage)
+                    .WithMany(p => p.GroupStages)
+                    .HasForeignKey(d => d.StageId)
+                    .HasConstraintName("FK_GroupStage_ProductStage");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -235,9 +235,9 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.HasOne(d => d.TeethProduct)
+                entity.HasOne(d => d.OrderItem)
                     .WithMany(p => p.OrderItemStages)
-                    .HasForeignKey(d => d.TeethProductId)
+                    .HasForeignKey(d => d.OrderItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItemStage_TeethProduct");
             });
@@ -283,22 +283,9 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("ProductStage");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.HasOne(d => d.GroupStaget)
-                    .WithMany(p => p.ProductStages)
-                    .HasForeignKey(d => d.GroupStagetId)
-                    .HasConstraintName("FK_ProductStage_GroupStage");
-
-                entity.HasOne(d => d.OrderItemStage)
-                    .WithMany(p => p.ProductStages)
-                    .HasForeignKey(d => d.OrderItemStageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductStage_OrderItemStage");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -310,15 +297,6 @@ namespace DentalLabManagement.DataTier.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.RoleName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Stage>(entity =>
-            {
-                entity.ToTable("Stage");
-
-                entity.Property(e => e.StageName).HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasMaxLength(50);
             });
 
             modelBuilder.Entity<TeethPosition>(entity =>

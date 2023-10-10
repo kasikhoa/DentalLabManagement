@@ -9,7 +9,7 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
     {
         public Task<LoginResponse> Login(LoginRequest loginRequest);
 
-        public Task<Account?> CreateNewAccount(CreateNewAccountRequest createNewAccountRequest);
+        public Task<Account?> CreateNewAccount(CreateAccountRequest createNewAccountRequest);
 
         public Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, int page, int size);
     }

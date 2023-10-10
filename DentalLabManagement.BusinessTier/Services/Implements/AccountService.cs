@@ -44,7 +44,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return loginResponse;
         }
 
-        public async Task<Account?> CreateNewAccount(CreateNewAccountRequest createNewAccountRequest)
+        public async Task<Account?> CreateNewAccount(CreateAccountRequest createNewAccountRequest)
         {
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));

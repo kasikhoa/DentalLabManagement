@@ -5,14 +5,16 @@ namespace DentalLabManagement.DataTier.Models
 {
     public partial class ProductStage
     {
-        public int Id { get; set; }
-        public int? GroupStagetId { get; set; }
-        public string? Name { get; set; }
-        public int? LevelStage { get; set; }
-        public string? Description { get; set; }
-        public int OrderItemStageId { get; set; }
+        public ProductStage()
+        {
+            GroupStages = new HashSet<GroupStage>();
+        }
 
-        public virtual GroupStage? GroupStaget { get; set; }
-        public virtual OrderItemStage OrderItemStage { get; set; } = null!;
+        public int Id { get; set; }
+        public int IndexStage { get; set; }
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+
+        public virtual ICollection<GroupStage> GroupStages { get; set; }
     }
 }

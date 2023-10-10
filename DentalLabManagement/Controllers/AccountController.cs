@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.API.Constants;
-using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;
-using static DentalLabManagement.API.Constants.ApiEndPointConstant;
 using DentalLabManagement.DataTier.Paginate;
-using DentalLabManagement.BusinessTier.Validators;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -42,8 +39,9 @@ namespace DentalLabManagement.API.Controllers
 
         [Authorize]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
-        [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateAccount(CreateNewAccountRequest createNewAccountRequest)
+        [ProducesResponseType(typeof(CreateAccountResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> CreateAccount(CreateAccountRequest createNewAccountRequest)
         {
             var response = await _accountService.CreateNewAccount(createNewAccountRequest);
             if (response == null)

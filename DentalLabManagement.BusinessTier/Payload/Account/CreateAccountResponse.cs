@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Payload.Account
 {
-    public class CreateNewAccountResponse
+    public class CreateAccountResponse
     {
         public int UserId { get; set; }
 
