@@ -2,8 +2,6 @@
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using DentalLabManagement.BusinessTier.Payload.Account;
-using DentalLabManagement.BusinessTier.Services.Implements;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
 

@@ -40,13 +40,18 @@ public static class MessageConstant
 
     public static class Product
     {
-        public const string ProductNameExisted = "Product Name đã tồn tại";
+        public const string ProductNameExisted = "Product đã tồn tại";
         public const string CreateNewProductFailedMessage = "Tạo mới product thất bại";
         public const string UpdateProductFailedMessage = "Cập nhật thông tin product thất bại";
         public const string EmptyProductIdMessage = "Product Id không hợp lệ";
         public const string ProductNotFoundMessage = "Product không tồn tại trong hệ thống";
     }
 
+    public static class ProductStage
+    {
+        public const string ProductStageExisted = "Product Stage đã tồn tại";
+        public const string CreateNewProductStageFailed = "Tạo mới product stage thất bại";
+    }
 
     public static class Order
     {
@@ -66,17 +71,5 @@ public static class MessageConstant
         public const string AlreadySessionAvailableInTimeGap = "Thời gian của session bạn đang tạo hoặc cập nhật hiện đã có một vài session vui lòng thay đổi thời gian phù hợp";
     }
 
-    public static class GroupProduct
-    {
-        public const string WrongComboInformationMessage = "Combo bạn đang chọn không tồn tại hoặc không thuộc brand của bạn";
-        public const string GroupProductNotFoundMessage = "Group Product không tồn tại trong hệ thống";
-    }
-
-    public static class ProductInGroup
-    {
-        public const string EmptyProductInGroupId = "Id của product in group bị trống";
-        public const string ProductInGroupNotFound = "Product in Group không tồn tại trong hệ thống";
-        public const string ProductNotInGroupMessage = "Data cũ của product không tồn tại, productId: ";
-    }
     
 }

@@ -2,10 +2,6 @@
 
 public static class ApiEndPointConstant
 {
-    static ApiEndPointConstant()
-    {
-
-    }
 
     public const string RootEndPoint = "/api";
     public const string ApiVersion = "/v1";
@@ -52,20 +48,7 @@ public static class ApiEndPointConstant
         public const string AccountEndpoint = AccountsEndpoint + "/{id}";
     }
 
-    //public static class Category
-    //{
-    //    public const string CategoriesEndpoint = ApiEndpoint + "/categories";
-    //    public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
-    //    public const string ExtraCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/extra-categories";
-    //    public const string ProductsInCategoryEndpoint = CategoriesEndpoint + "/{categoryId}/products";
-    //}
 
-    public static class Collection
-    {
-        public const string CollectionsEndPoint = ApiEndpoint + "/collections";
-        public const string CollectionEndPoint = CollectionsEndPoint + "/{id}";
-        public const string ProductsInCollectionEndpoint = CollectionsEndPoint + "/{collectionId}/products";
-    }
     public static class Product
     {
         public const string ProductsEndPoint = ApiEndpoint + "/products";
@@ -73,20 +56,11 @@ public static class ApiEndPointConstant
         public const string ProductsInCategory = ProductsEndPoint + "/category/{categoryId}";
     }
 
-    public static class Menu
+    public static class ProductStage
     {
-        public const string MenusEndPoint = ApiEndpoint + "/menus";
-        public const string MenuEndPoint = MenusEndPoint + "/{menuId}";
-        public const string MenusInBrandEndPoint = Brand.BrandEndpoint + "/menus";
-        public const string HasBaseMenuEndPoint = MenusInBrandEndPoint + "/hasBaseMenu";
-        public const string MenuProductsEndpoint = MenusEndPoint + "/{menuId}/products";
-        public const string MenuStoresEndPoint = MenuEndPoint + "/stores";
+        public const string ProductStageEndPoint = ApiEndpoint + "/productstage";
     }
 
-    public static class PaymentType
-    {
-	    public const string PaymentTypesEndPoint = ApiEndpoint + "/payment-types";
-    }
 
     public static class Order
     {
@@ -95,16 +69,4 @@ public static class ApiEndPointConstant
     }
 
 
-    public static class Report
-    {
-        public const string ReportEndpoint = ApiEndpoint + "/report";
-        public const string SessionReportEndPoint = ReportEndpoint + "/session-report/{id}";
-        public const string StoreReportExcelEndPoint = ReportEndpoint + "/store/{id}/download-excel";
-    }
-
-    public static class Promotion
-    {
-        public const string PromotionEndpoint = ApiEndpoint + "/promotion";
-        public const string SessionReportEndPoint = PromotionEndpoint + "/session-report/{id}";
-    }
 }
