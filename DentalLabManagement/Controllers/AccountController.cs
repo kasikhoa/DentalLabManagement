@@ -5,6 +5,8 @@ using DentalLabManagement.BusinessTier.Payload.Login;
 using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.DataTier.Paginate;
+using DentalLabManagement.BusinessTier.Validators;
+using DentalLabManagement.BusinessTier.Enums;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -33,11 +35,17 @@ namespace DentalLabManagement.API.Controllers
                     TimeStamp = DateTime.Now
                 });
             }
-     
+            if (loginResponse.Status == AccountStatus.Deactivate)
+                return Unauthorized(new ErrorResponse()
+                {
+                    StatusCode = StatusCodes.Status401Unauthorized,
+                    Error = MessageConstant.LoginMessage.DeactivatedAccount,
+                    TimeStamp = DateTime.Now
+                });
             return Ok(loginResponse);
         }
 
-        [Authorize]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(CreateAccountResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
@@ -51,7 +59,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok( response);
         }
 
-        [Authorize]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]

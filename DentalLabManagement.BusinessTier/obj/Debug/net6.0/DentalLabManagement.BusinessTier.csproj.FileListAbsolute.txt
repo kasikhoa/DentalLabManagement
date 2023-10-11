@@ -13,3 +13,18 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.BusinessTier\obj
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\refint\DentalLabManagement.BusinessTier.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.pdb
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\ref\DentalLabManagement.BusinessTier.dll
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\bin\Debug\net6.0\DentalLabManagement.BusinessTier.deps.json
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\bin\Debug\net6.0\DentalLabManagement.BusinessTier.dll
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\bin\Debug\net6.0\DentalLabManagement.BusinessTier.pdb
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\bin\Debug\net6.0\DentalLabManagement.DataTier.dll
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\bin\Debug\net6.0\DentalLabManagement.DataTier.pdb
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.csproj.AssemblyReference.cache
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.GeneratedMSBuildEditorConfig.editorconfig
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.AssemblyInfoInputs.cache
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.AssemblyInfo.cs
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.csproj.CoreCompileInputs.cache
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.csproj.CopyComplete
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.dll
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\refint\DentalLabManagement.BusinessTier.dll
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.pdb
+D:\FU\SWD392_Dental Lab\git clone\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\ref\DentalLabManagement.BusinessTier.dll

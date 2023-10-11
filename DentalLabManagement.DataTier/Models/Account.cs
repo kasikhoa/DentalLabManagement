@@ -16,7 +16,7 @@ namespace DentalLabManagement.DataTier.Models
         public string FullName { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string Role { get; set; } = null!;
-        public string PhoneNumber { get; set; } = null!;
+        public string Status { get; set; } = null!;
 
         public virtual ICollection<Dental> Dentals { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }

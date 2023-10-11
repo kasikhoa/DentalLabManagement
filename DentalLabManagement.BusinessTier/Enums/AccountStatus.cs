@@ -2,6 +2,6 @@
 	
 public enum AccountStatus
 {
-	Active,
+    Activate,
 	Deactivate
 }	

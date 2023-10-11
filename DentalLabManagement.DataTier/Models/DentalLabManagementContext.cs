@@ -53,12 +53,12 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Password).HasMaxLength(50);
 
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Role)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserName).HasMaxLength(50);

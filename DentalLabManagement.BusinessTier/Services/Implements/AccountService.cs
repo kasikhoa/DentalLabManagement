@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
@@ -33,18 +34,20 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 .SingleOrDefaultAsync(predicate: searchFilter);
             if (account == null) return null;
            
-            var token = JwtUtil.GenerateJwtToken();
+            var token = JwtUtil.GenerateJwtToken(account);
+            
             LoginResponse loginResponse = new LoginResponse()
             {
-                AccessToken= token,
+                AccessToken = token,
                 Id = account.AccountId,
                 Username = account.UserName,
-                Role = account.Role,
+                Role = EnumUtil.ParseEnum<RoleEnum>(account.Role),
+                Status = EnumUtil.ParseEnum<AccountStatus>(account.Status),
             };
             return loginResponse;
         }
 
-        public async Task<Account?> CreateNewAccount(CreateAccountRequest createNewAccountRequest)
+        public async Task<GetAccountsResponse> CreateNewAccount(CreateAccountRequest createNewAccountRequest)
         {
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
@@ -52,28 +55,26 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             {
                 throw new HttpRequestException(MessageConstant.Account.AccountExisted);
             }
-            Account newAccount = new Account()
+            account = new Account()
             {
                 UserName = createNewAccountRequest.Username,
                 Password = PasswordUtil.HashPassword(createNewAccountRequest.Password),
                 FullName = createNewAccountRequest.Name,
-                Role = createNewAccountRequest.Role,
-                PhoneNumber = createNewAccountRequest.PhoneNumber,
+                Role = EnumUtil.GetDescriptionFromEnum(createNewAccountRequest.Role),
+                Status = EnumUtil.GetDescriptionFromEnum(createNewAccountRequest.Status)
             };
-            await _unitOfWork.GetRepository<Account>().InsertAsync(newAccount);
+            await _unitOfWork.GetRepository<Account>().InsertAsync(account);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (isSuccessful)
-            {
-                return newAccount;
-            }
-            throw new HttpRequestException(MessageConstant.Account.CreateAccountFailed);
+            if (!isSuccessful) throw new HttpRequestException(MessageConstant.Account.CreateAccountFailed);
+            return new GetAccountsResponse(account.AccountId, account.UserName, account.FullName,
+                createNewAccountRequest.Role, createNewAccountRequest.Status);
         }
 
         public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, int page, int size)
         {
             searchUsername = searchUsername?.Trim().ToLower();
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
-                selector: x => new GetAccountsResponse(x.AccountId, x.UserName, x.FullName, x.Role, x.PhoneNumber),
+                selector: x => new GetAccountsResponse(x.AccountId, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),
                 predicate: string.IsNullOrEmpty(searchUsername) ? x => true : x => x.UserName.ToLower().Contains(searchUsername),
                 page: page,
                 size: size

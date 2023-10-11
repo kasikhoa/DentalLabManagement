@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Payload.Account
 {
-    public class CreateAccountRequest
+    public class AccountRequest
     {
+        
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Username is missing")]
         public string Username { get; set; }
@@ -21,8 +23,8 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Role is missing")]
-        public RoleEnum Role { get; set; }
+        public string Role { get; set; }
         [Required(ErrorMessage = "Phone is missing")]
-        public AccountStatus Status { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }
