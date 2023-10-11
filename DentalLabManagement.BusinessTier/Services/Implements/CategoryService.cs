@@ -2,6 +2,7 @@
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
@@ -21,7 +22,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
         public CategoryService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CategoryService> logger) : base(unitOfWork, logger)
         {
 
-        }
+        }    
 
         public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
@@ -79,6 +80,38 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (!isSuccessful) return null;
             return new CategoryResponse(categoryId, category.CategoryName, category.Description);
         }
-       
+
+        public async Task<bool> CategoryMappingProductStage(int categoryId, List<int> request)
+        {
+            List<int> currentExtraCategoriesId = (List<int>)await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
+            selector: x => x.ProductStageId,
+            predicate: x => x.CategoryId.Equals(categoryId)
+            );
+
+            (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) splittedExtraCategoriesIds = CustomListUtil.splitIdsToAddAndRemove(currentExtraCategoriesId, request);
+            //Handle add and remove to database
+            if (splittedExtraCategoriesIds.idsToAdd.Count > 0)
+            {
+                List<GroupStage> extraCategoriesToInsert = new List<GroupStage>();
+                splittedExtraCategoriesIds.idsToAdd.ForEach(id => extraCategoriesToInsert.Add(new GroupStage
+                {
+                    CategoryId = categoryId,
+                    ProductStageId = id
+                }));
+                await _unitOfWork.GetRepository<GroupStage>().InsertRangeAsync(extraCategoriesToInsert);
+            }
+
+            if (splittedExtraCategoriesIds.idsToRemove.Count > 0)
+            {
+                List<GroupStage> extraCategoriesToDelete = new List<GroupStage>();
+                extraCategoriesToDelete = (List<GroupStage>)await _unitOfWork.GetRepository<GroupStage>()
+                    .GetListAsync(predicate: x => x.CategoryId.Equals(categoryId) && splittedExtraCategoriesIds.idsToRemove.Contains(x.ProductStageId));
+
+                _unitOfWork.GetRepository<GroupStage>().DeleteRangeAsync(extraCategoriesToDelete);
+            }
+            bool isSuccesful = await _unitOfWork.CommitAsync() > 0;
+            return isSuccesful;
+        }
+
     }
 }

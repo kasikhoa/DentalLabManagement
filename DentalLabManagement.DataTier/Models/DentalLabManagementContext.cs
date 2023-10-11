@@ -123,11 +123,13 @@ namespace DentalLabManagement.DataTier.Models
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.GroupStages)
                     .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GroupStage_Category");
 
                 entity.HasOne(d => d.ProductStage)
                     .WithMany(p => p.GroupStages)
                     .HasForeignKey(d => d.ProductStageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GroupStage_ProductStage1");
             });
 

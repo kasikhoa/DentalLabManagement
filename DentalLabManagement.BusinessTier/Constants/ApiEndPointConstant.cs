@@ -17,6 +17,7 @@ public static class ApiEndPointConstant
     {
         public const string CategoriesEndpoint = ApiEndpoint + "/categories";
         public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
+        public const string CategoryMappingProductStage = CategoriesEndpoint + "/{categoryId}/product-stage";
     }
 
     public static class Account

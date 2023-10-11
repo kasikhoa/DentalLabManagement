@@ -60,6 +60,15 @@ namespace DentalLabManagement.API.Controllers
                 return BadRequest(NotFound());
             }
             return Ok(response);
-        }       
+        }
+
+        [HttpPost(ApiEndPointConstant.Category.CategoryMappingProductStage)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> CategoryMappingProductStage(int categoryId, List<int> request)
+        {
+            bool isSuccessful = await _categoryService.CategoryMappingProductStage(categoryId, request);
+            if (!isSuccessful) return Ok(MessageConstant.Category.UpdateExtraCategoryFailedMessage);
+            return Ok(MessageConstant.Category.UpdateExtraCategorySuccessfulMessage);
+        }
     }
 }
