@@ -10,6 +10,7 @@ namespace DentalLabManagement.BusinessTier.Enums
     {
         Admin,
         Staff,
+        Reception,
         Dental
     }
 }
