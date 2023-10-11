@@ -2,6 +2,7 @@
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
+using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,6 +36,19 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new HttpRequestException(MessageConstant.ProductStage.CreateNewProductStageFailed);
             return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description);
+        }
+
+        public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int page, int size)
+        {
+            name = name?.Trim().ToLower();
+            IPaginate<ProductStageResponse> response = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync
+                (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description),
+                predicate: string.IsNullOrEmpty(name) ? x => true : x => x.Name.ToLower().Contains(name),
+                page: page,
+                size: size
+                );
+            return response;
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
+using DentalLabManagement.BusinessTier.Services.Implements;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,15 @@ namespace DentalLabManagement.API.Controllers
                 return BadRequest(NotFound());
             }
             return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> ViewAllProductStage([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        {
+            var productStage = await _productStageService.GetProductStages(name, page, size);
+            return Ok(productStage);
         }
     }
 }
