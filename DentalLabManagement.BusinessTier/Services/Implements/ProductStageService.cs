@@ -38,6 +38,15 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description);
         }
 
+        public async Task<ProductStageResponse> GetProductStageByIndexStage(int index)
+        {
+            if (index < 1) throw new HttpRequestException(MessageConstant.ProductStage.EmptyProductStageMessage);
+            ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>()
+                .SingleOrDefaultAsync(predicate: x => x.IndexStage.Equals(index));
+            if (productStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IndexStageNotFoundMessage);
+            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description);
+        }
+
         public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int page, int size)
         {
             name = name?.Trim().ToLower();

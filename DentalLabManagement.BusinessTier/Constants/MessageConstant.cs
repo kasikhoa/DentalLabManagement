@@ -49,8 +49,10 @@ public static class MessageConstant
 
     public static class ProductStage
     {
+        public const string EmptyProductStageMessage = "Index Stage không hợp lệ";
         public const string ProductStageExisted = "Product Stage đã tồn tại";
         public const string CreateNewProductStageFailed = "Tạo mới product stage thất bại";
+        public const string IndexStageNotFoundMessage = "Index Stage không tồn tại trong hệ thống";
     }
 
     public static class Order

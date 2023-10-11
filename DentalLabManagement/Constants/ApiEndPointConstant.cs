@@ -2,10 +2,6 @@
 
 public static class ApiEndPointConstant
 {
-    static ApiEndPointConstant()
-    {
-
-    }
 
     public const string RootEndPoint = "/api";
     public const string ApiVersion = "/v1";
@@ -75,7 +71,8 @@ public static class ApiEndPointConstant
 
     public static class ProductStage
     {
-        public const string ProductStageEndPoint = ApiEndpoint + "/productstage";
+        public const string ProductStagesEndPoint = ApiEndpoint + "/productstage";
+        public const string ProductStageEndPoint = ProductStagesEndPoint + "/{indexStage}";
     }
 
 

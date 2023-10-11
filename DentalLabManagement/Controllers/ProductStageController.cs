@@ -17,7 +17,7 @@ namespace DentalLabManagement.API.Controllers
             _productStageService = productStageService;
         }
 
-        [HttpPost(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [HttpPost(ApiEndPointConstant.ProductStage.ProductStagesEndPoint)]
         [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateProduct(ProductStageRequest productRequest)
@@ -30,12 +30,21 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [HttpGet(ApiEndPointConstant.ProductStage.ProductStagesEndPoint)]
         [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> ViewAllProductStage([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
         {
             var productStage = await _productStageService.GetProductStages(name, page, size);
+            return Ok(productStage);
+        }
+
+        [HttpGet(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetProductStageByIndex(int indexStage)
+        {
+            var productStage = await _productStageService.GetProductStageByIndexStage(indexStage);
             return Ok(productStage);
         }
     }
