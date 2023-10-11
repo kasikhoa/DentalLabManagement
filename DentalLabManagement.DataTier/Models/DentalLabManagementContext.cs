@@ -120,15 +120,15 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("GroupStage");
 
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.Category)
                     .WithMany(p => p.GroupStages)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_GroupStage_Product1");
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_GroupStage_Category");
 
-                entity.HasOne(d => d.Stage)
+                entity.HasOne(d => d.ProductStage)
                     .WithMany(p => p.GroupStages)
-                    .HasForeignKey(d => d.StageId)
-                    .HasConstraintName("FK_GroupStage_ProductStage");
+                    .HasForeignKey(d => d.ProductStageId)
+                    .HasConstraintName("FK_GroupStage_ProductStage1");
             });
 
             modelBuilder.Entity<Order>(entity =>

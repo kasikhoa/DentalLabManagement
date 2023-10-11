@@ -7,6 +7,7 @@ namespace DentalLabManagement.DataTier.Models
     {
         public Category()
         {
+            GroupStages = new HashSet<GroupStage>();
             Products = new HashSet<Product>();
         }
 
@@ -14,6 +15,7 @@ namespace DentalLabManagement.DataTier.Models
         public string CategoryName { get; set; } = null!;
         public string Description { get; set; } = null!;
 
+        public virtual ICollection<GroupStage> GroupStages { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }
