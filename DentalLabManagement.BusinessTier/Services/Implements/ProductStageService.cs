@@ -79,10 +79,11 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
             if (updateProductStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
             updateProductStageRequest.TrimString();
-            updateProductStage.IndexStage = updateProductStageRequest.IndexStage;
-            updateProductStage.Name = updateProductStageRequest.Name;
-            updateProductStage.Description = updateProductStageRequest.Description;
-            updateProductStage.ExecutionTime = updateProductStageRequest.ExecutionTime;
+
+            updateProductStage.IndexStage = (updateProductStageRequest.IndexStage) < 1 ? updateProductStage.IndexStage : updateProductStageRequest.IndexStage;
+            updateProductStage.Name = string.IsNullOrEmpty(updateProductStageRequest.Name) ? updateProductStage.Name : updateProductStageRequest.Name;
+            updateProductStage.Description = string.IsNullOrEmpty(updateProductStageRequest.Description) ? updateProductStage.Description : updateProductStageRequest.Description;
+            updateProductStage.ExecutionTime = (updateProductStageRequest.ExecutionTime) <= 0 ? updateProductStage.ExecutionTime : updateProductStageRequest.ExecutionTime;
 
             _unitOfWork.GetRepository<ProductStage>().UpdateAsync(updateProductStage);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

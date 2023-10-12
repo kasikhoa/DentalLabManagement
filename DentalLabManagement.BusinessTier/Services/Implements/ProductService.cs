@@ -87,9 +87,9 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (updateProduct == null) throw new HttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
             updateProductRequest.TrimString();
 
-            updateProduct.Name = updateProductRequest.Name;
-            updateProduct.Description = updateProductRequest.Description;
-            updateProduct.CostPrice = updateProductRequest.CostPrice;
+            updateProduct.Name = string.IsNullOrEmpty(updateProductRequest.Name) ? updateProduct.Name : updateProductRequest.Name;
+            updateProduct.Description = string.IsNullOrEmpty(updateProductRequest.Description) ? updateProduct.Description : updateProductRequest.Description;
+            updateProduct.CostPrice = (updateProductRequest.CostPrice <= 0) ? updateProduct.CostPrice : updateProductRequest.CostPrice;
             updateProduct.CategoryId = updateProductRequest.CategoryId;
 
             _unitOfWork.GetRepository<Product>().UpdateAsync(updateProduct);
