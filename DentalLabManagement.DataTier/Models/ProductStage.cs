@@ -14,6 +14,7 @@ namespace DentalLabManagement.DataTier.Models
         public int IndexStage { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public double? ExecutionTime { get; set; }
 
         public virtual ICollection<GroupStage> GroupStages { get; set; }
     }

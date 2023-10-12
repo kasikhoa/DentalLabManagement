@@ -15,5 +15,9 @@ namespace DentalLabManagement.BusinessTier.Payload.ProductStage
         public string Name { get; set; }
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Execution Time is required")]
+        public double? ExecutionTime { get; set; }
+
     }
 }

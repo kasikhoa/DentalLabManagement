@@ -33,6 +33,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
+        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -198,12 +199,6 @@ namespace DentalLabManagement.DataTier.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItem_Product");
 
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.OrderItems)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TeethProduct_Account");
-
                 entity.HasOne(d => d.TeethPosition)
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.TeethPositionId)
@@ -331,23 +326,36 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("WarrantyCard");
 
-                entity.Property(e => e.EndDate)
-                    .HasColumnType("date")
-                    .HasColumnName("endDate");
+                entity.Property(e => e.EndDate).HasColumnType("date");
 
                 entity.Property(e => e.OrderItemsId)
                     .HasMaxLength(20)
                     .IsFixedLength();
 
-                entity.Property(e => e.StartDate)
-                    .HasColumnType("date")
-                    .HasColumnName("startDate");
+                entity.Property(e => e.StartDate).HasColumnType("date");
 
                 entity.HasOne(d => d.Patient)
                     .WithMany(p => p.WarrantyCards)
                     .HasForeignKey(d => d.PatientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_Patient");
+            });
+
+            modelBuilder.Entity<staff>(entity =>
+            {
+                entity.ToTable("Staff");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Address).HasMaxLength(50);
+
+                entity.Property(e => e.FullName).HasMaxLength(50);
+
+                entity.Property(e => e.Gender).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
             });
 
             OnModelCreatingPartial(modelBuilder);

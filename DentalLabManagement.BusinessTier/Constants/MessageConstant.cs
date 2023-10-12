@@ -51,10 +51,13 @@ public static class MessageConstant
 
     public static class ProductStage
     {
+        public const string EmptyProductStageIdMessage = "Id không hợp lệ";
         public const string EmptyProductStageMessage = "Index Stage không hợp lệ";
         public const string ProductStageExisted = "Product Stage đã tồn tại";
         public const string CreateNewProductStageFailed = "Tạo mới product stage thất bại";
         public const string IndexStageNotFoundMessage = "Index Stage không tồn tại trong hệ thống";
+        public const string IdNotFoundMessage = "Id không tồn tại trong hệ thống";
+        public const string UpdateProductStageFailedMessage = "Cập nhật thông tin product stage thất bại";
     }
 
     public static class Order

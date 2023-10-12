@@ -49,6 +49,25 @@ namespace DentalLabManagement.API.Controllers
             return Ok(productStage);
         }
 
+        [HttpGet(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetProductStageById(int id)
+        {
+            var productStage = await _productStageService.GetProductStageById(id);
+            return Ok(productStage);
+        }
+
+        [HttpPut(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
+        [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateProductStage(int id, [FromBody] UpdateProductStageRequest updateProductStageRequest)
+        {
+            var productStage = await _productStageService.UpdateProductStage(id, updateProductStageRequest);
+            return Ok(productStage);
+        }
+
+
         [HttpGet(ApiEndPointConstant.ProductStage.ProductStageByCategoryEndPoint)]
         [ProducesResponseType(typeof(IPaginate<ProductStageResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProductStageByCategory(int categoryId, int page, int size)

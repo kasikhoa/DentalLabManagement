@@ -1,9 +1,11 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             await _unitOfWork.GetRepository<ProductStage>().InsertAsync(productStage);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new HttpRequestException(MessageConstant.ProductStage.CreateNewProductStageFailed);
-            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description);
+            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
         }
 
         public async Task<ProductStageResponse> GetProductStageByIndexStage(int index)
@@ -44,7 +46,16 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>()
                 .SingleOrDefaultAsync(predicate: x => x.IndexStage.Equals(index));
             if (productStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IndexStageNotFoundMessage);
-            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description);
+            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
+        }
+
+        public async Task<ProductStageResponse> GetProductStageById(int id)
+        {
+            if (id < 1) throw new HttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
+            ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>()
+                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            if (productStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
+            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
         }
 
 
@@ -52,13 +63,32 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
         {
             name = name?.Trim().ToLower();
             IPaginate<ProductStageResponse> response = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync
-                (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description),
+                (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: string.IsNullOrEmpty(name) ? x => true : x => x.Name.ToLower().Contains(name),
                 page: page,
                 size: size
                 );
             return response;
 
+        }
+
+        public async Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest)
+        {
+            if (id < 1) throw new HttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
+            ProductStage updateProductStage = await _unitOfWork.GetRepository<ProductStage>()
+               .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            if (updateProductStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
+            updateProductStageRequest.TrimString();
+            updateProductStage.IndexStage = updateProductStageRequest.IndexStage;
+            updateProductStage.Name = updateProductStageRequest.Name;
+            updateProductStage.Description = updateProductStageRequest.Description;
+            updateProductStage.ExecutionTime = updateProductStageRequest.ExecutionTime;
+
+            _unitOfWork.GetRepository<ProductStage>().UpdateAsync(updateProductStage);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) throw new HttpRequestException(MessageConstant.ProductStage.UpdateProductStageFailedMessage);
+            return new ProductStageResponse
+                (updateProductStage.Id, updateProductStage.IndexStage, updateProductStage.Name, updateProductStage.Description, updateProductStage.ExecutionTime);
         }
 
         public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
@@ -70,7 +100,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
             IPaginate<ProductStageResponse> productStageResponse =
             await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
-                selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description),
+                selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: x => categoryIds.Contains(x.Id),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
@@ -78,5 +108,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 );
             return productStageResponse;
         }
+
+       
     }
 }

@@ -13,6 +13,8 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
         public Task<ProductStageResponse> CreateProductStage(ProductStageRequest productStageRequest);
         public Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int page, int size);
         public Task <ProductStageResponse> GetProductStageByIndexStage (int index);
+        public Task<ProductStageResponse> GetProductStageById(int id);
+        public Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest);
         public Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
     }
 }
