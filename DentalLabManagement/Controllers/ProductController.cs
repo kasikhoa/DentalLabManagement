@@ -58,10 +58,7 @@ namespace DentalLabManagement.API.Controllers
         {
             var response = await _productService.UpdateProduct(id, updateProductRequest);
 
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
+            if (response == null) return BadRequest(NotFound());
             return Ok(response);
         }
 

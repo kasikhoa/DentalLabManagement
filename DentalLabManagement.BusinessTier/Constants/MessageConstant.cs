@@ -30,7 +30,10 @@ public static class MessageConstant
 
     public static class Dental
     {
-        
+        public const string EmptyDentalId = "Id không hợp lệ";
+        public const string DentalNotFoundMessage = "Dental không có trong hệ thống";
+        public const string AccountDentalNotFoundMessage = "Dental chưa có account";
+        public const string UpdateDentalFailedMessage = "Cập nhật thông tin Dental thất bại";
     }
 
     public static class Category

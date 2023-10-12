@@ -83,8 +83,10 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 (predicate: x => x.Id.Equals(updateProductRequest.CategoryId));
             if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
-            Product updateProduct = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(predicate: x => x.Id.Equals(productId));
+            Product updateProduct = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(productId));
             if (updateProduct == null) throw new HttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
+
             updateProductRequest.TrimString();
 
             updateProduct.Name = string.IsNullOrEmpty(updateProductRequest.Name) ? updateProduct.Name : updateProductRequest.Name;

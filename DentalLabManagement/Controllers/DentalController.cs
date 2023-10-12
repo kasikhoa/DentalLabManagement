@@ -30,5 +30,36 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
 
         }
+
+        [HttpGet(ApiEndPointConstant.Dental.DentalEndPoint)]
+        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetAccountDentalById(int id)
+        {
+            var response = await _dentalService.GetAccountDentalById(id);          
+            return Ok(response);
+
+        }
+
+        [HttpGet(ApiEndPointConstant.Dental.DentalsEndPoint)]
+        [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> ViewAllDentals([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        {
+            var dentals = await _dentalService.GetDentalAccounts(name, page, size);
+            return Ok(dentals);
+        }
+
+        [HttpPut(ApiEndPointConstant.Dental.DentalEndPoint)]
+        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateDentalInfo(int id, UpdateDentalRequest updateDentalRequest)
+        {
+            var response = await _dentalService.UpdateDentalInfo(id, updateDentalRequest);
+            
+            if (response == null) return BadRequest(response);
+            return Ok(response);
+
+        }
     }
 }

@@ -59,13 +59,13 @@ namespace DentalLabManagement.API.Controllers
             return Ok( response);
         }
 
-        //[CustomAuthorize(RoleEnum.Admin)]
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? name, [FromQuery] RoleEnum? role , [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role , [FromQuery] int page, [FromQuery] int size)
         {
-            var accounts = await _accountService.GetAccounts(name, role , page, size);
+            var accounts = await _accountService.GetAccounts(username, role , page, size);
             return Ok(accounts);
         }
 

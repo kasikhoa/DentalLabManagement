@@ -46,7 +46,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>()
                 .SingleOrDefaultAsync(predicate: x => x.IndexStage.Equals(index));
             if (productStage == null) throw new HttpRequestException(MessageConstant.ProductStage.IndexStageNotFoundMessage);
-            return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
+            return new ProductStageResponse
+                (productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
         }
 
         public async Task<ProductStageResponse> GetProductStageById(int id)
