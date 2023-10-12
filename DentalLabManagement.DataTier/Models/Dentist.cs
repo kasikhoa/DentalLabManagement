@@ -8,7 +8,5 @@ namespace DentalLabManagement.DataTier.Models
         public int Id { get; set; }
         public string DentistName { get; set; } = null!;
         public int DentalId { get; set; }
-
-        public virtual Dental Dental { get; set; } = null!;
     }
 }

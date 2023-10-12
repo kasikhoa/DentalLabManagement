@@ -59,13 +59,13 @@ namespace DentalLabManagement.API.Controllers
             return Ok( response);
         }
 
-        [CustomAuthorize(RoleEnum.Admin)]
+        //[CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? name, [FromQuery] RoleEnum? role , [FromQuery] int page, [FromQuery] int size)
         {
-            var accounts = await _accountService.GetAccounts(name, page, size);
+            var accounts = await _accountService.GetAccounts(name, role , page, size);
             return Ok(accounts);
         }
 
@@ -78,6 +78,13 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
         }
 
-
+        [HttpGet(ApiEndPointConstant.Account.AccountEndpoint)]
+        [ProducesResponseType(typeof(GetAccountsResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetAccountDetail(int id)
+        {
+            var accountDetails = await _accountService.GetAccountDetail(id);
+            return Ok(accountDetails);
+        }
     }
 }

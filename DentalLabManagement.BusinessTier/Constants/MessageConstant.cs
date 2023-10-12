@@ -28,6 +28,11 @@ public static class MessageConstant
         public const string EmptyAccountId = "Account id bị trống";
     }
 
+    public static class Dental
+    {
+        
+    }
+
     public static class Category
     {
         public const string CategoryNameExisted = "Category Name đã tồn tại";

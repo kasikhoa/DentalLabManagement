@@ -19,8 +19,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Dental> Dentals { get; set; } = null!;
-        public virtual DbSet<Dentist> Dentists { get; set; } = null!;
-        public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<GroupStage> GroupStages { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
@@ -29,7 +27,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductStage> ProductStages { get; set; } = null!;
-        public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
@@ -80,41 +77,13 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
-                entity.Property(e => e.DentalName).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Dentals)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Dental_Account1");
-            });
-
-            modelBuilder.Entity<Dentist>(entity =>
-            {
-                entity.ToTable("Dentist");
-
-                entity.Property(e => e.DentistName).HasMaxLength(50);
-
-                entity.HasOne(d => d.Dental)
-                    .WithMany(p => p.Dentists)
-                    .HasForeignKey(d => d.DentalId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Dentist_Dental1");
-            });
-
-            modelBuilder.Entity<Employee>(entity =>
-            {
-                entity.ToTable("Employee");
-
-                entity.Property(e => e.Address).HasMaxLength(50);
-
-                entity.Property(e => e.DateOfBirth).HasColumnType("date");
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.Property(e => e.Gender)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
@@ -198,6 +167,12 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItem_Product");
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.OrderItems)
+                    .HasForeignKey(d => d.StaffId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItem_Account");
 
                 entity.HasOne(d => d.TeethPosition)
                     .WithMany(p => p.OrderItems)
@@ -285,26 +260,13 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.ToTable("Role");
-
-                entity.Property(e => e.Id)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RoleName).HasMaxLength(50);
-            });
-
             modelBuilder.Entity<TeethPosition>(entity =>
             {
                 entity.ToTable("TeethPosition");
 
-                entity.Property(e => e.Position)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.ProductId)
+                entity.Property(e => e.PositionName)
                     .HasMaxLength(10)
                     .IsFixedLength();
             });

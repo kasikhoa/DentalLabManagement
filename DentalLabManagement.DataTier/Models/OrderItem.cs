@@ -20,6 +20,7 @@ namespace DentalLabManagement.DataTier.Models
 
         public virtual Order Order { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;
+        public virtual Account Staff { get; set; } = null!;
         public virtual TeethPosition TeethPosition { get; set; } = null!;
         public virtual WarrantyCard Warranty { get; set; } = null!;
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }

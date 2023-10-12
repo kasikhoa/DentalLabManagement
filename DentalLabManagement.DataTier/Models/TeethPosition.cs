@@ -11,8 +11,8 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
-        public string Position { get; set; } = null!;
-        public string ProductId { get; set; } = null!;
+        public string PositionName { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }

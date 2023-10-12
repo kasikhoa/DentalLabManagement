@@ -11,5 +11,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
     {
         public string FullName { get; set; }
         public string Password { get; set; }
+        public AccountStatus Status { get; set; }
     }
 }
