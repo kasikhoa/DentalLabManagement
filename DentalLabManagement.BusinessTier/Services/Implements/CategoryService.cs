@@ -1,6 +1,7 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.Product;
+using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
@@ -104,7 +105,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (splittedExtraCategoriesIds.idsToRemove.Count > 0)
             {
                 List<GroupStage> extraCategoriesToDelete = new List<GroupStage>();
-                extraCategoriesToDelete = (List<GroupStage>)await _unitOfWork.GetRepository<GroupStage>()
+                extraCategoriesToDelete = (List<GroupStage>) await _unitOfWork.GetRepository<GroupStage>()
                     .GetListAsync(predicate: x => x.CategoryId.Equals(categoryId) && splittedExtraCategoriesIds.idsToRemove.Contains(x.ProductStageId));
 
                 _unitOfWork.GetRepository<GroupStage>().DeleteRangeAsync(extraCategoriesToDelete);
@@ -113,5 +114,6 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return isSuccesful;
         }
 
+        
     }
 }

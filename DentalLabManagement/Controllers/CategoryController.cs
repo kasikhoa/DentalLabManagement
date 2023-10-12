@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
+using DentalLabManagement.BusinessTier.Payload.ProductStage;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -70,5 +71,7 @@ namespace DentalLabManagement.API.Controllers
             if (!isSuccessful) return Ok(MessageConstant.Category.UpdateExtraCategoryFailedMessage);
             return Ok(MessageConstant.Category.UpdateExtraCategorySuccessfulMessage);
         }
+
+        
     }
 }

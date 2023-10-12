@@ -20,5 +20,6 @@ namespace DentalLabManagement.BusinessTier.Payload.ProductStage
             Name = name;
             Description = description;
         }
+
     }
 }
