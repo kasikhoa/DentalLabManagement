@@ -81,11 +81,10 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 string.IsNullOrEmpty(searchUsername) && (role == null)
                     ? x => true
                     : ((role == null)
-                    ? x => x.UserName.Contains(searchUsername)
-                    : (string.IsNullOrEmpty(searchUsername)
-                    ? x => x.Role.Equals(role.GetDescriptionFromEnum())
-                    : x => x.UserName.Contains(searchUsername) && x.Role.Equals(role.GetDescriptionFromEnum()))
-                    ),
+                        ? x => x.UserName.Contains(searchUsername)
+                        : (string.IsNullOrEmpty(searchUsername)
+                            ? x => x.Role.Equals(role.GetDescriptionFromEnum())
+                            : x => x.UserName.Contains(searchUsername) && x.Role.Equals(role.GetDescriptionFromEnum()))),
                 orderBy: x => x.OrderBy(x => x.UserName),
                 page: page,
                 size: size
