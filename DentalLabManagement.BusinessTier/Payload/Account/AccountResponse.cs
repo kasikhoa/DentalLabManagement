@@ -17,6 +17,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
 
         public string Password { get; set; }
 
-        public string Role { get; set; }
+        public RoleEnum Role { get; set; }
+        public AccountStatus Status { get; set; }
     }
 }

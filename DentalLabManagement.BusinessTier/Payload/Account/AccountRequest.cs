@@ -10,8 +10,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
 {
     public class AccountRequest
     {
-        
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "Username is missing")]
         public string Username { get; set; }
@@ -23,8 +21,8 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Role is missing")]
-        public string Role { get; set; }
+        public RoleEnum Role { get; set; }
         [Required(ErrorMessage = "Phone is missing")]
-        public string PhoneNumber { get; set; }
+        public AccountStatus Status { get; set; }
     }
 }

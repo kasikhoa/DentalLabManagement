@@ -11,7 +11,7 @@ namespace DentalLabManagement.BusinessTier.Payload.ProductStage
         public int IndexStage { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double? ExecutionTime { get; set; }
+        public double ExecutionTime { get; set; }
 
         public void TrimString()
         {

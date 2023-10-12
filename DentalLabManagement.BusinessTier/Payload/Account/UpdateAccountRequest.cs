@@ -7,17 +7,9 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Payload.Account
 {
-    public class CreateAccountResponse
+    public class UpdateAccountRequest
     {
-        public int UserId { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Name { get; set; }
-
+        public string FullName { get; set; }
         public string Password { get; set; }
-
-        public RoleEnum Role { get; set; }
-        public AccountStatus Status { get; set; }
     }
 }

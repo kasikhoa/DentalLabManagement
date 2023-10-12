@@ -48,7 +48,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return loginResponse;
         }
 
-        public async Task<GetAccountsResponse> CreateNewAccount(CreateAccountRequest createNewAccountRequest)
+        public async Task<GetAccountsResponse> CreateNewAccount(AccountRequest createNewAccountRequest)
         {
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
@@ -81,6 +81,21 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 size: size
                 );
             return accounts;
+        }
+
+        public async Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest)
+        {
+            if (id < 1) throw new HttpRequestException(MessageConstant.Account.EmptyAccountId);
+            Account updateAccount = await _unitOfWork.GetRepository<Account>()
+                .SingleOrDefaultAsync(predicate: x => x.AccountId.Equals(id));
+            if (updateAccount == null)
+                throw new HttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            updateAccount.FullName = string.IsNullOrEmpty(updateAccountRequest.FullName) ? updateAccount.FullName : updateAccountRequest.FullName;
+            updateAccount.Password = string.IsNullOrEmpty(updateAccountRequest.Password) ? updateAccount.Password : PasswordUtil.HashPassword(updateAccountRequest.Password.Trim());
+            _unitOfWork.GetRepository<Account>().UpdateAsync(updateAccount);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessful;
         }
     }
 }

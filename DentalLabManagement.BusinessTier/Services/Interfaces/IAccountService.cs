@@ -8,9 +8,8 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
     public interface IAccountService
     {
         public Task<LoginResponse> Login(LoginRequest loginRequest);
-
-        public Task<GetAccountsResponse> CreateNewAccount(CreateAccountRequest createNewAccountRequest);
-
+        public Task<GetAccountsResponse> CreateNewAccount(AccountRequest createNewAccountRequest);
         public Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, int page, int size);
+        public Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);
     }
 }

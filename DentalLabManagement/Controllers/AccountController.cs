@@ -47,9 +47,9 @@ namespace DentalLabManagement.API.Controllers
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
-        [ProducesResponseType(typeof(CreateAccountResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> CreateAccount(CreateAccountRequest createNewAccountRequest)
+        public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
         {
             var response = await _accountService.CreateNewAccount(createNewAccountRequest);
             if (response == null)
@@ -68,6 +68,16 @@ namespace DentalLabManagement.API.Controllers
             var accounts = await _accountService.GetAccounts(name, page, size);
             return Ok(accounts);
         }
+
+        [CustomAuthorize(RoleEnum.Admin)]
+        [HttpPut(ApiEndPointConstant.Account.AccountEndpoint)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateAccountInformation(int id, [FromBody] UpdateAccountRequest updateAccountRequest)
+        {
+            await _accountService.UpdateAccountInformation(id, updateAccountRequest);
+            return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
+        }
+
 
     }
 }
