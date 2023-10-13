@@ -114,6 +114,23 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return isSuccesful;
         }
 
-        
+        public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
+        {
+            List<int> categoryIds = (List<int>)await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
+             selector: x => x.ProductStageId,
+             predicate: x => x.CategoryId.Equals(categoryId)
+             );
+
+            IPaginate<ProductStageResponse> productStageResponse =
+            await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
+                selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
+                predicate: x => categoryIds.Contains(x.Id),
+                orderBy: x => x.OrderBy(x => x.IndexStage),
+                page: page,
+                size: size
+                );
+            return productStageResponse;
+        }
+
     }
 }

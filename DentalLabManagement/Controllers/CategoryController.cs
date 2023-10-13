@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
+using DentalLabManagement.BusinessTier.Services.Implements;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -72,6 +73,13 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Category.UpdateExtraCategorySuccessfulMessage);
         }
 
-        
+        [HttpGet(ApiEndPointConstant.Category.CategoryMappingProductStage)]
+        [ProducesResponseType(typeof(IPaginate<ProductStageResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProductStageByCategory(int categoryId, int page, int size)
+        {
+            var response = await _categoryService.GetProductStageByCategory(categoryId, page, size);
+            return Ok(response);
+        }
+
     }
 }

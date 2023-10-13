@@ -53,11 +53,11 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             return new ProductResponse(newProduct.Id, newProduct.Name, newProduct.Description, newProduct.CostPrice, newProduct.CategoryId);
         }      
 
-        public async Task<IPaginate<GetProductsResponse>> GetProducts(string? searchProductName, int page, int size)
+        public async Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int page, int size)
         {
             searchProductName = searchProductName?.Trim().ToLower();
-            IPaginate<GetProductsResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new GetProductsResponse(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
+            IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
+                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
                 predicate: string.IsNullOrEmpty(searchProductName) ? x => true : x => x.Name.ToLower().Contains(searchProductName),
                 page: page,
                 size: size,

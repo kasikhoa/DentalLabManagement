@@ -20,7 +20,8 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
         public Task<GetCategoriesResponse> GetCategoryById(int id);
         public Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
         public Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
-       
+        public Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
+
 
     }
 }

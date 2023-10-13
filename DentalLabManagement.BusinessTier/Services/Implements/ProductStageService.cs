@@ -60,12 +60,19 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
         }
 
 
-        public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int page, int size)
+        public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size)
         {
             name = name?.Trim().ToLower();
             IPaginate<ProductStageResponse> response = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync
                 (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: string.IsNullOrEmpty(name) ? x => true : x => x.Name.ToLower().Contains(name),
+                predicate: string.IsNullOrEmpty(name) && !index.HasValue
+                    ? x => true
+                    : ((!index.HasValue)
+                        ? x => x.Name.Contains(name)
+                        : (string.IsNullOrEmpty(name)
+                            ? x => x.IndexStage.Equals(index)
+                            : x => x.Name.Contains(name) && x.IndexStage.Equals(index))),
+                orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
                 size: size
                 );
@@ -91,25 +98,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (!isSuccessful) throw new HttpRequestException(MessageConstant.ProductStage.UpdateProductStageFailedMessage);
             return new ProductStageResponse
                 (updateProductStage.Id, updateProductStage.IndexStage, updateProductStage.Name, updateProductStage.Description, updateProductStage.ExecutionTime);
-        }
-
-        public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
-        {
-            List<int> categoryIds = (List<int>)await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
-             selector: x => x.ProductStageId,
-             predicate: x => x.CategoryId.Equals(categoryId)
-             );
-
-            IPaginate<ProductStageResponse> productStageResponse =
-            await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
-                selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: x => categoryIds.Contains(x.Id),
-                orderBy: x => x.OrderBy(x => x.IndexStage),
-                page: page,
-                size: size
-                );
-            return productStageResponse;
-        }
+        }     
 
        
     }

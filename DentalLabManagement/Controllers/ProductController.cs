@@ -34,7 +34,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Product.ProductsEndPoint)]
-        [ProducesResponseType(typeof(IPaginate<GetProductsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IPaginate<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> ViewAllProducts([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
         {
@@ -43,7 +43,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Product.ProductEndPoint)]
-        [ProducesResponseType(typeof(GetCategoriesResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> GetProductById(int id)
         {
