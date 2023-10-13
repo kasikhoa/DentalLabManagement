@@ -39,7 +39,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             if (!isSuccessful) throw new HttpRequestException(MessageConstant.TeethPosition.CreateTeethPositionFailed);
             return new TeethPositionResponse(teethPosition.Id, teethPosition.ToothArch, teethPosition.PositionName, teethPosition.Description);
 
-        }
+        }       
 
         public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(int? toothArch, int page, int size)
         {
@@ -50,6 +50,37 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 size : size
                 );
             return response;
+        }
+
+        public async Task<TeethPositionResponse> GetTeethPositionById(int id)
+        {
+            if (id < 1) throw new HttpRequestException(MessageConstant.TeethPosition.EmptyTeethPositionIdMessage);
+            TeethPosition teethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id));
+            if (teethPosition == null) throw new HttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
+            return new TeethPositionResponse(teethPosition.Id, teethPosition.ToothArch, teethPosition.PositionName, teethPosition.Description);
+        }
+
+        public async Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest)
+        {
+            if (id < 1) throw new HttpRequestException(MessageConstant.TeethPosition.EmptyTeethPositionIdMessage);
+            TeethPosition updateTeethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id));
+            if (updateTeethPosition == null) throw new HttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
+            updateTeethPositionRequest.TrimString();
+
+            updateTeethPosition.ToothArch = (updateTeethPositionRequest.ToothArch < 1 || updateTeethPositionRequest.ToothArch > 4)
+                ? throw new HttpRequestException(MessageConstant.TeethPosition.ToothArchError) : updateTeethPositionRequest.ToothArch;
+            updateTeethPosition.PositionName = string.IsNullOrEmpty(updateTeethPositionRequest.PositionName)
+                ? updateTeethPosition.PositionName : updateTeethPositionRequest.PositionName;
+            updateTeethPosition.Description = string.IsNullOrEmpty(updateTeethPositionRequest.Description)
+                ? updateTeethPosition.Description : updateTeethPositionRequest.Description;
+
+            _unitOfWork.GetRepository<TeethPosition>().UpdateAsync(updateTeethPosition);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) throw new HttpRequestException(MessageConstant.TeethPosition.UpdateTeethPositionFailedMessage);
+            return new TeethPositionResponse
+                (updateTeethPosition.Id, updateTeethPosition.ToothArch, updateTeethPosition.PositionName, updateTeethPosition.Description);
         }
     }
 }

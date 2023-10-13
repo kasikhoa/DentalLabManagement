@@ -1,8 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Payload.Product;
-using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
-using DentalLabManagement.BusinessTier.Services.Implements;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Paginate;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +36,24 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> GetTeethPositons([FromQuery] int? toothArch, [FromQuery] int page, [FromQuery] int size)
         {
             var response = await _teethPositionServices.GetTeethPositions(toothArch, page, size);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.TeethPosition.TeethPositonEndPoint)]
+        [ProducesResponseType(typeof(IPaginate<TeethPositionResponse>), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetTeethPositons(int id)
+        {
+            var response = await _teethPositionServices.GetTeethPositionById(id);
+            return Ok(response);
+        }
+
+        [HttpPut(ApiEndPointConstant.TeethPosition.TeethPositonEndPoint)]
+        [ProducesResponseType(typeof(IPaginate<TeethPositionResponse>), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest)
+        {
+            var response = await _teethPositionServices.UpdateTeethPosition(id, updateTeethPositionRequest);
             return Ok(response);
         }
     }

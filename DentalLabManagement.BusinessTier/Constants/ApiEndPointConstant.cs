@@ -50,6 +50,7 @@ public static class ApiEndPointConstant
     public static class TeethPosition
     {
         public const string TeethPositonsEndPoint = ApiEndpoint + "/teethPosition";
+        public const string TeethPositonEndPoint = TeethPositonsEndPoint + "/{id}";
     }
 
 }

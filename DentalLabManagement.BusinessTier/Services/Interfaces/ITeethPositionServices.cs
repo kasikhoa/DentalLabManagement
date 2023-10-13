@@ -12,5 +12,7 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
     {
         public Task<TeethPositionResponse> CreateTeethPosition(TeethPositionRequest teethPositionRequest);
         public Task<IPaginate<TeethPositionResponse>> GetTeethPositions(int? toothArch, int page, int size);
+        public Task<TeethPositionResponse> GetTeethPositionById (int id);
+        public Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest);
     }
 }
