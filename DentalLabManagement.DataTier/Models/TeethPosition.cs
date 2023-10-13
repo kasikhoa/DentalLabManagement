@@ -11,6 +11,7 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
+        public int ToothArch { get; set; }
         public string PositionName { get; set; } = null!;
         public string Description { get; set; } = null!;
 

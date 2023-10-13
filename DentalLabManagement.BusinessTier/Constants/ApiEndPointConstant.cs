@@ -47,5 +47,9 @@ public static class ApiEndPointConstant
         public const string ProductStageByCategoryEndPoint = ProductStagesEndPoint + "/category/{categoryId}";
     }
 
+    public static class TeethPosition
+    {
+        public const string TeethPositonsEndPoint = ApiEndpoint + "/teethPosition";
+    }
 
 }

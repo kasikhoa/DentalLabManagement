@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Net.NetworkInformation;
 
 namespace DentalLabManagement.BusinessTier.Constants;
 
@@ -66,6 +67,12 @@ public static class MessageConstant
         public const string IndexStageNotFoundMessage = "Index Stage không tồn tại trong hệ thống";
         public const string IdNotFoundMessage = "Id không tồn tại trong hệ thống";
         public const string UpdateProductStageFailedMessage = "Cập nhật thông tin product stage thất bại";
+    }
+
+    public static class TeethPosition
+    {
+        public const string TeethPositionExisted = "Teeth Position đã tồn tại";
+        public const string CreateTeethPositionFailed = "Tạo mới teeth position thất bại";
     }
 
     public static class Order

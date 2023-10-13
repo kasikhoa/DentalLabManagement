@@ -15,18 +15,17 @@ namespace DentalLabManagement.DataTier.Models
         public string PatientName { get; set; } = null!;
         public string? Gender { get; set; }
         public int? PhoneNumber { get; set; }
-        public DateTime? DateOfBirth { get; set; }
         public string Status { get; set; } = null!;
         public string Mode { get; set; } = null!;
         public int DentalId { get; set; }
-        public string NameDentist { get; set; } = null!;
+        public string DentistName { get; set; } = null!;
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }
         public string InvoiceId { get; set; } = null!;
         public DateTime CreatedDate { get; set; }
         public DateTime CompletedDate { get; set; }
-        public string UpdateBy { get; set; } = null!;
+        public string UpdatedBy { get; set; } = null!;
         public int PatientPhoneNumber { get; set; }
 
         public virtual Dental Dental { get; set; } = null!;

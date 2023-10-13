@@ -111,7 +111,7 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("date");
 
-                entity.Property(e => e.DateOfBirth).HasColumnType("date");
+                entity.Property(e => e.DentistName).HasMaxLength(50);
 
                 entity.Property(e => e.Gender)
                     .HasMaxLength(10)
@@ -125,15 +125,13 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.Property(e => e.NameDentist).HasMaxLength(50);
-
                 entity.Property(e => e.PatientName).HasMaxLength(50);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.Property(e => e.UpdateBy)
+                entity.Property(e => e.UpdatedBy)
                     .HasMaxLength(20)
                     .IsFixedLength();
 
@@ -267,7 +265,7 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.PositionName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(3)
                     .IsFixedLength();
             });
 
