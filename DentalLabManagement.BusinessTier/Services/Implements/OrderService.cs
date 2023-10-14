@@ -76,17 +76,20 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             newOrder.TeethQuantity = count;
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
-            return new CreateOrderResponse(newOrder.Id, newOrder.InvoiceId, dental.Name, newOrder.DentistName , newOrder.DentistNote, newOrder.PatientName, 
-                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), EnumUtil.ParseEnum<OrderStatus>(newOrder.Status),
-                EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TeethQuantity, newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
+            return new CreateOrderResponse(newOrder.Id, newOrder.InvoiceId, dental.Name, 
+                newOrder.DentistName , newOrder.DentistNote, newOrder.PatientName, 
+                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), 
+                EnumUtil.ParseEnum<OrderStatus>(newOrder.Status),
+                EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TeethQuantity, 
+                newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
 
         }
 
-        public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
+        public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(
+            string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
 
-            // Thực hiện truy vấn lấy danh sách đơn hàng với điều kiện lọc (status, mode) và phân trang (page, size).
             var orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: x => new GetOrderDetailResponse()
                 {
@@ -111,8 +114,10 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                     ? x => x.InvoiceId.Contains(InvoiceId)
                     : ((status == null)
                         ? x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum())
-                        : x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum()) 
-                            && x.Status.Equals(status.GetDescriptionFromEnum()))),
+                        : ((mode == null)
+                            ? x => x.InvoiceId.Contains(InvoiceId) && x.Status.Equals(status.GetDescriptionFromEnum())
+                            : x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum()) 
+                                && x.Status.Equals(status.GetDescriptionFromEnum())))),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size
@@ -149,7 +154,6 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                         predicate: x => x.OrderId.Equals(order.Id)
                     );
             }
-
             return orderList;
         }
 
