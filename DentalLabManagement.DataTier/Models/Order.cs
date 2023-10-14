@@ -12,7 +12,7 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
-        public string InvoiceId { get; set; } = null!;
+        public string? InvoiceId { get; set; }
         public int DentalId { get; set; }
         public string? DentistName { get; set; }
         public string PatientName { get; set; } = null!;

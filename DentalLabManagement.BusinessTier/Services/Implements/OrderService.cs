@@ -29,16 +29,14 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
             Dental dental = await _unitOfWork.GetRepository<Dental>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(createOrderRequest.DentalId));
-            if (dental == null) throw new HttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
-
-            string newInvoice = dental.Id + currentTimeStamp;
+            if (dental == null) throw new HttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);          
 
             Order newOrder = new Order()
             {
-                InvoiceId = newInvoice,
                 DentalId = dental.Id,
                 DentistName = createOrderRequest.DentistName,
                 PatientName = createOrderRequest.PatientName,
+                PatientGender = createOrderRequest.PatientGender,
                 DentistNote = createOrderRequest.DentistNote,
                 Status= createOrderRequest.Status,
                 Mode = createOrderRequest.Mode.GetDescriptionFromEnum(),
@@ -47,8 +45,14 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 FinalAmount = createOrderRequest.TotalAmount - createOrderRequest.Discount,
                 CreatedDate = currentTime,
             };
+           
             await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
             await _unitOfWork.CommitAsync();
+
+            string newInvoice = "E" + (dental.Id * 1000 + newOrder.Id).ToString("D4");
+            newOrder.InvoiceId = newInvoice;
+            await _unitOfWork.CommitAsync();
+
             List<OrderItem> orderItems = new List<OrderItem>();
             createOrderRequest.ProductsList.ForEach(product =>
             {
@@ -58,16 +62,16 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                     OrderId = newOrder.Id,
                     ProductId = product.ProductId,
                     TeethPositionId = product.TeethPositionId,
+                    SellingPrice = product.SellingPrice,
                     Quantity = product.Quantity,
                     Note = product.Note,
                     TotalAmount = totalProductAmount,
                 });
-
             });
            
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
-            return new CreateOrderResponse(newOrder.Id, newInvoice, dental.Name, newOrder.PatientName, newOrder.DentistNote, newOrder.Status,
+            return new CreateOrderResponse(newOrder.Id, newInvoice, dental.Name, newOrder.DentistName , newOrder.DentistNote, newOrder.PatientName, newOrder.Status,
                 EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
 
         }

@@ -164,11 +164,6 @@ namespace DentalLabManagement.DataTier.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItem_Product");
 
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.OrderItems)
-                    .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK_OrderItem_Account");
-
                 entity.HasOne(d => d.TeethPosition)
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.TeethPositionId)
@@ -191,10 +186,6 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 
-                entity.Property(e => e.StageId)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
                 entity.Property(e => e.StartDate).HasMaxLength(50);
 
                 entity.Property(e => e.Status)
@@ -206,6 +197,12 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.OrderItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItemStage_OrderItem");
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.OrderItemStages)
+                    .HasForeignKey(d => d.StaffId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItemStage_Account");
             });
 
             modelBuilder.Entity<Patient>(entity =>
