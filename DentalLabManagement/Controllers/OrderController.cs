@@ -24,5 +24,12 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet(ApiEndPointConstant.Order.OrderEndPoint)]
+        [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrderDetail(int id)
+        {
+            var response = await _orderService.GetOrderTeethDetals(id);
+            return Ok(response);
+        }
     }
 }

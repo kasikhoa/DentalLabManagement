@@ -10,6 +10,7 @@ namespace DentalLabManagement.BusinessTier.Services.Interfaces
     public interface IOrderService
     {
         public Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest);
+        public Task<GetOrderDetailResponse> GetOrderTeethDetals(int id);
         
     }
 }

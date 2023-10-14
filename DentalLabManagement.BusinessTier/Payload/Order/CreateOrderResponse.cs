@@ -15,14 +15,14 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? DentistName { get; set; }
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; }      
-        public string Status { get; set; }
+        public OrderStatus Status { get; set; }
         public OrderMode Mode { get; set; }
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public CreateOrderResponse(int id, string invoiceId, string dentalName, string? dentistName, string? dentistNote, string? patientName, string status, OrderMode mode, double totalAmount, double discount, double finalAmount, DateTime createdDate)
+        public CreateOrderResponse(int id, string invoiceId, string dentalName, string? dentistName, string? dentistNote, string? patientName, OrderStatus status, OrderMode mode, double totalAmount, double discount, double finalAmount, DateTime createdDate)
         {
             Id = id;
             InvoiceId = invoiceId;

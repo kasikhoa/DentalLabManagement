@@ -66,18 +66,18 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpPost(ApiEndPointConstant.Category.CategoryMappingProductStage)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CategoryMappingProductStage(int categoryId, List<int> request)
+        public async Task<IActionResult> CategoryMappingProductStage(int id, List<int> request)
         {
-            bool isSuccessful = await _categoryService.CategoryMappingProductStage(categoryId, request);
+            bool isSuccessful = await _categoryService.CategoryMappingProductStage(id, request);
             if (!isSuccessful) return Ok(MessageConstant.Category.UpdateExtraCategoryFailedMessage);
             return Ok(MessageConstant.Category.UpdateExtraCategorySuccessfulMessage);
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoryMappingProductStage)]
         [ProducesResponseType(typeof(IPaginate<ProductStageResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProductStageByCategory(int categoryId, int page, int size)
+        public async Task<IActionResult> GetProductStageByCategory(int id, int page, int size)
         {
-            var response = await _categoryService.GetProductStageByCategory(categoryId, page, size);
+            var response = await _categoryService.GetProductStageByCategory(id, page, size);
             return Ok(response);
         }
 

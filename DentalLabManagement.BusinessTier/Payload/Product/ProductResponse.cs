@@ -9,8 +9,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
 {
     public class ProductResponse
     {
-        public int Id { get; set; }
-       
+        public int Id { get; set; }    
         public string Name { get; set; }     
         public string Description { get; set; }      
         public double CostPrice { get; set; }
@@ -23,6 +22,10 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
             Description = description;
             CostPrice = costPrice;
             CategoryId = categoryId;
+        }
+
+        public ProductResponse()
+        {
         }
     }
 }
