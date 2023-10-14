@@ -78,7 +78,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             searchUsername = searchUsername?.Trim().ToLower();
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
                 selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),
-                string.IsNullOrEmpty(searchUsername) && (role == null)
+                predicate: string.IsNullOrEmpty(searchUsername) && (role == null)
                     ? x => true
                     : ((role == null)
                         ? x => x.UserName.Contains(searchUsername)

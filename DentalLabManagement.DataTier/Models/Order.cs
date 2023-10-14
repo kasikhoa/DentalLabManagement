@@ -18,8 +18,9 @@ namespace DentalLabManagement.DataTier.Models
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; }
         public string? PatientGender { get; set; }
-        public string Status { get; set; } = null!;
         public string Mode { get; set; } = null!;
+        public string Status { get; set; } = null!;
+        public int TeethQuantity { get; set; }
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }

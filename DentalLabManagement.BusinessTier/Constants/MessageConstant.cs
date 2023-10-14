@@ -82,9 +82,9 @@ public static class MessageConstant
 
     public static class Order
     {
-        public const string NoProductsInOrderMessage = "Không thể tạo order khi order không đính kèm sản phẩm bên trong";
         public const string CreateOrderFailedMessage = "Tạo mới order thất bại";
         public const string EmptyOrderIdMessage = "Id của order không hợp lệ";
+        public const string InvoiceIdExistedMessage = "InvoiceId đã tồn tại";
         public const string OrderNotFoundMessage = "Order không tồn tại trong hệ thống";
     }
 

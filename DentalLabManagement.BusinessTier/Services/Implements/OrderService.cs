@@ -6,6 +6,7 @@ using DentalLabManagement.BusinessTier.Payload.TeethPosition;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
+using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -39,8 +40,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 DentistName = createOrderRequest.DentistName,
                 DentistNote = createOrderRequest.DentistNote,
                 PatientName = createOrderRequest.PatientName,
-                PatientGender = createOrderRequest.PatientGender,               
-                Status= createOrderRequest.Status.GetDescriptionFromEnum(),
+                PatientGender = createOrderRequest.PatientGender.GetDescriptionFromEnum(),               
+                Status = createOrderRequest.Status.GetDescriptionFromEnum(),
                 Mode = createOrderRequest.Mode.GetDescriptionFromEnum(),
                 TotalAmount = createOrderRequest.TotalAmount,
                 Discount = createOrderRequest.Discount,
@@ -51,10 +52,10 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
             await _unitOfWork.CommitAsync();
 
-            string newInvoice = "E" + (dental.Id * 1000 + newOrder.Id).ToString("D4");
-            newOrder.InvoiceId = newInvoice;
+            newOrder.InvoiceId = "E" + (dental.Id * 10000 + newOrder.Id).ToString("D5");
             await _unitOfWork.CommitAsync();
-
+            int count = 0;
+            
             List<OrderItem> orderItems = new List<OrderItem>();
             createOrderRequest.ProductsList.ForEach(product =>
             {
@@ -69,14 +70,89 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                     Note = product.Note,
                     TotalAmount = totalProductAmount,
                 });
+                count++;
             });
            
+            newOrder.TeethQuantity = count;
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
-            return new CreateOrderResponse(newOrder.Id, newInvoice, dental.Name, newOrder.DentistName , newOrder.DentistNote, newOrder.PatientName, EnumUtil.ParseEnum<OrderStatus>(newOrder.Status),
-                EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
+            return new CreateOrderResponse(newOrder.Id, newOrder.InvoiceId, dental.Name, newOrder.DentistName , newOrder.DentistNote, newOrder.PatientName, 
+                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), EnumUtil.ParseEnum<OrderStatus>(newOrder.Status),
+                EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TeethQuantity, newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
 
         }
+
+        public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
+        {
+            InvoiceId = InvoiceId?.Trim().ToLower();
+
+            // Thực hiện truy vấn lấy danh sách đơn hàng với điều kiện lọc (status, mode) và phân trang (page, size).
+            var orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
+                selector: x => new GetOrderDetailResponse()
+                {
+                    Id = x.Id,
+                    InvoiceId = x.InvoiceId,
+                    DentalName = x.Dental.Name,
+                    DentistName = x.DentistName,
+                    DentistNote = x.DentistNote,
+                    PatientName = x.PatientName,
+                    PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
+                    Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
+                    Mode = EnumUtil.ParseEnum<OrderMode>(x.Mode),
+                    TeethQuantity = x.TeethQuantity,
+                    TotalAmount = x.TotalAmount,
+                    Discount = x.Discount,
+                    FinalAmount = x.FinalAmount,
+                    CreatedDate = x.CreatedDate
+                },
+                predicate: string.IsNullOrEmpty(InvoiceId) && (mode == null) && (status == null)
+                ? x => true
+                : ((status == null && mode == null)
+                    ? x => x.InvoiceId.Contains(InvoiceId)
+                    : ((status == null)
+                        ? x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum())
+                        : x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum()) 
+                            && x.Status.Equals(status.GetDescriptionFromEnum()))),
+                orderBy: x => x.OrderBy(x => x.InvoiceId),
+                page: page,
+                size: size
+            );
+
+            foreach (var order in orderList.Items)
+            {
+                order.ToothList = (List<OrderItemResponse>) await _unitOfWork.GetRepository<OrderItem>()
+                    .GetListAsync(
+                        selector: x => new OrderItemResponse()
+                        {
+                            Id = x.Id,
+                            OrderId = x.OrderId,
+                            Product = new ProductResponse()
+                            {
+                                Id = x.ProductId,
+                                Name = x.Product.Name,
+                                Description = x.Product.Description,
+                                CostPrice = x.Product.CostPrice,
+                                CategoryId = x.Product.CategoryId
+                            },
+                            TeethPosition = new TeethPositionResponse()
+                            {
+                                Id = x.Id,
+                                ToothArch = x.TeethPosition.ToothArch,
+                                PositionName = x.TeethPosition.PositionName,
+                                Description = x.TeethPosition.Description
+                            },
+                            Note = x.Note,
+                            SellingPrice = x.SellingPrice,
+                            Quantity = x.Quantity,
+                            TotalAmount = x.TotalAmount
+                        },
+                        predicate: x => x.OrderId.Equals(order.Id)
+                    );
+            }
+
+            return orderList;
+        }
+
 
         public async Task<GetOrderDetailResponse> GetOrderTeethDetals(int id)
         {
@@ -91,20 +167,22 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             GetOrderDetailResponse orderItemResponse = new GetOrderDetailResponse();
             orderItemResponse.Id = order.Id;
             orderItemResponse.InvoiceId = order.InvoiceId;
-            orderItemResponse.DentalName = dental.Name;
+            orderItemResponse.DentalName = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                selector: x => x.Name, predicate: x => x.Id.Equals(order.DentalId));
             orderItemResponse.DentistName = order.DentistName;
             orderItemResponse.DentistNote = order.DentistNote;
             orderItemResponse.PatientName = order.PatientName;
-            orderItemResponse.PatientGender = order.PatientGender;
+            orderItemResponse.PatientGender = EnumUtil.ParseEnum<PatientGender>(order.PatientGender);
             orderItemResponse.Status = EnumUtil.ParseEnum<OrderStatus>(order.Status);
             orderItemResponse.Mode = EnumUtil.ParseEnum<OrderMode>(order.Mode);
+            orderItemResponse.TeethQuantity = order.TeethQuantity;
             orderItemResponse.TotalAmount = order.TotalAmount;
             orderItemResponse.Discount = order.Discount;
             orderItemResponse.FinalAmount = order.FinalAmount;
             orderItemResponse.CreatedDate = order.CreatedDate;
 
 
-            orderItemResponse.ToothList = (List<OrderItemResponse>)await _unitOfWork.GetRepository<OrderItem>()
+            orderItemResponse.ToothList = (List<OrderItemResponse>) await _unitOfWork.GetRepository<OrderItem>()
                 .GetListAsync(
                     selector: x => new OrderItemResponse()
                     {
@@ -128,10 +206,9 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                         Note = x.Note,
                         SellingPrice = x.SellingPrice,
                         Quantity = x.Quantity,
-                        TotalAmount= x.TotalAmount
+                        TotalAmount = x.TotalAmount
                     },
                     predicate: x => x.OrderId.Equals(id)
-
                 );
 
             return orderItemResponse;

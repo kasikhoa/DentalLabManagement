@@ -17,9 +17,10 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? DentistName { get; set; }
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; }
-        public string? PatientGender { get; set; }
+        public PatientGender? PatientGender { get; set; }
         public OrderStatus Status { get; set; }
         public OrderMode Mode { get; set; }
+        public int TeethQuantity { get; set; }
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }
@@ -34,8 +35,8 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
-        public ProductResponse Product { get; set; }
-        public TeethPositionResponse TeethPosition { get; set; }
+        public ProductResponse? Product { get; set; }
+        public TeethPositionResponse? TeethPosition { get; set; }
         public string? Note { get; set; }
         public double SellingPrice { get; set; }
         public int Quantity { get; set; }

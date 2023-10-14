@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "LAK.Sdk.Core/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/LAK.Sdk.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/LAK.Sdk.Core.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.22": {
         "type": "package",
         "dependencies": {
@@ -1219,6 +1228,7 @@
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
           "DentalLabManagement.DataTier": "1.0.0",
+          "LAK.Sdk.Core": "5.0.0",
           "Microsoft.AspNetCore.Authorization": "6.0.22",
           "Microsoft.AspNetCore.Http": "2.2.2",
           "Microsoft.AspNetCore.Server.Kestrel.Https": "2.1.3"
@@ -1247,6 +1257,18 @@
     }
   },
   "libraries": {
+    "LAK.Sdk.Core/5.0.0": {
+      "sha512": "HIoR35M9trd/wthjjgIbpDypxmYKpLq/5rbDWqhLqoRMlqQ3McN2Zn0VpL3OlzT/EqmIwUH9PTfKf6yDMAi3Dg==",
+      "type": "package",
+      "path": "lak.sdk.core/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lak.sdk.core.5.0.0.nupkg.sha512",
+        "lak.sdk.core.nuspec",
+        "lib/net5.0/LAK.Sdk.Core.dll"
+      ]
+    },
     "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.22": {
       "sha512": "+iuPmRkxfJ2vHoXifWqPJK8jppS8+iH3m1B8VMdgVWiC2U4q3JPBXx/kb7348HfClMPG+OcHpTUtmJkfUByvgg==",
       "type": "package",

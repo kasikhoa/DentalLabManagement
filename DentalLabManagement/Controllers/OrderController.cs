@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Order;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,14 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> GetOrderDetail(int id)
         {
             var response = await _orderService.GetOrderTeethDetals(id);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
+        [ProducesResponseType(typeof(CreateOrderResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrders(string? invoiceId, OrderMode? mode,OrderStatus? status, int page, int size)
+        {
+            var response = await _orderService.GetOrders(invoiceId, mode, status, page, size);
             return Ok(response);
         }
     }
