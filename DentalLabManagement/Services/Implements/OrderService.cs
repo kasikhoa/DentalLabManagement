@@ -32,7 +32,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
             Dental dental = await _unitOfWork.GetRepository<Dental>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(createOrderRequest.DentalId));
-            if (dental == null) throw new HttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);          
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);          
 
             Order newOrder = new Order()
             {
@@ -141,8 +141,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                             },
                             TeethPosition = new TeethPositionResponse()
                             {
-                                Id = x.Id,
-                                ToothArch = x.TeethPosition.ToothArch,
+                                Id = x.TeethPositionId,
+                                ToothArch = EnumUtil.ParseEnum<ToothArch>(x.TeethPosition.ToothArch.ToString()),
                                 PositionName = x.TeethPosition.PositionName,
                                 Description = x.TeethPosition.Description
                             },
@@ -160,13 +160,13 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<GetOrderDetailResponse> GetOrderTeethDetals(int id)
         {
-            if (id < 1) throw new HttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id));
-            if (order == null) throw new HttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
+            if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(order.DentalId));
-            if (dental == null) throw new HttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
             GetOrderDetailResponse orderItemResponse = new GetOrderDetailResponse();
             orderItemResponse.Id = order.Id;
@@ -202,8 +202,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                         },
                         TeethPosition = new TeethPositionResponse()
                         {
-                            Id = x.Id,
-                            ToothArch = x.TeethPosition.ToothArch,
+                            Id = x.TeethPositionId,
+                            ToothArch = EnumUtil.ParseEnum<ToothArch>(x.TeethPosition.ToothArch.ToString()),
                             PositionName = x.TeethPosition.PositionName,
                             Description = x.TeethPosition.Description
                         },

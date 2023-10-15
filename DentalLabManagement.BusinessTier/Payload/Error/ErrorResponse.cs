@@ -4,19 +4,26 @@ using System.Text.Json;
 
 public class ErrorResponse
 {
-	public int StatusCode { get; set; }
+    public int StatusCode { get; set; }
 
-	public string Message { get; set; }
+    public string Error { get; set; }
 
+    public DateTime TimeStamp { get; set; }
 
-	public override string ToString()
-	{
-		return JsonSerializer.Serialize(this);
-	}
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
+    }
 
-    public ErrorResponse(int statusCode, string message)
+    public ErrorResponse()
+    {
+    }
+
+    public ErrorResponse(int statusCode, string error, DateTime timeStamp)
     {
         StatusCode = statusCode;
-        Message = message;
+        Error = error;
+        TimeStamp = timeStamp;
     }
+
 }

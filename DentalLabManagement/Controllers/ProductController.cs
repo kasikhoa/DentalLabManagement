@@ -26,10 +26,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateProduct(ProductRequest productRequest)
         {
             var response = await _productService.CreateProduct(productRequest);
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok(response);
         }
 

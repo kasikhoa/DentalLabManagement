@@ -121,7 +121,9 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.DentistNote).HasMaxLength(50);
 
-                entity.Property(e => e.InvoiceId).HasMaxLength(50);
+                entity.Property(e => e.InvoiceId)
+                    .HasMaxLength(6)
+                    .IsFixedLength();
 
                 entity.Property(e => e.Mode)
                     .HasMaxLength(10)
@@ -209,10 +211,6 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("Patient");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
@@ -259,8 +257,6 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("TeethPosition");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.PositionName)
@@ -291,10 +287,6 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(20)
                     .IsFixedLength();
 
-                entity.Property(e => e.PatientId)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
                 entity.HasOne(d => d.Patient)
@@ -320,8 +312,6 @@ namespace DentalLabManagement.DataTier.Models
             modelBuilder.Entity<staff>(entity =>
             {
                 entity.ToTable("Staff");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 

@@ -7,8 +7,6 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -53,10 +51,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
         {
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
-            if (account != null)
-            {
-                throw new HttpRequestException(MessageConstant.Account.AccountExisted);
-            }
+            if (account != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
             account = new Account()
             {
                 UserName = createNewAccountRequest.Username,
@@ -68,7 +63,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             
             await _unitOfWork.GetRepository<Account>().InsertAsync(account);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new HttpRequestException(MessageConstant.Account.CreateAccountFailed);
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Account.CreateAccountFailed);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName,
                 createNewAccountRequest.Role, createNewAccountRequest.Status);
         }
@@ -94,15 +89,16 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest)
         {
-            if (id < 1) throw new HttpRequestException(MessageConstant.Account.EmptyAccountId);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
             Account updateAccount = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (updateAccount == null)
-                throw new HttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+            if (updateAccount == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
 
             updateAccount.FullName = string.IsNullOrEmpty(updateAccountRequest.FullName) ? updateAccount.FullName : updateAccountRequest.FullName.Trim();
             updateAccount.Password = string.IsNullOrEmpty(updateAccountRequest.Password) ? updateAccount.Password : PasswordUtil.HashPassword(updateAccountRequest.Password.Trim());
             updateAccount.Status = EnumUtil.GetDescriptionFromEnum(updateAccountRequest.Status);
+
             _unitOfWork.GetRepository<Account>().UpdateAsync(updateAccount);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
@@ -110,10 +106,10 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<GetAccountsResponse> GetAccountDetail(int id)
         {
-            if (id < 1) throw new HttpRequestException(MessageConstant.Account.EmptyAccountId);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (account == null) throw new HttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName, 
                 EnumUtil.ParseEnum<RoleEnum>(account.Role), EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }

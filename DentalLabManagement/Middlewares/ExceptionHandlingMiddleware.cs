@@ -1,5 +1,5 @@
-﻿
-using System.Net;
+﻿using System.Net;
+using DentalLabManagement.BusinessTier.Error;
 using DentalLabManagement.BusinessTier.Payload.Login;
 
 namespace DentalLabManagement.API.Middlewares;
@@ -42,7 +42,7 @@ public class ExceptionHandlingMiddleware
 				break;
 			default:
 				//unhandled error
-				response.StatusCode = (int) HttpStatusCode.InternalServerError;
+				response.StatusCode = (int)HttpStatusCode.InternalServerError;
 				errorResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
 				_logger.LogError(exception.ToString());
 				break;

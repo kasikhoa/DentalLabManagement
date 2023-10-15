@@ -11,6 +11,10 @@ public class LoginResponse
     public RoleEnum Role { get; set; }    
     public AccountStatus Status { get; set; }
 
+    public LoginResponse() 
+    {
+    }
+
     public LoginResponse(string accessToken, int id, string username, RoleEnum role, AccountStatus status)
     {
         AccessToken = accessToken;
@@ -18,10 +22,6 @@ public class LoginResponse
         Username = username;
         Role = role;
         Status = status;
-    }
-
-    public LoginResponse()
-    {
     }
 }
 

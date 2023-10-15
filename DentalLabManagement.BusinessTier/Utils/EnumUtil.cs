@@ -21,7 +21,6 @@ public static class EnumUtil
 				return attributes[0].Description;
 			}
 		}
-
 		return value.ToString();
 	}
 

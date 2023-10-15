@@ -1,11 +1,10 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
-using DentalLabManagement.BusinessTier.Services.Implements;
+using DentalLabManagement.BusinessTier.Error;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -25,10 +24,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateCategory(CategoryRequest categoryRequest)
         {
             var response = await _categoryService.CreateCategory(categoryRequest);
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok(response);
         }
 
@@ -56,11 +51,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> UpdateCategoryInformation(int id, UpdateCategoryRequest updateCategoryRequest)
         {
             var response = await _categoryService.UpdateCategoryInformation(id, updateCategoryRequest);
-
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok(response);
         }
 
@@ -69,8 +59,8 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CategoryMappingProductStage(int id, List<int> request)
         {
             bool isSuccessful = await _categoryService.CategoryMappingProductStage(id, request);
-            if (!isSuccessful) return Ok(MessageConstant.Category.UpdateExtraCategoryFailedMessage);
-            return Ok(MessageConstant.Category.UpdateExtraCategorySuccessfulMessage);
+            if (!isSuccessful) return Ok(MessageConstant.Category.StageForCategorySuccessfulMessage);
+            return Ok(MessageConstant.Category.StageForCategoryFailedMessage);
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoryMappingProductStage)]

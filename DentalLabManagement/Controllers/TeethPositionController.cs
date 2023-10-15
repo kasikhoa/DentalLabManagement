@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
 using DentalLabManagement.BusinessTier.Services.Interfaces;
 using DentalLabManagement.DataTier.Paginate;
@@ -23,17 +24,13 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateTeethPosition(TeethPositionRequest teethPositionRequest)
         {
             var response = await _teethPositionServices.CreateTeethPosition(teethPositionRequest);
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok(response);
         }
 
         [HttpGet(ApiEndPointConstant.TeethPosition.TeethPositonsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<TeethPositionResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetTeethPositons([FromQuery] int? toothArch, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetTeethPositons(ToothArch? toothArch, int page, int size)
         {
             var response = await _teethPositionServices.GetTeethPositions(toothArch, page, size);
             return Ok(response);

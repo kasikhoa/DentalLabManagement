@@ -24,13 +24,14 @@ public static class MessageConstant
             "Cập nhật status tài khoản request sai format";
 
         public const string AccountNotFoundMessage = "Không tìm thấy tài khoản";
-        public const string UpdateAccountStatusSuccessfulMessage = "Cập nhật status tài khoản thành công";
-        public const string UpdateAccountStatusFailedMessage = "Cập nhật status tài khoản thất bại";
-        public const string EmptyAccountId = "Account id bị trống";
+        public const string UpdateAccountSuccessfulMessage = "Cập nhật status tài khoản thành công";
+        public const string UpdateAccountFailedMessage = "Cập nhật status tài khoản thất bại";
+        public const string EmptyAccountIdMessage = "Account Id không hợp lệ";
     }
 
     public static class Dental
     {
+        public const string CreateDentalFailed = "Dental tạo mới thất bại";
         public const string EmptyDentalId = "Id không hợp lệ";
         public const string DentalNotFoundMessage = "Dental không có trong hệ thống";
         public const string AccountDentalNotFoundMessage = "Dental chưa có account";
@@ -40,13 +41,13 @@ public static class MessageConstant
     public static class Category
     {
         public const string CategoryNameExisted = "Category Name đã tồn tại";
-        public const string CreateNewCategoryFailedMessage = "Tạo mới Category bị failed";
+        public const string CreateNewCategoryFailedMessage = "Tạo mới Category thất bại";
         public const string EmptyCategoryIdMessage = "Category Id không hợp lệ";
         public const string CategoryNotFoundMessage = "Category không có trong hệ thống";
         public const string UpdateCategorySuccessfulMessage = "Category được cập nhật thành công";
         public const string UpdateCategoryFailedMessage = "Category cập nhật thất bại";
-        public const string UpdateExtraCategorySuccessfulMessage = "Extra Category được cập nhật thành công";
-        public const string UpdateExtraCategoryFailedMessage = "Extra Category cập nhật thất bại";
+        public const string StageForCategorySuccessfulMessage = "Stage cho Category được cập nhật thành công";
+        public const string StageForCategoryFailedMessage = "Stage cho Category cập nhật thất bại";
     }
 
     public static class Product

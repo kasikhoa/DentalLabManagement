@@ -14,7 +14,7 @@ namespace DentalLabManagement.DataTier.Models
         public string OrderItemsId { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string PatientId { get; set; } = null!;
+        public int PatientId { get; set; }
 
         public virtual Patient Patient { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }

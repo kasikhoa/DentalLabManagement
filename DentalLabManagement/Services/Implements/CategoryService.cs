@@ -6,7 +6,7 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 (predicate: x => x.CategoryName.Equals(categoryRequest.CategoryName));
             if (category != null)
             {
-                throw new HttpRequestException(MessageConstant.Category.CategoryNameExisted);
+                throw new BadHttpRequestException(MessageConstant.Category.CategoryNameExisted);
             }
             Category newCategory = new Category()
             {
@@ -40,7 +40,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) return null;
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.CreateNewCategoryFailedMessage);
             return new CategoryResponse(newCategory.Id, newCategory.CategoryName, newCategory.Description);
         }
 
@@ -58,27 +58,27 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<GetCategoriesResponse> GetCategoryById(int categoryId)
         {
-            if (categoryId < 1) throw new HttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
+            if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
+            if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage); ;
             GetCategoriesResponse response = new GetCategoriesResponse(category.Id, category.CategoryName, category.Description);
             return response;
         }     
 
         public async Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
         {
-            if (categoryId < 1) throw new HttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
+            if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new HttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
+            if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             updateCategoryRequest.TrimString();
             category.CategoryName = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.CategoryName : updateCategoryRequest.CategoryName;
             category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
            
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) return null;
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.UpdateCategoryFailedMessage);
             return new CategoryResponse(categoryId, category.CategoryName, category.Description);
         }
 
@@ -116,13 +116,12 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
         {
-            List<int> categoryIds = (List<int>)await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
+            List<int> categoryIds = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
              selector: x => x.ProductStageId,
              predicate: x => x.CategoryId.Equals(categoryId)
              );
 
-            IPaginate<ProductStageResponse> productStageResponse =
-            await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
+            IPaginate<ProductStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
                 selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: x => categoryIds.Contains(x.Id),
                 orderBy: x => x.OrderBy(x => x.IndexStage),

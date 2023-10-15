@@ -22,7 +22,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
 
         [Required(ErrorMessage = "Role is missing")]
         public RoleEnum Role { get; set; }
-        [Required(ErrorMessage = "Phone is missing")]
+        [Required(ErrorMessage = "Status is missing")]
         public AccountStatus Status { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Validators;
 using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Error;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -26,22 +27,10 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             var loginResponse = await _accountService.Login(loginRequest);
-            if (loginResponse == null)
-            {
-                return Unauthorized(new ErrorResponse()
-                {
-                    StatusCode = StatusCodes.Status401Unauthorized,
-                    Error = MessageConstant.LoginMessage.InvalidUsernameOrPassword,
-                    TimeStamp = DateTime.Now
-                });
-            }
-            if (loginResponse.Status == AccountStatus.Deactivate)
-                return Unauthorized(new ErrorResponse()
-                {
-                    StatusCode = StatusCodes.Status401Unauthorized,
-                    Error = MessageConstant.LoginMessage.DeactivatedAccount,
-                    TimeStamp = DateTime.Now
-                });
+            if (loginResponse == null) 
+                throw new BadHttpRequestException(MessageConstant.LoginMessage.InvalidUsernameOrPassword);
+            if (loginResponse.Status == AccountStatus.Deactivate) 
+                throw new BadHttpRequestException(MessageConstant.LoginMessage.DeactivatedAccount);
             return Ok(loginResponse);
         }
 
@@ -52,10 +41,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
         {
             var response = await _accountService.CreateNewAccount(createNewAccountRequest);
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok( response);
         }
 
@@ -74,8 +59,9 @@ namespace DentalLabManagement.API.Controllers
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> UpdateAccountInformation(int id, [FromBody] UpdateAccountRequest updateAccountRequest)
         {
-            await _accountService.UpdateAccountInformation(id, updateAccountRequest);
-            return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
+            var isSuccessfull = await _accountService.UpdateAccountInformation(id, updateAccountRequest);
+            if (!isSuccessfull) return Ok(MessageConstant.Account.UpdateAccountFailedMessage);
+            return Ok(MessageConstant.Account.UpdateAccountSuccessfulMessage);
         }
 
         [HttpGet(ApiEndPointConstant.Account.AccountEndpoint)]

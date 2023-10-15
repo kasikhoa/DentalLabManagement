@@ -23,10 +23,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateDentalAccount(DentalRequest dentalRequest)
         {
             var response = await _dentalService.CreateDentalAccount(dentalRequest);
-            if (response == null)
-            {
-                return BadRequest(NotFound());
-            }
             return Ok(response);
 
         }
@@ -56,8 +52,6 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> UpdateDentalInfo(int id, UpdateDentalRequest updateDentalRequest)
         {
             var response = await _dentalService.UpdateDentalInfo(id, updateDentalRequest);
-            
-            if (response == null) return BadRequest(response);
             return Ok(response);
 
         }
