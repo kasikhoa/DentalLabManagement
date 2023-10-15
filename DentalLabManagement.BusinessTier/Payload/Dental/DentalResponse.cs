@@ -21,11 +21,5 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
             AccountId = accountId;
         }
 
-        public DentalResponse(int id, string name, string address)
-        {
-            Id = id;
-            Name = name;
-            Address = address;
-        }
     }
 }

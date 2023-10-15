@@ -29,7 +29,7 @@ namespace DentalLabManagement.API.Controllers
         [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetOrderDetail(int id)
         {
-            var response = await _orderService.GetOrderTeethDetals(id);
+            var response = await _orderService.GetOrderTeethDetail(id);
             return Ok(response);
         }
 
@@ -38,6 +38,14 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> GetOrders(string? invoiceId, OrderMode? mode,OrderStatus? status, int page, int size)
         {
             var response = await _orderService.GetOrders(invoiceId, mode, status, page, size);
+            return Ok(response);
+        }
+
+        [HttpPut(ApiEndPointConstant.Order.OrderEndPoint)]
+        [ProducesResponseType(typeof(UpdateOrderResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
+        {
+            var response = await _orderService.UpdateOrder(id, updateOrderRequest);
             return Ok(response);
         }
     }

@@ -26,7 +26,8 @@ namespace DentalLabManagement.DataTier.Models
         public double FinalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
-        public string? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual Dental Dental { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }

@@ -87,6 +87,7 @@ public static class MessageConstant
         public const string EmptyOrderIdMessage = "Id của order không hợp lệ";
         public const string InvoiceIdExistedMessage = "InvoiceId đã tồn tại";
         public const string OrderNotFoundMessage = "Order không tồn tại trong hệ thống";
+        public const string UpdateStatusFailedMessage = "Cập nhật trạng thái Order thất bại";
     }
 
 

@@ -9,13 +9,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
 {
     public class ProductRequest
     {
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Name is missing")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Description is required")]
+        [Required(ErrorMessage = "Description is missing")]
         public string Description { get; set; }
-        [Required(ErrorMessage = "Price is required")]
+        [Required(ErrorMessage = "Price is missing")]
         public double CostPrice { get; set; }
-        [Required(ErrorMessage = "Category ID is required")]
+        [Required(ErrorMessage = "Category Id is missing")]
         public int CategoryId { get; set; }
     }
 }

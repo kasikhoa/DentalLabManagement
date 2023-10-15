@@ -84,12 +84,13 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<bool> CategoryMappingProductStage(int categoryId, List<int> request)
         {
-            List<int> currentExtraCategoriesId = (List<int>)await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
+            List<int> currentExtraCategoriesId = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
             selector: x => x.ProductStageId,
             predicate: x => x.CategoryId.Equals(categoryId)
             );
 
-            (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) splittedExtraCategoriesIds = CustomListUtil.splitIdsToAddAndRemove(currentExtraCategoriesId, request);
+            (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) splittedExtraCategoriesIds 
+                = CustomListUtil.splitIdsToAddAndRemove(currentExtraCategoriesId, request);
             //Handle add and remove to database
             if (splittedExtraCategoriesIds.idsToAdd.Count > 0)
             {

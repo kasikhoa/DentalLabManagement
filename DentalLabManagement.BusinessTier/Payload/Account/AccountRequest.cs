@@ -20,9 +20,9 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
         [Required(ErrorMessage = "Password is missing")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Role is missing")]
+        [EnumDataType(typeof(RoleEnum))]
         public RoleEnum Role { get; set; }
-        [Required(ErrorMessage = "Status is missing")]
+        [EnumDataType(typeof(AccountStatus))]
         public AccountStatus Status { get; set; }
     }
 }

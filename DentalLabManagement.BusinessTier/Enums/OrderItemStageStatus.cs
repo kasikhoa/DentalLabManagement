@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Enums
 {
-    public enum OrderStatus
+    public enum OrderItemStageStatus
     {
-        New,
-        Producing,
+        Pending,
         Completed, 
-        Canceled
     }
 }

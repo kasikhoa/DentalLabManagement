@@ -30,7 +30,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
-        public virtual DbSet<WarrantyCardType> WarrantyCardTypes { get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -70,11 +69,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.CategoryName).HasMaxLength(50);
 
                 entity.Property(e => e.Description).HasMaxLength(50);
-
-                entity.HasOne(d => d.CardType)
-                    .WithMany(p => p.Categories)
-                    .HasForeignKey(d => d.CardTypeId)
-                    .HasConstraintName("FK_Category_WarrantyCardType");
             });
 
             modelBuilder.Entity<Dental>(entity =>
@@ -139,7 +133,7 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UpdatedBy).HasMaxLength(50);
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Dental)
                     .WithMany(p => p.Orders)
@@ -182,17 +176,19 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("OrderItemStage");
 
-                entity.Property(e => e.EndDate).HasMaxLength(50);
+                entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.Image).HasColumnType("image");
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Image).IsUnicode(false);
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 
-                entity.Property(e => e.StartDate).HasMaxLength(50);
+                entity.Property(e => e.StageName).HasMaxLength(50);
 
-                entity.Property(e => e.Status)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.HasOne(d => d.OrderItem)
                     .WithMany(p => p.OrderItemStages)
@@ -203,7 +199,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.OrderItemStages)
                     .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItemStage_Account");
             });
 
@@ -281,32 +276,13 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("WarrantyCard");
 
-                entity.Property(e => e.EndDate).HasColumnType("date");
+                entity.Property(e => e.CardCode).HasMaxLength(50);
 
-                entity.Property(e => e.OrderItemsId)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
-                entity.Property(e => e.StartDate).HasColumnType("date");
-
-                entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.WarrantyCards)
-                    .HasForeignKey(d => d.PatientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WarrantyCard_Patient");
-            });
-
-            modelBuilder.Entity<WarrantyCardType>(entity =>
-            {
-                entity.ToTable("WarrantyCardType");
-
-                entity.Property(e => e.CardCode)
-                    .HasMaxLength(5)
-                    .IsFixedLength();
+                entity.Property(e => e.CardType).HasMaxLength(50);
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.Image).HasColumnType("image");
+                entity.Property(e => e.PatientName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<staff>(entity =>
