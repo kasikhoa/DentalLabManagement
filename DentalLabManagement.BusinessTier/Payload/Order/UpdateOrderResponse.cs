@@ -12,16 +12,18 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public OrderStatus Status { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string Message { get; set; }
 
         public UpdateOrderResponse()
         {
         }
 
-        public UpdateOrderResponse(OrderStatus status, string updatedBy, DateTime? updatedAt)
+        public UpdateOrderResponse(OrderStatus status, string updatedBy, DateTime? updatedAt, string message)
         {
             Status = status;
             UpdatedBy = updatedBy;
             UpdatedAt = updatedAt;
+            Message = message;
         }
     }
 }
