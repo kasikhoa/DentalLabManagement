@@ -50,8 +50,8 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                 selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()), 
                     x.PositionName, x.Description),
                 predicate: (toothArch == null)
-                        ? x => true 
-                        : x => x.ToothArch.Equals(Convert.ToInt32(toothArch)),
+                    ? x => true 
+                    : x => x.ToothArch.Equals(Convert.ToInt32(toothArch)),
                 page: page,
                 size : size
                 );

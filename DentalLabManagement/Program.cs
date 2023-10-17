@@ -4,6 +4,7 @@ using DentalLabManagement.API.Middlewares;
 using DentalLabManagement.API.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Text.Json.Serialization;
+using DentalLabManagement.DataTier.Models;
 
 namespace DentalLabManagement.API
 {
@@ -27,13 +28,16 @@ namespace DentalLabManagement.API
                     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     x.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
                 });
-                builder.Services.AddDatabase();
+                //builder.Services.AddDatabase();
                 builder.Services.AddUnitOfWork();
                 builder.Services.AddServices();
                 builder.Services.AddJwtValidation();
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddConfigSwagger();
+
+                builder.Configuration.GetConnectionString("SQLServerDatabase");
+                builder.Services.AddDbContext<DentalLabManagementContext>();
 
                 var app = builder.Build();
 

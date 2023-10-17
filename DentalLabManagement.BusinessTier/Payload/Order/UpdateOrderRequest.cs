@@ -10,6 +10,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     public class UpdateOrderRequest
     {
         public OrderStatus Status { get; set; }
-        public int UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

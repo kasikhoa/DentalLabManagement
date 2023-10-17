@@ -28,6 +28,7 @@ namespace DentalLabManagement.API.Extensions
             services.AddDbContext<DentalLabManagementContext>(options => options.UseSqlServer($"Server=Khoa\\SQLEXPRESS;Database=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345"));
             return services;
         }
+
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();

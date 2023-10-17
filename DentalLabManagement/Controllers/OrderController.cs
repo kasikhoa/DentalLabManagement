@@ -34,7 +34,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
-        [ProducesResponseType(typeof(CreateOrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetOrders(string? invoiceId, OrderMode? mode,OrderStatus? status, int page, int size)
         {
             var response = await _orderService.GetOrders(invoiceId, mode, status, page, size);

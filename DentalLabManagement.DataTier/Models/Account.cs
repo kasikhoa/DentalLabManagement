@@ -9,6 +9,7 @@ namespace DentalLabManagement.DataTier.Models
         {
             Dentals = new HashSet<Dental>();
             OrderItemStages = new HashSet<OrderItemStage>();
+            Orders = new HashSet<Order>();
         }
 
         public int Id { get; set; }
@@ -20,5 +21,6 @@ namespace DentalLabManagement.DataTier.Models
 
         public virtual ICollection<Dental> Dentals { get; set; }
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

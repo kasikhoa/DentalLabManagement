@@ -23,21 +23,19 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<OrderItemStage> OrderItemStages { get; set; } = null!;
-        public virtual DbSet<Patient> Patients { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductStage> ProductStages { get; set; } = null!;
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
-        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=Khoa\\SQLEXPRESS;Initial Catalog=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345");
+                optionsBuilder.UseSqlServer("Data Source=Khoa\\SQLEXPRESS;Initial Catalog=DentalLabManagement;\nPersist Security Info=True;User ID=sa;Password=12345");
             }
         }
 
@@ -140,6 +138,11 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.DentalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Dental");
+
+                entity.HasOne(d => d.UpdatedByNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.UpdatedBy)
+                    .HasConstraintName("FK_Order_Account1");
             });
 
             modelBuilder.Entity<OrderItem>(entity =>
@@ -200,13 +203,6 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.OrderItemStages)
                     .HasForeignKey(d => d.StaffId)
                     .HasConstraintName("FK_OrderItemStage_Account");
-            });
-
-            modelBuilder.Entity<Patient>(entity =>
-            {
-                entity.ToTable("Patient");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -283,21 +279,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.PatientName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<staff>(entity =>
-            {
-                entity.ToTable("Staff");
-
-                entity.Property(e => e.Address).HasMaxLength(50);
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.Property(e => e.Gender).HasMaxLength(50);
-
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -88,7 +88,7 @@ public static class MessageConstant
         public const string InvoiceIdExistedMessage = "InvoiceId đã tồn tại";
         public const string OrderNotFoundMessage = "Order không tồn tại trong hệ thống";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái Order thất bại";
-        public const string NewStatusMessage = "Order mới được tạo";
+        public const string NewStatusMessage = "Order đã được tạo";
         public const string StatusErrorMessage = "Thay đổi trạng thái Order thất bại";
         public const string ProducingStatusMessage = "Order đang được sản xuất";
         public const string ProducingStatusRepeatMessage = "Order đã được đưa vào sản xuất";
@@ -96,7 +96,7 @@ public static class MessageConstant
         public const string CompletedStatusRepeatMessage = "Không thể thay đổi trạng thái Order đã hoàn thành";
         public const string CanceledStatusMessage = "Order đã bị hủy";
         public const string CanceledStatusRepeatMessage = "Không thể thay đổi trạng thái Order đã hủy";
-        public const string CannotChangeToStatusMessage = "Không thể đổi trạng thái Order đã hoàn thành hoặc đã hủy";
+        public const string CannotChangeToStatusMessage = "Không thể thay đổi trạng thái Order đã hoàn thành hoặc đã hủy";
     }
 
 

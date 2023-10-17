@@ -30,6 +30,7 @@ namespace DentalLabManagement.DataTier.Models
         public DateTime? UpdatedAt { get; set; }
 
         public virtual Dental Dental { get; set; } = null!;
+        public virtual Account? UpdatedByNavigation { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
     }
