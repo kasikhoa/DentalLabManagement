@@ -26,15 +26,15 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         public async Task<ProductResponse> CreateProduct(ProductRequest productRequest)
         {
-            Product product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync
+            Product newProduct = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync
                 (predicate: x => x.Name.Equals(productRequest.Name));
-            if (product != null) throw new BadHttpRequestException(MessageConstant.Product.ProductNameExisted);
+            if (newProduct != null) throw new BadHttpRequestException(MessageConstant.Product.ProductNameExisted);
 
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
                 (predicate: x => x.Id.Equals(productRequest.CategoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
-            Product newProduct = new Product()
+            newProduct = new Product()
             {
                 Name = productRequest.Name,
                 Description = productRequest.Description,

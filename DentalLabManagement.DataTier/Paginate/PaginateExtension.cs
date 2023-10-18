@@ -8,6 +8,8 @@ public static class PaginateExtension
     {
         if (firstPage > page)
             throw new ArgumentException($"page ({page}) must greater or equal than firstPage ({firstPage})");
+        if (size == 0)
+            throw new ArgumentException($"size ({size}) must greater than 0");
         var total = await queryable.CountAsync();
         var items = await queryable.Skip((page - firstPage) * size).Take(size).ToListAsync();
         var totalPages = (int)Math.Ceiling(total / (double)size);

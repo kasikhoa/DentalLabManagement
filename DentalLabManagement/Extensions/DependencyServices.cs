@@ -6,7 +6,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DentalLabManagement.API.Extensions
 {
-
+    using DentalLabManagement.API.Services.Implements;
+    using DentalLabManagement.API.Services.Interfaces;
     using DentalLabManagement.BusinessTier.Services.Implements;
     using DentalLabManagement.BusinessTier.Services.Interfaces;
     using DentalLabManagement.DataTier.Models;
@@ -38,6 +39,7 @@ namespace DentalLabManagement.API.Extensions
             services.AddScoped<IDentalService, DentalService>();
             services.AddScoped<ITeethPositionServices, TeethPositionService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderItemStageService, OrderItemStageService>();
             return services;
         }
 

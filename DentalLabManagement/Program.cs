@@ -13,33 +13,33 @@ namespace DentalLabManagement.API
         public static void Main(string[] args)
         {
             
-                var builder = WebApplication.CreateBuilder(args);
-                builder.Logging.ClearProviders();
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Logging.ClearProviders();
                
 
-                // Add services to the container.
-                builder.Services.AddCors(options =>
-                {
-                    options.AddPolicy(name: CorsConstant.PolicyName,
-                        policy => { policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod(); });
-                });
-                builder.Services.AddControllers().AddJsonOptions(x =>
-                {
-                    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    x.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
-                });
-                //builder.Services.AddDatabase();
-                builder.Services.AddUnitOfWork();
-                builder.Services.AddServices();
-                builder.Services.AddJwtValidation();
-                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-                builder.Services.AddEndpointsApiExplorer();
-                builder.Services.AddConfigSwagger();
+            // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsConstant.PolicyName,
+                    policy => { policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod(); });
+            });
+            builder.Services.AddControllers().AddJsonOptions(x =>
+            {
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                x.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
+            });
+            //builder.Services.AddDatabase();
+            builder.Services.AddUnitOfWork();
+            builder.Services.AddServices();
+            builder.Services.AddJwtValidation();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddConfigSwagger();
 
-                builder.Configuration.GetConnectionString("SQLServerDatabase");
-                builder.Services.AddDbContext<DentalLabManagementContext>();
+            builder.Configuration.GetConnectionString("SQLServerDatabase");
+            builder.Services.AddDbContext<DentalLabManagementContext>();
 
-                var app = builder.Build();
+            var app = builder.Build();
 
                 // Configure the HTTP request pipeline.
                 app.UseSwagger();

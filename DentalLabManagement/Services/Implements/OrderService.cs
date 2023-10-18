@@ -90,7 +90,6 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
             string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
-
             
             var orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 include: x => x.Include(x => x.UpdatedByNavigation),
@@ -287,7 +286,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                                 StageName = itemStage.ProductStage.Name,
                                 Description = itemStage.ProductStage.Description,
                                 ExecutionTime = itemStage.ProductStage.ExecutionTime,
-                                Status = OrderItemStageStatus.Pending.GetDescriptionFromEnum(),
+                                Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
                                 StartDate = currentTime,
                             };
                             orderItemStageList.Add(newStage);

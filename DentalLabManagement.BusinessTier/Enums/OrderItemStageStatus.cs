@@ -8,7 +8,9 @@ namespace DentalLabManagement.BusinessTier.Enums
 {
     public enum OrderItemStageStatus
     {
+        Waiting,
         Pending,
         Completed, 
+        Canceled
     }
 }

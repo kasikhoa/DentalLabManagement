@@ -99,6 +99,14 @@ public static class MessageConstant
         public const string CannotChangeToStatusMessage = "Không thể thay đổi trạng thái Order đã hoàn thành hoặc đã hủy";
     }
 
+    public static class OrderItemStage 
+    {
+        public const string EmptyOrderItemStageIdMessage = "Id của order không hợp lệ";
+        public const string IndexStageNotFoundMessage = "Không tìm thấy khâu sản xuất";
+        public const string UpdateStatusStageSuccessMessage = "Cập nhật trạng thái khâu sản xuất thành công";
+        public const string UpdateStatusStageFailedMessage = "Cập nhật trạng thái khâu sản xuất thất bại";
+        
+    }
 
     
 }

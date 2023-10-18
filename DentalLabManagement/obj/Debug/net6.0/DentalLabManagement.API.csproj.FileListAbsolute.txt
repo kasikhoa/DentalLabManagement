@@ -151,3 +151,5 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Humanizer.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll

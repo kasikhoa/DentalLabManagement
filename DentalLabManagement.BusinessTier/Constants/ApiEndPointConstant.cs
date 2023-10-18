@@ -1,4 +1,6 @@
-﻿namespace DentalLabManagement.BusinessTier.Constants;
+﻿using System.Net.NetworkInformation;
+
+namespace DentalLabManagement.BusinessTier.Constants;
 
 public static class ApiEndPointConstant
 {
@@ -57,6 +59,12 @@ public static class ApiEndPointConstant
     {
         public const string OrdersEndPoint = ApiEndpoint + "/orders";
         public const string OrderEndPoint = OrdersEndPoint + "/{id}";
+    }
+
+    public static class OrderItemStage
+    {
+        public const string OrderItemStagesEndPoint = ApiEndpoint + "/orderItemStages";
+        public const string OrderItemStageEndPoint = OrderItemStagesEndPoint + "/{id}";
     }
 
 }
