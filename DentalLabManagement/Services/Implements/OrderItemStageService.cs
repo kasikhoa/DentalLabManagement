@@ -45,9 +45,9 @@ namespace DentalLabManagement.API.Services.Implements
                         }
                         else
                         {
-                            OrderItemStage updateItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
+                            OrderItemStage prevOrderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
                                 predicate: x => x.OrderItemId.Equals(orderItemStage.OrderItemId) && x.IndexStage.Equals(orderItemStage.IndexStage - 1));
-                            if (updateItemStage != null && updateItemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()))
+                            if (prevOrderItemStage != null && prevOrderItemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()))
                             {
                                 orderItemStage.StaffId = updateOrderItemStageRequest.StaffId;
                                 orderItemStage.Status = updateOrderItemStageRequest.Status.GetDescriptionFromEnum();

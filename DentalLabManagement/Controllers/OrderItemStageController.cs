@@ -17,7 +17,7 @@ namespace DentalLabManagement.API.Controllers
             _orderItemStageService = orderItemStageService;
         }
 
-        [HttpPost(ApiEndPointConstant.OrderItemStage.OrderItemStageEndPoint)]
+        [HttpPut(ApiEndPointConstant.OrderItemStage.OrderItemStageEndPoint)]
         [ProducesResponseType(typeof(UpdateOrderItemStageResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderItemStage(int id, UpdateOrderItemStageRequest updateOrderItemStageRequest)
         {
