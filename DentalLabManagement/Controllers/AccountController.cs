@@ -41,16 +41,16 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
         {
             var response = await _accountService.CreateNewAccount(createNewAccountRequest);
-            return Ok( response);
+            return Ok(response);
         }
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role , [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role, AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
         {
-            var accounts = await _accountService.GetAccounts(username, role , page, size);
+            var accounts = await _accountService.GetAccounts(username, role, status , page, size);
             return Ok(accounts);
         }
 
@@ -59,8 +59,8 @@ namespace DentalLabManagement.API.Controllers
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> UpdateAccountInformation(int id, [FromBody] UpdateAccountRequest updateAccountRequest)
         {
-            var isSuccessfull = await _accountService.UpdateAccountInformation(id, updateAccountRequest);
-            if (!isSuccessfull) return Ok(MessageConstant.Account.UpdateAccountFailedMessage);
+            var isSuccessful = await _accountService.UpdateAccountInformation(id, updateAccountRequest);
+            if (!isSuccessful) return Ok(MessageConstant.Account.UpdateAccountFailedMessage);
             return Ok(MessageConstant.Account.UpdateAccountSuccessfulMessage);
         }
 
@@ -71,6 +71,16 @@ namespace DentalLabManagement.API.Controllers
         {
             var accountDetails = await _accountService.GetAccountDetail(id);
             return Ok(accountDetails);
+        }
+
+        [CustomAuthorize(RoleEnum.Admin)]
+        [HttpDelete(ApiEndPointConstant.Account.AccountEndpoint)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateAccountStatus(int id)
+        {
+            var isSuccessful = await _accountService.UpdateAccountStatus(id);
+            if (!isSuccessful) return Ok(MessageConstant.Account.UpdateAccountStatusFailedMessage);
+            return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
         }
     }
 }

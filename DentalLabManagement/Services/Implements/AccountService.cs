@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DentalLabManagement.API.Extensions;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -68,18 +69,35 @@ namespace DentalLabManagement.API.Services.Implements
                 createNewAccountRequest.Role, createNewAccountRequest.Status);
         }
 
-        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, int page, int size)
+        private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, AccountStatus? status)
+        {
+            Expression<Func<Account, bool>> filterQuery = x => true; 
+
+            if (!string.IsNullOrEmpty(searchUsername))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.UserName.Contains(searchUsername));
+            }
+
+            if (role != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Role == role.GetDescriptionFromEnum());
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status == status.GetDescriptionFromEnum());
+            }
+
+            return filterQuery;
+        }
+
+
+        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, AccountStatus? status, int page, int size)
         {
             searchUsername = searchUsername?.Trim().ToLower();
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
                 selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),
-                predicate: string.IsNullOrEmpty(searchUsername) && (role == null)
-                    ? x => true
-                    : ((role == null)
-                        ? x => x.UserName.Contains(searchUsername)
-                        : (string.IsNullOrEmpty(searchUsername)
-                            ? x => x.Role.Equals(role.GetDescriptionFromEnum())
-                            : x => x.UserName.Contains(searchUsername) && x.Role.Equals(role.GetDescriptionFromEnum()))),
+                predicate: BuildGetAccountsQuery(searchUsername, role, status),
                 orderBy: x => x.OrderBy(x => x.UserName),
                 page: page,
                 size: size
@@ -107,11 +125,29 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<GetAccountsResponse> GetAccountDetail(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName, 
                 EnumUtil.ParseEnum<RoleEnum>(account.Role), EnumUtil.ParseEnum<AccountStatus>(account.Status));
+        }
+
+        public async Task<bool> UpdateAccountStatus(int id)
+        {
+
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id));
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            account.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
+
+            _unitOfWork.GetRepository<Account>().UpdateAsync(account);
+            bool isSuccessfull = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessfull;
+            
         }
     }
 }

@@ -31,8 +31,6 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest)
         {
-            DateTime currentTime = TimeUtils.GetCurrentSEATime();
-
             Dental dental = await _unitOfWork.GetRepository<Dental>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(createOrderRequest.DentalId));
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
@@ -49,7 +47,7 @@ namespace DentalLabManagement.API.Services.Implements
                 TotalAmount = createOrderRequest.TotalAmount,
                 Discount = createOrderRequest.Discount,
                 FinalAmount = createOrderRequest.TotalAmount - createOrderRequest.Discount,
-                CreatedDate = currentTime,
+                CreatedDate = TimeUtils.GetCurrentSEATime(),
             };
 
             await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
@@ -90,7 +88,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, OrderMode? mode, OrderStatus? status)
         {
-            Expression<Func<Order, bool>> filterQuery = p => true; // Bắt đầu với một điều kiện luôn đúng.
+            Expression<Func<Order, bool>> filterQuery = p => true; 
 
             if (!string.IsNullOrEmpty(InvoiceId))
             {

@@ -20,12 +20,13 @@ public static class MessageConstant
         public const string CreateStaffAccountFailMessage = "Tạo tài khoản nhân viên thất bại";
         public const string UserUnauthorizedMessage = "Bạn không được phép cập nhật status cho tài khoản này";
 
-        public const string UpdateAccountStatusRequestWrongFormatMessage =
-            "Cập nhật status tài khoản request sai format";
+        public const string UpdateAccountStatusRequestWrongFormatMessage = "Cập nhật status tài khoản request sai format";
 
         public const string AccountNotFoundMessage = "Không tìm thấy tài khoản";
         public const string UpdateAccountSuccessfulMessage = "Cập nhật status tài khoản thành công";
-        public const string UpdateAccountFailedMessage = "Cập nhật status tài khoản thất bại";
+        public const string UpdateAccountFailedMessage = "Cập nhật thông tin tài khoản thất bại";
+        public const string UpdateAccountStatusFailedMessage = "Vô hiệu hóa tài khoản thất bại";
+        public const string UpdateAccountStatusSuccessfulMessage = "Vô hiệu hóa tài khoản thành công";
         public const string EmptyAccountIdMessage = "Account Id không hợp lệ";
     }
 
@@ -57,6 +58,8 @@ public static class MessageConstant
         public const string UpdateProductFailedMessage = "Cập nhật thông tin product thất bại";
         public const string EmptyProductIdMessage = "Product Id không hợp lệ";
         public const string ProductNotFoundMessage = "Product không tồn tại trong hệ thống";
+        public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
+        public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
 
     public static class ProductStage

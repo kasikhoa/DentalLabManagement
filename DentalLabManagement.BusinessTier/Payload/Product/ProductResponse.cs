@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,18 +15,20 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public string Description { get; set; }      
         public double CostPrice { get; set; }
         public int CategoryId { get; set; }
+        public ProductStatus Status { get; set; }
 
-        public ProductResponse(int id, string name, string description, double costPrice, int categoryId)
+        public ProductResponse()
+        {
+        }
+
+        public ProductResponse(int id, string name, string description, double costPrice, int categoryId, ProductStatus status)
         {
             Id = id;
             Name = name;
             Description = description;
             CostPrice = costPrice;
             CategoryId = categoryId;
-        }
-
-        public ProductResponse()
-        {
+            Status = status;
         }
     }
 }

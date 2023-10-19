@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public double CostPrice { get; set; }
         [Required(ErrorMessage = "Category Id is missing")]
         public int CategoryId { get; set; }
+        [Required(ErrorMessage = "Status is missing")]
+        public ProductStatus Status { get; set; }
     }
 }

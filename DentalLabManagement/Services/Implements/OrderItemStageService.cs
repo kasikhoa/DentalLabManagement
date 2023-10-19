@@ -18,13 +18,17 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? indexStage, OrderItemStageStatus? status)
+        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status)
         {
             Expression<Func<OrderItemStage, bool>> filterQuery = x => true; 
 
             if (orderItemId.HasValue)
             {
                 filterQuery = filterQuery.AndAlso(x => x.OrderItemId == orderItemId);
+            }
+            if (staffId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.StaffId == staffId);
             }
 
             if (indexStage.HasValue)
@@ -41,7 +45,7 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? indexStage, OrderItemStageStatus? status, int page, int size)
+        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, int page, int size)
         {
             IPaginate<OrderItemStageResponse> result = await _unitOfWork.GetRepository<OrderItemStage>().GetPagingListAsync(
                 selector: x => new OrderItemStageResponse()
@@ -59,7 +63,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     Image = x.Image
                 },
-                predicate: BuildGetOrderItemStagesQuery(orderItemId, indexStage, status),
+                predicate: BuildGetOrderItemStagesQuery(orderItemId, staffId, indexStage, status),
                 page: page,
                 size: size
                 );

@@ -15,6 +15,7 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public double CostPrice { get; set; }
         public int CategoryId { get; set; }
+        public string Status { get; set; } = null!;
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }

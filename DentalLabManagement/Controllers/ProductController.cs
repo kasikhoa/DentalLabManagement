@@ -1,11 +1,11 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.Product;
-using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.DataTier.Paginate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DentalLabManagement.BusinessTier.Enums;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -31,9 +31,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Product.ProductsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllProducts([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllProducts(string? name, int? categoryId, ProductStatus? status, [FromQuery] int page, [FromQuery] int size)
         {
-            var products = await _productService.GetProducts(name, page, size);
+            var products = await _productService.GetProducts(name, categoryId, status, page, size);
             return Ok(products);
         }
 
@@ -65,6 +65,13 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpDelete(ApiEndPointConstant.Product.ProductEndPoint)]
+        public async Task<IActionResult> UpdateProductStatus(int id)
+        {
+            var isSuccessful = await _productService.UpdateProductStatus(id);
+            if (!isSuccessful) return Ok(MessageConstant.Product.UpdateStatusFailedMessage);
+            return Ok(MessageConstant.Product.UpdateStatusSuccessMessage);
+        }
        
     }
 }
