@@ -33,7 +33,8 @@ namespace DentalLabManagement.API.Services.Implements
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync
                 (predicate: x => x.Id.Equals(dentalRequest.AccountId));
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
-            if (account.Role.Equals(RoleEnum.Dental))
+
+            if (account.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()))
             {
                 newDental = new Dental()
                 {
@@ -49,7 +50,6 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (!isSuccefful) throw new BadHttpRequestException(MessageConstant.Dental.CreateDentalFailed);
             return new DentalResponse(newDental.Id, newDental.Name, newDental.Address, newDental.AccountId);
-
         }
 
         public async Task<DentalAccountResponse> GetAccountDentalById(int dentalId)

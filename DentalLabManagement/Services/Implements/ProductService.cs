@@ -45,14 +45,15 @@ namespace DentalLabManagement.API.Services.Implements
                 Description = productRequest.Description,
                 CostPrice = productRequest.CostPrice,
                 CategoryId = productRequest.CategoryId,
-                Status = productRequest.Status.GetDescriptionFromEnum()
+                Status = productRequest.Status.GetDescriptionFromEnum(),
+                Image = productRequest.Image
             };
 
             await _unitOfWork.GetRepository<Product>().InsertAsync(newProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Product.CreateNewProductFailedMessage);
             return new ProductResponse(newProduct.Id, newProduct.Name, newProduct.Description, newProduct.CostPrice, 
-                newProduct.CategoryId, EnumUtil.ParseEnum<ProductStatus>(newProduct.Status));
+                newProduct.CategoryId, EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
         }
 
         private Expression<Func<Product, bool>> BuildGetProductsQuery(string? searchProductName, int? categoryId, ProductStatus? status)
@@ -81,7 +82,7 @@ namespace DentalLabManagement.API.Services.Implements
             searchProductName = searchProductName?.Trim().ToLower();
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
                 selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId, 
-                EnumUtil.ParseEnum<ProductStatus>(x.Status)),
+                EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: BuildGetProductsQuery(searchProductName, categoryId, status),
                 page: page,
                 size: size,
@@ -98,7 +99,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (product == null) throw new BadHttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
 
             return new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.CategoryId, 
-                EnumUtil.ParseEnum<ProductStatus>(product.Status));
+                EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
         }
 
         public async Task<ProductResponse> UpdateProduct(int productId, UpdateProductRequest updateProductRequest)
@@ -120,13 +121,14 @@ namespace DentalLabManagement.API.Services.Implements
             updateProduct.CostPrice = (updateProductRequest.CostPrice < 0) ? updateProduct.CostPrice : updateProductRequest.CostPrice;
             updateProduct.CategoryId = updateProductRequest.CategoryId;
             updateProduct.Status = updateProductRequest.Status.GetDescriptionFromEnum();
+            updateProduct.Image = string.IsNullOrEmpty(updateProductRequest.Image) ? updateProduct.Image : updateProductRequest.Image;
 
             _unitOfWork.GetRepository<Product>().UpdateAsync(updateProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Product.UpdateProductFailedMessage);
             return new ProductResponse(updateProduct.Id, updateProduct.Name, 
                 updateProduct.Description, updateProduct.CostPrice, updateProduct.CategoryId, 
-                EnumUtil.ParseEnum<ProductStatus>(updateProduct.Status));
+                EnumUtil.ParseEnum<ProductStatus>(updateProduct.Status), updateProduct.Image);
         }
 
         public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)

@@ -2,7 +2,6 @@
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
-using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -14,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DentalLabManagement.API.Services;
+using System.Linq.Expressions;
+using DentalLabManagement.API.Extensions;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -44,19 +45,35 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<ToothArch>(teethPosition.ToothArch.ToString()), 
                 teethPosition.PositionName, teethPosition.Description);
 
-        }       
+        }
 
-        public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(ToothArch? toothArch, int page, int size)
+        private Expression<Func<TeethPosition, bool>> BuildGetPositionsQuery(string? positionName, ToothArch? toothArch)
+        {
+            Expression<Func<TeethPosition, bool>> filterQuery = x => true; 
+
+            if (!string.IsNullOrEmpty(positionName))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.PositionName.Contains(positionName));
+            }
+
+            if (toothArch != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.ToothArch.Equals(Convert.ToInt32(toothArch)));
+            }
+
+            return filterQuery;
+        }
+
+
+        public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(string? positionName, ToothArch? toothArch, int page, int size)
         {
             IPaginate<TeethPositionResponse> response = await _unitOfWork.GetRepository<TeethPosition>().GetPagingListAsync(
-                selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()), 
+                selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()),
                     x.PositionName, x.Description),
-                predicate: (toothArch == null)
-                    ? x => true 
-                    : x => x.ToothArch.Equals(Convert.ToInt32(toothArch)),
+                predicate: BuildGetPositionsQuery(positionName, toothArch),
                 page: page,
-                size : size
-                );
+                size: size
+                ) ;
             return response;
         }
 

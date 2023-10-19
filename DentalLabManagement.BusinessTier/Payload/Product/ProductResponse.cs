@@ -16,12 +16,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public double CostPrice { get; set; }
         public int CategoryId { get; set; }
         public ProductStatus Status { get; set; }
+        public string? Image { get; set; }
 
         public ProductResponse()
         {
         }
 
-        public ProductResponse(int id, string name, string description, double costPrice, int categoryId, ProductStatus status)
+        public ProductResponse(int id, string name, string description, double costPrice, int categoryId, ProductStatus status, string? image)
         {
             Id = id;
             Name = name;
@@ -29,6 +30,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
             CostPrice = costPrice;
             CategoryId = categoryId;
             Status = status;
+            Image = image;
         }
     }
 }

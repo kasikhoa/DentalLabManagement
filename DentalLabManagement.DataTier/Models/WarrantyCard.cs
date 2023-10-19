@@ -15,6 +15,7 @@ namespace DentalLabManagement.DataTier.Models
         public string CardCode { get; set; } = null!;
         public string CardType { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public string? Image { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }

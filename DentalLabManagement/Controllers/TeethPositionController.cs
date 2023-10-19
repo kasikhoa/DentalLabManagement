@@ -30,9 +30,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.TeethPosition.TeethPositonsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<TeethPositionResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetTeethPositons(ToothArch? toothArch, int page, int size)
+        public async Task<IActionResult> GetTeethPositons(string? name, ToothArch? toothArch, int page, int size)
         {
-            var response = await _teethPositionServices.GetTeethPositions(toothArch, page, size);
+            var response = await _teethPositionServices.GetTeethPositions(name, toothArch, page, size);
             return Ok(response);
         }
 

@@ -20,5 +20,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public int CategoryId { get; set; }
         [Required(ErrorMessage = "Status is missing")]
         public ProductStatus Status { get; set; }
+        public string? Image { get; set; }
     }
 }

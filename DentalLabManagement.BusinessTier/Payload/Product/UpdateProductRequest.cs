@@ -15,11 +15,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public double CostPrice { get; set; }
         public int CategoryId { get; set; }
         public ProductStatus Status { get; set; }
+        public string? Image { get; set; }
 
         public void TrimString()
         {
             Name = Name.Trim();
-            Description = Description.Trim();            
+            Description = Description.Trim();    
+            Image = Image?.Trim();
 
         }
     }
