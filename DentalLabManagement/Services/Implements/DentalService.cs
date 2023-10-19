@@ -1,7 +1,7 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Dental;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Services.Implements
+namespace DentalLabManagement.API.Services.Implements
 {
     public class DentalService : BaseService<IDentalService>, IDentalService
     {

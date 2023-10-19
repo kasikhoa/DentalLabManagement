@@ -1,7 +1,8 @@
-﻿using DentalLabManagement.BusinessTier.Constants;
+﻿using DentalLabManagement.API.Services.Interfaces;
+using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -12,8 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DentalLabManagement.API.Services;
 
-namespace DentalLabManagement.BusinessTier.Services.Implements
+namespace DentalLabManagement.API.Services.Implements
 {
     public class TeethPositionService : BaseService<TeethPositionService>, ITeethPositionServices
     {

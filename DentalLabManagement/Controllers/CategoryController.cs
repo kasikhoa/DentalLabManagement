@@ -1,5 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;

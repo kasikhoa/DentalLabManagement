@@ -2,7 +2,7 @@
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DentalLabManagement.BusinessTier.Services.Implements
+namespace DentalLabManagement.API.Services.Implements
 {
     public class AccountService : BaseService<AccountService>, IAccountService
     {

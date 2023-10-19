@@ -1,8 +1,6 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
-using DentalLabManagement.BusinessTier.Services.Implements;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
-using DentalLabManagement.DataTier.Paginate;
+using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

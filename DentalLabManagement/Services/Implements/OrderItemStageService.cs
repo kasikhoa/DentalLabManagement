@@ -1,13 +1,13 @@
-﻿using DentalLabManagement.API.Services.Interfaces;
+﻿using DentalLabManagement.API.Extensions;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.OrderItemStage;
-using DentalLabManagement.BusinessTier.Services;
-using DentalLabManagement.BusinessTier.Services.Implements;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
+using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
+using System.Linq.Expressions;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -16,6 +16,54 @@ namespace DentalLabManagement.API.Services.Implements
         public OrderItemStageService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<OrderItemStageService> logger) : base(unitOfWork, logger)
         {
 
+        }
+
+        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? indexStage, OrderItemStageStatus? status)
+        {
+            Expression<Func<OrderItemStage, bool>> filterQuery = x => true; 
+
+            if (orderItemId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.OrderItemId == orderItemId);
+            }
+
+            if (indexStage.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.IndexStage == indexStage);
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status == status.GetDescriptionFromEnum());
+            }
+
+            return filterQuery;
+        }
+
+
+        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? indexStage, OrderItemStageStatus? status, int page, int size)
+        {
+            IPaginate<OrderItemStageResponse> result = await _unitOfWork.GetRepository<OrderItemStage>().GetPagingListAsync(
+                selector: x => new OrderItemStageResponse()
+                {
+                    Id = x.Id,
+                    OrderItemId = x.OrderItemId,
+                    StaffId = x.StaffId,
+                    IndexStage = x.IndexStage,
+                    StageName = x.StageName,
+                    Description = x.Description,
+                    Execution = x.ExecutionTime,
+                    Status = EnumUtil.ParseEnum<OrderItemStageStatus>(x.Status),
+                    StartDate = x.StartDate,
+                    EndDate= x.EndDate,
+                    Note = x.Note,
+                    Image = x.Image
+                },
+                predicate: BuildGetOrderItemStagesQuery(orderItemId, indexStage, status),
+                page: page,
+                size: size
+                );
+            return result;
         }
 
         public async Task<UpdateOrderItemStageResponse> UpdateOrderItemStage(int orderItemStageId, UpdateOrderItemStageRequest updateOrderItemStageRequest)

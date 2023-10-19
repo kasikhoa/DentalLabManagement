@@ -1,9 +1,10 @@
-﻿using DentalLabManagement.BusinessTier.Constants;
+﻿using DentalLabManagement.API.Extensions;
+using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Order;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
@@ -14,11 +15,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Services.Implements
+namespace DentalLabManagement.API.Services.Implements
 {
     public class OrderService : BaseService<OrderService>, IOrderService
     {
@@ -86,6 +88,29 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
 
         }
 
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, OrderMode? mode, OrderStatus? status)
+        {
+            Expression<Func<Order, bool>> filterQuery = p => true; // Bắt đầu với một điều kiện luôn đúng.
+
+            if (!string.IsNullOrEmpty(InvoiceId))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
+            }
+
+            if (mode != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.Mode.Equals(mode.GetDescriptionFromEnum()));
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
+            }
+
+            return filterQuery;
+        }
+
+
         public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(
             string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
         {
@@ -111,16 +136,7 @@ namespace DentalLabManagement.BusinessTier.Services.Implements
                     CreatedDate = x.CreatedDate,
                     UpdatedBy = x.UpdatedByNavigation.FullName,
                 },
-                predicate: string.IsNullOrEmpty(InvoiceId) && (mode == null) && (status == null)
-                ? x => true
-                : ((status == null && mode == null)
-                    ? x => x.InvoiceId.Contains(InvoiceId)
-                    : ((status == null)
-                        ? x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum())
-                        : ((mode == null)
-                            ? x => x.InvoiceId.Contains(InvoiceId) && x.Status.Equals(status.GetDescriptionFromEnum())
-                            : x => x.InvoiceId.Contains(InvoiceId) && x.Mode.Equals(mode.GetDescriptionFromEnum())
-                                && x.Status.Equals(status.GetDescriptionFromEnum())))),
+                predicate: BuildGetOrdersQuery(InvoiceId, mode, status),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

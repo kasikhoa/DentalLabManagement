@@ -1,7 +1,7 @@
 ﻿using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.OrderItemStage;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +22,14 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> UpdateOrderItemStage(int id, UpdateOrderItemStageRequest updateOrderItemStageRequest)
         {
             var response = await _orderItemStageService.UpdateOrderItemStage(id, updateOrderItemStageRequest);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.OrderItemStage.OrderItemStagesEndPoint)]
+        [ProducesResponseType(typeof(UpdateOrderItemStageResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrderItemStages(int? orderItemId, int? indexStage, OrderItemStageStatus? status, int page, int size)
+        {
+            var response = await _orderItemStageService.GetOrderItemStages(orderItemId, indexStage, status, page, size);
             return Ok(response);
         }
     }

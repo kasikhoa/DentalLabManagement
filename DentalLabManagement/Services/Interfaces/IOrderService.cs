@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Services.Interfaces
+namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IOrderService
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Services.Interfaces;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;

@@ -27,7 +27,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string? UpdatedBy { get; set; }
-
         public List<OrderItemResponse> ToothList { get; set; } = new List<OrderItemResponse>();
     }
 

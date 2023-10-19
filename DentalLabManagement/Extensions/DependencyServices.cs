@@ -4,18 +4,17 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+using DentalLabManagement.API.Services.Implements;
+using DentalLabManagement.API.Services.Interfaces;
+using DentalLabManagement.DataTier.Models;
+using DentalLabManagement.DataTier.Repository.Implement;
+using DentalLabManagement.DataTier.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace DentalLabManagement.API.Extensions
 {
-    using DentalLabManagement.API.Services.Implements;
-    using DentalLabManagement.API.Services.Interfaces;
-    using DentalLabManagement.BusinessTier.Services.Implements;
-    using DentalLabManagement.BusinessTier.Services.Interfaces;
-    using DentalLabManagement.DataTier.Models;
-    using DentalLabManagement.DataTier.Repository.Implement;
-    using DentalLabManagement.DataTier.Repository.Interfaces;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-
+    
     public static class DependencyServices
     {
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)

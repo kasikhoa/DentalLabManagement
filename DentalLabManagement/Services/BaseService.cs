@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 
-namespace DentalLabManagement.BusinessTier.Services
+namespace DentalLabManagement.API.Services
 {
     public abstract class BaseService<T> where T : class
     {

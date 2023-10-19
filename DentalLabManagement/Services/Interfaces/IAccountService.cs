@@ -1,10 +1,9 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
-using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 
-namespace DentalLabManagement.BusinessTier.Services.Interfaces
+namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IAccountService
     {
