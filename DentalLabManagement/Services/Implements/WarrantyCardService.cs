@@ -7,9 +7,7 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -79,7 +77,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? categoryId, WarrantyCardStatus? status, int page, int size)
         {
             cardCode = cardCode?.Trim().ToLower();
-
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             IPaginate<WarrantyCardResponse> result = await _unitOfWork.GetRepository<WarrantyCard>().GetPagingListAsync(
                 selector: x => new WarrantyCardResponse()
                 {

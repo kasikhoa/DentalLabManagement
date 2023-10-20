@@ -67,6 +67,9 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(string? positionName, ToothArch? toothArch, int page, int size)
         {
+            positionName = positionName?.Trim().ToLower();
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             IPaginate<TeethPositionResponse> response = await _unitOfWork.GetRepository<TeethPosition>().GetPagingListAsync(
                 selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()),
                     x.PositionName, x.Description),

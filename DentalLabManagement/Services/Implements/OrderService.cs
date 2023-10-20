@@ -115,9 +115,9 @@ namespace DentalLabManagement.API.Services.Implements
             OrderMode? mode, OrderStatus? status, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
-            
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             var orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
-                include: x => x.Include(x => x.UpdatedByNavigation),
                 selector: x => new GetOrderDetailResponse()
                 {
                     Id = x.Id,
@@ -293,7 +293,7 @@ namespace DentalLabManagement.API.Services.Implements
                     {
                         ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
                             predicate: p => p.CategoryId.Equals(item.Product.CategoryId),
-                            include: x => x.Include(c => c.ProductStage)
+                            include: x => x.Include(x => x.ProductStage)
                             );
                         foreach (var itemStage in stageList)
                         {

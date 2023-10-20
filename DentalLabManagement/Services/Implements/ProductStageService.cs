@@ -28,24 +28,29 @@ namespace DentalLabManagement.API.Services.Implements
             ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>().SingleOrDefaultAsync
                 (predicate: x => x.Name.Equals(productStageRequest.Name));
             if (productStage != null) throw new BadHttpRequestException(MessageConstant.ProductStage.ProductStageExisted);
+
             productStage = new ProductStage()
             {
                 IndexStage = productStageRequest.IndexStage,
                 Name = productStageRequest.Name,
                 Description = productStageRequest.Description,
             };
+
             await _unitOfWork.GetRepository<ProductStage>().InsertAsync(productStage);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.ProductStage.CreateNewProductStageFailed);
+
             return new ProductStageResponse(productStage.Id, productStage.IndexStage, productStage.Name, productStage.Description, productStage.ExecutionTime);
         }
 
         public async Task<ProductStageResponse> GetProductStageById(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
+
             ProductStage productStage = await _unitOfWork.GetRepository<ProductStage>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
             if (productStage == null) throw new BadHttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
+
             return new ProductStageResponse(productStage.Id, productStage.IndexStage, 
                 productStage.Name, productStage.Description, productStage.ExecutionTime);
         }
@@ -54,6 +59,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size)
         {
             name = name?.Trim().ToLower();
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             IPaginate<ProductStageResponse> response = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync
                 (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: string.IsNullOrEmpty(name) && !index.HasValue

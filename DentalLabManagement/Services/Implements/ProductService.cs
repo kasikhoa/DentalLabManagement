@@ -80,6 +80,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size)
         {
             searchProductName = searchProductName?.Trim().ToLower();
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
                 selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId, 
                 EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),

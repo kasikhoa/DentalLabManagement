@@ -70,6 +70,10 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size)
         {
             searchCategoryName = searchCategoryName?.Trim().ToLower();
+
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
+
             IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
                 selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
                 predicate: BuildGetCategoriesQuery(searchCategoryName, status),
@@ -163,6 +167,9 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
         {
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
+
             List<int> categoryIds = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
              selector: x => x.ProductStageId,
              predicate: x => x.CategoryId.Equals(categoryId)
@@ -170,7 +177,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             IPaginate<ProductStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
                 selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: x => categoryIds.Contains(x.Id),
+                predicate: x => categoryIds.Equals(x.Id),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
                 size: size

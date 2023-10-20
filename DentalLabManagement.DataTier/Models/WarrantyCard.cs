@@ -21,7 +21,7 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public string? Image { get; set; }
         public string? LinkCategory { get; set; }
-        public string? Status { get; set; }
+        public string Status { get; set; } = null!;
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }

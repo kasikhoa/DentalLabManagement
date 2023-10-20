@@ -47,6 +47,8 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, int page, int size)
         {
+            page = (page == 0) ? page = 1 : page;
+            size = (size == 0) ? size = 10 : size;
             IPaginate<OrderItemStageResponse> result = await _unitOfWork.GetRepository<OrderItemStage>().GetPagingListAsync(
                 selector: x => new OrderItemStageResponse()
                 {
