@@ -9,6 +9,7 @@ namespace DentalLabManagement.DataTier.Models
         {
             GroupStages = new HashSet<GroupStage>();
             Products = new HashSet<Product>();
+            WarrantyCards = new HashSet<WarrantyCard>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace DentalLabManagement.DataTier.Models
 
         public virtual ICollection<GroupStage> GroupStages { get; set; }
         public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<WarrantyCard> WarrantyCards { get; set; }
     }
 }

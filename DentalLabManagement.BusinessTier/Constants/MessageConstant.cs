@@ -115,5 +115,10 @@ public static class MessageConstant
         
     }
 
+    public static class WarrantyCard
+    {
+        public const string CardCodeExistedMessage = "Mã thẻ đã tồn tại";
+        public const string CreateCardFailedMessage = "Tạo mới thẻ bảo hành thất bại";
+    }
     
 }

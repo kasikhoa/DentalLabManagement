@@ -290,7 +290,7 @@ namespace DentalLabManagement.API.Services.Implements
                         ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
                             predicate: p => p.CategoryId.Equals(item.Product.CategoryId),
                             include: x => x.Include(c => c.ProductStage)
-                          );
+                            );
                         foreach (var itemStage in stageList)
                         {
                             OrderItemStage newStage = new OrderItemStage()

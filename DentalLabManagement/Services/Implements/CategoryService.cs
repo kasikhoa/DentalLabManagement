@@ -31,13 +31,11 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
-            Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
+            Category newCategory = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
                 (predicate: x => x.CategoryName.Equals(categoryRequest.CategoryName));
-            if (category != null)
-            {
-                throw new BadHttpRequestException(MessageConstant.Category.CategoryNameExisted);
-            }
-            Category newCategory = new Category()
+            if (newCategory != null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNameExisted);
+
+            newCategory = new Category()
             {
                 CategoryName = categoryRequest.CategoryName,
                 Description = categoryRequest.Description,

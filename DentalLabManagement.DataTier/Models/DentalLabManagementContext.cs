@@ -35,7 +35,7 @@ namespace DentalLabManagement.DataTier.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=Khoa\\SQLEXPRESS;Initial Catalog=DentalLabManagement;\nPersist Security Info=True;User ID=sa;Password=12345");
+                optionsBuilder.UseSqlServer("Data Source=Khoa\\SQLEXPRESS;Initial Catalog=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345");
             }
         }
 
@@ -282,15 +282,31 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("WarrantyCard");
 
-                entity.Property(e => e.CardCode).HasMaxLength(50);
+                entity.Property(e => e.CardCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CardType).HasMaxLength(50);
+                entity.Property(e => e.DentalName).HasMaxLength(50);
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
+                entity.Property(e => e.ExpDate).HasColumnType("date");
+
                 entity.Property(e => e.Image).IsUnicode(false);
 
+                entity.Property(e => e.LaboName).HasMaxLength(50);
+
+                entity.Property(e => e.LinkCategory).HasMaxLength(50);
+
                 entity.Property(e => e.PatientName).HasMaxLength(50);
+
+                entity.Property(e => e.StartDate).HasColumnType("date");
+
+                entity.HasOne(d => d.CardTypeNavigation)
+                    .WithMany(p => p.WarrantyCards)
+                    .HasForeignKey(d => d.CardType)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WarrantyCard_Category");
             });
 
             OnModelCreatingPartial(modelBuilder);
