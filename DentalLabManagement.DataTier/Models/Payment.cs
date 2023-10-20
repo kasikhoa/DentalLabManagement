@@ -7,10 +7,10 @@ namespace DentalLabManagement.DataTier.Models
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
-        public string Status { get; set; } = null!;
         public string Note { get; set; } = null!;
-        public double Type { get; set; }
+        public string Type { get; set; } = null!;
         public double Amount { get; set; }
+        public string Status { get; set; } = null!;
 
         public virtual Order Order { get; set; } = null!;
     }

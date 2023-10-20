@@ -32,12 +32,12 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
             Category newCategory = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
-                (predicate: x => x.CategoryName.Equals(categoryRequest.CategoryName));
+                (predicate: x => x.Name.Equals(categoryRequest.CategoryName));
             if (newCategory != null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNameExisted);
 
             newCategory = new Category()
             {
-                CategoryName = categoryRequest.CategoryName,
+                Name = categoryRequest.CategoryName,
                 Description = categoryRequest.Description,
                 Status = categoryRequest.Status.GetDescriptionFromEnum(),
                 Image = categoryRequest.Image,
@@ -45,7 +45,7 @@ namespace DentalLabManagement.API.Services.Implements
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.CreateNewCategoryFailedMessage);
-            return new CategoryResponse(newCategory.Id, newCategory.CategoryName, newCategory.Description,
+            return new CategoryResponse(newCategory.Id, newCategory.Name, newCategory.Description,
                 EnumUtil.ParseEnum<CategoryStatus>(newCategory.Status), newCategory.Image);
         }
 
@@ -55,7 +55,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (!string.IsNullOrEmpty(searchCategoryName))
             {
-                filterQuery = filterQuery.AndAlso(x => x.CategoryName.Contains(searchCategoryName));
+                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchCategoryName));
             }
 
             if (status != null)
@@ -71,7 +71,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
             searchCategoryName = searchCategoryName?.Trim().ToLower();
             IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
-                selector: x => new CategoryResponse(x.Id, x.CategoryName, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
+                selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
                 predicate: BuildGetCategoriesQuery(searchCategoryName, status),
                 page: page,
                 size: size
@@ -85,7 +85,7 @@ namespace DentalLabManagement.API.Services.Implements
             Category category = await _unitOfWork.GetRepository<Category>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage); ;
-            return new CategoryResponse(category.Id, category.CategoryName, category.Description, 
+            return new CategoryResponse(category.Id, category.Name, category.Description, 
                 EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);
         }     
 
@@ -97,7 +97,7 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             updateCategoryRequest.TrimString();
-            category.CategoryName = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.CategoryName : updateCategoryRequest.CategoryName;
+            category.Name = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.Name : updateCategoryRequest.CategoryName;
             category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
             category.Status = updateCategoryRequest.Status.GetDescriptionFromEnum();
             category.Image = string.IsNullOrEmpty(updateCategoryRequest.Image) ? category.Image : updateCategoryRequest.Image; ;
@@ -124,7 +124,7 @@ namespace DentalLabManagement.API.Services.Implements
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.UpdateCategoryFailedMessage);
-            return new CategoryResponse(categoryId, category.CategoryName, category.Description, 
+            return new CategoryResponse(categoryId, category.Name, category.Description, 
                 EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);
         }
 

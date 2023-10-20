@@ -15,6 +15,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? DentistName { get; set; }
         public string PatientName { get; set; }
         public PatientGender? PatientGender { get; set; }
+        public string? PatientPhoneNumber { get; set; }
         public string? DentistNote { get; set; }
         public OrderStatus Status { get; set; }
         public OrderMode Mode { get; set; }

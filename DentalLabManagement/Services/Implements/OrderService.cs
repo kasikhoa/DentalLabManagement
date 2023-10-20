@@ -42,6 +42,7 @@ namespace DentalLabManagement.API.Services.Implements
                 DentistNote = createOrderRequest.DentistNote,
                 PatientName = createOrderRequest.PatientName,
                 PatientGender = createOrderRequest.PatientGender.GetDescriptionFromEnum(),
+                PatientPhoneNumber= createOrderRequest.PatientPhoneNumber,
                 Status = OrderStatus.New.GetDescriptionFromEnum(),
                 Mode = createOrderRequest.Mode.GetDescriptionFromEnum(),
                 TotalAmount = createOrderRequest.TotalAmount,
@@ -53,7 +54,8 @@ namespace DentalLabManagement.API.Services.Implements
             await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
             await _unitOfWork.CommitAsync();
 
-            newOrder.InvoiceId = "E" + (dental.Id * 10000 + newOrder.Id).ToString("D5");
+            newOrder.InvoiceId = "E" + newOrder.Id.ToString("D6");
+            
             await _unitOfWork.CommitAsync();
             int count = 0;
 
@@ -79,7 +81,7 @@ namespace DentalLabManagement.API.Services.Implements
             await _unitOfWork.CommitAsync();
             return new CreateOrderResponse(newOrder.Id, newOrder.InvoiceId, dental.Name,
                 newOrder.DentistName, newOrder.DentistNote, newOrder.PatientName,
-                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender),
+                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), newOrder.PatientPhoneNumber,
                 EnumUtil.ParseEnum<OrderStatus>(newOrder.Status),
                 EnumUtil.ParseEnum<OrderMode>(newOrder.Mode), newOrder.TeethQuantity,
                 newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.CreatedDate);
@@ -125,6 +127,7 @@ namespace DentalLabManagement.API.Services.Implements
                     DentistNote = x.DentistNote,
                     PatientName = x.PatientName,
                     PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
+                    PatientPhoneNumber = x.PatientPhoneNumber,
                     Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
                     Mode = EnumUtil.ParseEnum<OrderMode>(x.Mode),
                     TeethQuantity = x.TeethQuantity,
@@ -198,6 +201,7 @@ namespace DentalLabManagement.API.Services.Implements
             orderItemResponse.DentistNote = order.DentistNote;
             orderItemResponse.PatientName = order.PatientName;
             orderItemResponse.PatientGender = EnumUtil.ParseEnum<PatientGender>(order.PatientGender);
+            orderItemResponse.PatientPhoneNumber = order.PatientPhoneNumber;
             orderItemResponse.Status = EnumUtil.ParseEnum<OrderStatus>(order.Status);
             orderItemResponse.Mode = EnumUtil.ParseEnum<OrderMode>(order.Mode);
             orderItemResponse.TeethQuantity = order.TeethQuantity;

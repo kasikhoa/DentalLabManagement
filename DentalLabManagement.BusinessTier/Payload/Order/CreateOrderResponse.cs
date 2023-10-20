@@ -16,6 +16,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; } 
         public PatientGender? PatientGender { get; set; }
+        public string? PatientPhoneNumber { get; set; }
         public OrderStatus Status { get; set; }
         public OrderMode Mode { get; set; }
         public int TeethQuantity { get; set; }
@@ -24,7 +25,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public double FinalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public CreateOrderResponse(int id, string invoiceId, string dentalName, string? dentistName, string? dentistNote, string? patientName, PatientGender? patientGender, OrderStatus status, OrderMode mode, int teethQuantity, double totalAmount, double discount, double finalAmount, DateTime createdDate)
+        public CreateOrderResponse(int id, string invoiceId, string dentalName, string? dentistName, string? dentistNote, string? patientName, PatientGender? patientGender, string? patientPhoneNumber, OrderStatus status, OrderMode mode, int teethQuantity, double totalAmount, double discount, double finalAmount, DateTime createdDate)
         {
             Id = id;
             InvoiceId = invoiceId;
@@ -33,6 +34,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
             DentistNote = dentistNote;
             PatientName = patientName;
             PatientGender = patientGender;
+            PatientPhoneNumber = patientPhoneNumber;
             Status = status;
             Mode = mode;
             TeethQuantity = teethQuantity;

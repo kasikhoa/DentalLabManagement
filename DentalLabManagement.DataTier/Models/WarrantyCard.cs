@@ -11,8 +11,8 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
-        public string CardCode { get; set; } = null!;
-        public int CardType { get; set; }
+        public string? CardCode { get; set; }
+        public int CategoryId { get; set; }
         public string? PatientName { get; set; }
         public string? DentalName { get; set; }
         public string? LaboName { get; set; }
@@ -21,8 +21,9 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public string? Image { get; set; }
         public string? LinkCategory { get; set; }
+        public string? Status { get; set; }
 
-        public virtual Category CardTypeNavigation { get; set; } = null!;
+        public virtual Category Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }
