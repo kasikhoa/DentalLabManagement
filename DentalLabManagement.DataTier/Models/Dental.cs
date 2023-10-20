@@ -13,6 +13,7 @@ namespace DentalLabManagement.DataTier.Models
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;
+        public string Status { get; set; } = null!;
         public int AccountId { get; set; }
 
         public virtual Account Account { get; set; } = null!;

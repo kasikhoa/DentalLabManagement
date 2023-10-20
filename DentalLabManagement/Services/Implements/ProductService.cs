@@ -134,13 +134,14 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
+
             Category category = await _unitOfWork.GetRepository<Category>()
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
             IPaginate<GetProductsInCategory> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
                 selector: x => new GetProductsInCategory(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
-                predicate: x => x.CategoryId == categoryId,
+                predicate: x => x.CategoryId.Equals(categoryId),
                 page: page,
                 size: size,
                 orderBy: x => x.OrderBy(x => x.CostPrice)

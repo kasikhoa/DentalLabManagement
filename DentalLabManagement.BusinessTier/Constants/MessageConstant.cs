@@ -37,6 +37,8 @@ public static class MessageConstant
         public const string DentalNotFoundMessage = "Dental không có trong hệ thống";
         public const string AccountDentalNotFoundMessage = "Dental chưa có account";
         public const string UpdateDentalFailedMessage = "Cập nhật thông tin Dental thất bại";
+        public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
+        public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
 
     public static class Category
@@ -49,6 +51,8 @@ public static class MessageConstant
         public const string UpdateCategoryFailedMessage = "Category cập nhật thất bại";
         public const string StageForCategorySuccessfulMessage = "Stage cho Category được cập nhật thành công";
         public const string StageForCategoryFailedMessage = "Stage cho Category cập nhật thất bại";
+        public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
+        public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
 
     public static class Product

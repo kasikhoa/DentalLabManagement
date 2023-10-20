@@ -109,8 +109,8 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(
-            string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
+        public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(string? InvoiceId, 
+            OrderMode? mode, OrderStatus? status, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
             

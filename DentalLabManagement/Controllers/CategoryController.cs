@@ -5,6 +5,8 @@ using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Error;
+using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.API.Services.Implements;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -28,16 +30,16 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoriesEndpoint)]
-        [ProducesResponseType(typeof(IPaginate<GetCategoriesResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IPaginate<CategoryResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllCategories([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllCategories([FromQuery] string? name, CategoryStatus? status, [FromQuery] int page, [FromQuery] int size)
         {
-            var categories = await _categoryService.GetCategories(name, page, size);
+            var categories = await _categoryService.GetCategories(name, status, page, size);
             return Ok(categories);
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoryEndpoint)]
-        [ProducesResponseType(typeof(GetCategoriesResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> GetCategoryById(int id)
         {
@@ -69,6 +71,14 @@ namespace DentalLabManagement.API.Controllers
         {
             var response = await _categoryService.GetProductStageByCategory(id, page, size);
             return Ok(response);
+        }
+
+        [HttpDelete(ApiEndPointConstant.Category.CategoryEndpoint)]
+        public async Task<IActionResult> UpdateProductStatus(int id)
+        {
+            var isSuccessful = await _categoryService.UpdateCategoryStatus(id);
+            if (!isSuccessful) return Ok(MessageConstant.Category.UpdateStatusFailedMessage);
+            return Ok(MessageConstant.Category.UpdateStatusSuccessMessage);
         }
 
     }

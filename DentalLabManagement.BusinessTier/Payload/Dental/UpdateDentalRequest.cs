@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
     {
         public string? Name { get; set; }
         public string? Address { get; set; }
+        public DentalStatus? Status { get; set; }
 
         public void TrimString()
         {

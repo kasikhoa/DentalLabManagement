@@ -3,6 +3,8 @@ using DentalLabManagement.BusinessTier.Payload.Dental;
 using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DentalLabManagement.API.Services.Implements;
+using DentalLabManagement.BusinessTier.Enums;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -39,9 +41,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Dental.DentalsEndPoint)]
         [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllDentals([FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllDentals([FromQuery] string? name, DentalStatus? status, [FromQuery] int page, [FromQuery] int size)
         {
-            var dentals = await _dentalService.GetDentalAccounts(name, page, size);
+            var dentals = await _dentalService.GetDentals(name, status, page, size);
             return Ok(dentals);
         }
 
@@ -53,6 +55,14 @@ namespace DentalLabManagement.API.Controllers
             var response = await _dentalService.UpdateDentalInfo(id, updateDentalRequest);
             return Ok(response);
 
+        }
+
+        [HttpDelete(ApiEndPointConstant.Dental.DentalEndPoint)]
+        public async Task<IActionResult> UpdateProductStatus(int id)
+        {
+            var isSuccessful = await _dentalService.UpdateDentalStatus(id);
+            if (!isSuccessful) return Ok(MessageConstant.Dental.UpdateStatusFailedMessage);
+            return Ok(MessageConstant.Dental.UpdateStatusSuccessMessage);
         }
     }
 }

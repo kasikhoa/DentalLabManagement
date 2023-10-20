@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Category
     { 
         public string? CategoryName { get; set; }
         public string? Description { get; set; }
-
+        public CategoryStatus Status { get; set; }
+        public string? Image { get; set; }
         public void TrimString()
         {
             CategoryName = CategoryName.Trim();
             Description = Description.Trim();
+            Image = Image?.Trim();
         }
 
     }

@@ -73,7 +73,7 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: BuildGetPositionsQuery(positionName, toothArch),
                 page: page,
                 size: size
-                ) ;
+                );
             return response;
         }
 

@@ -14,6 +14,10 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using DentalLabManagement.BusinessTier.Enums;
+using System.Linq.Expressions;
+using DentalLabManagement.API.Extensions;
+using DentalLabManagement.DataTier.Repository.Implement;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -37,49 +41,93 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 CategoryName = categoryRequest.CategoryName,
                 Description = categoryRequest.Description,
+                Status = categoryRequest.Status.GetDescriptionFromEnum(),
+                Image = categoryRequest.Image,
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.CreateNewCategoryFailedMessage);
-            return new CategoryResponse(newCategory.Id, newCategory.CategoryName, newCategory.Description);
+            return new CategoryResponse(newCategory.Id, newCategory.CategoryName, newCategory.Description,
+                EnumUtil.ParseEnum<CategoryStatus>(newCategory.Status), newCategory.Image);
         }
 
-        public async Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size)
+        private Expression<Func<Category, bool>> BuildGetCategoriesQuery(string? searchCategoryName, CategoryStatus? status)
+        {
+            Expression<Func<Category, bool>> filterQuery = x => true; 
+
+            if (!string.IsNullOrEmpty(searchCategoryName))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CategoryName.Contains(searchCategoryName));
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
+            }
+
+            return filterQuery;
+        }
+
+
+        public async Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size)
         {
             searchCategoryName = searchCategoryName?.Trim().ToLower();
-            IPaginate<GetCategoriesResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
-                selector: x => new GetCategoriesResponse(x.Id, x.CategoryName, x.Description),
-                predicate: string.IsNullOrEmpty(searchCategoryName) ? x => true : x => x.CategoryName.ToLower().Contains(searchCategoryName),
+            IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
+                selector: x => new CategoryResponse(x.Id, x.CategoryName, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
+                predicate: BuildGetCategoriesQuery(searchCategoryName, status),
                 page: page,
                 size: size
                 );
             return categories;
         }
 
-        public async Task<GetCategoriesResponse> GetCategoryById(int categoryId)
+        public async Task<CategoryResponse> GetCategoryById(int categoryId)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
             Category category = await _unitOfWork.GetRepository<Category>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage); ;
-            GetCategoriesResponse response = new GetCategoriesResponse(category.Id, category.CategoryName, category.Description);
-            return response;
+            return new CategoryResponse(category.Id, category.CategoryName, category.Description, 
+                EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);
         }     
 
         public async Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
-            Category category = await _unitOfWork.GetRepository<Category>()
-                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
+
+            Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
             updateCategoryRequest.TrimString();
             category.CategoryName = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.CategoryName : updateCategoryRequest.CategoryName;
             category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
-           
+            category.Status = updateCategoryRequest.Status.GetDescriptionFromEnum();
+            category.Image = string.IsNullOrEmpty(updateCategoryRequest.Image) ? category.Image : updateCategoryRequest.Image; ;
+
+            ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
+                predicate: x => x.CategoryId.Equals(category.Id));
+
+            if (category.Status.Equals(CategoryStatus.Activate.GetDescriptionFromEnum()))
+            {
+                foreach (var product in products)
+                {
+                    product.Status = ProductStatus.Available.GetDescriptionFromEnum();
+                }
+            }
+            if (category.Status.Equals(CategoryStatus.Deactivate.GetDescriptionFromEnum()))
+            {
+                foreach (var product in products)
+                {
+                    product.Status = ProductStatus.Unavailable.GetDescriptionFromEnum();
+                }
+            }
+
+            _unitOfWork.GetRepository<Product>().UpdateRange(products);
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.UpdateCategoryFailedMessage);
-            return new CategoryResponse(categoryId, category.CategoryName, category.Description);
+            return new CategoryResponse(categoryId, category.CategoryName, category.Description, 
+                EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);
         }
 
         public async Task<bool> CategoryMappingProductStage(int categoryId, List<int> request)
@@ -132,5 +180,26 @@ namespace DentalLabManagement.API.Services.Implements
             return productStageResponse;
         }
 
+        public async Task<bool> UpdateCategoryStatus(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
+
+            Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id));
+            if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
+            category.Status = CategoryStatus.Deactivate.GetDescriptionFromEnum();
+
+            ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
+                predicate: x => x.CategoryId.Equals(category.Id));                        
+
+            foreach(var product in products)
+            {
+                product.Status = ProductStatus.Unavailable.GetDescriptionFromEnum();
+            }
+            _unitOfWork.GetRepository<Product>().UpdateRange(products);
+            _unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessful;
+        }
     }
 }

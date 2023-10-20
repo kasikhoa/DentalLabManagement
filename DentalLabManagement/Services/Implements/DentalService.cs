@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using DentalLabManagement.API.Extensions;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -40,7 +42,8 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Name = dentalRequest.DentalName,
                     Address = dentalRequest.Address,
-                    AccountId = dentalRequest.AccountId,
+                    Status = dentalRequest.Status.GetDescriptionFromEnum(),
+                    AccountId = dentalRequest.AccountId,                  
                 };
             } 
             else throw new BadHttpRequestException(MessageConstant.Account.CreateAccountWithWrongRoleMessage);
@@ -49,7 +52,8 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccefful = await _unitOfWork.CommitAsync() > 0;
 
             if (!isSuccefful) throw new BadHttpRequestException(MessageConstant.Dental.CreateDentalFailed);
-            return new DentalResponse(newDental.Id, newDental.Name, newDental.Address, newDental.AccountId);
+            return new DentalResponse(newDental.Id, newDental.Name, newDental.Address,
+                EnumUtil.ParseEnum<DentalStatus>(newDental.Status), newDental.AccountId);
         }
 
         public async Task<DentalAccountResponse> GetAccountDentalById(int dentalId)
@@ -69,12 +73,30 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        public async Task<IPaginate<DentalResponse>> GetDentalAccounts(string? searchDentalName, int page, int size)
+        private Expression<Func<Dental, bool>> BuildGetDentalsQuery(string? searchDentalName, DentalStatus? status)
+        {
+            Expression<Func<Dental, bool>> filterQuery = x => true; 
+
+            if (!string.IsNullOrEmpty(searchDentalName))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchDentalName));
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
+            }
+
+            return filterQuery;
+        }
+
+
+        public async Task<IPaginate<DentalResponse>> GetDentals(string? searchDentalName, DentalStatus? status, int page, int size)
         {
             searchDentalName = searchDentalName?.Trim().ToLower();
             IPaginate<DentalResponse> response = await _unitOfWork.GetRepository<Dental>().GetPagingListAsync(
-                selector: x => new DentalResponse(x.Id, x.Name, x.Address, x.AccountId),
-                predicate: string.IsNullOrEmpty(searchDentalName) ? x => true : x => x.Name.ToLower().Contains(searchDentalName),
+                selector: x => new DentalResponse(x.Id, x.Name, x.Address, EnumUtil.ParseEnum<DentalStatus>(x.Status), x.AccountId),
+                predicate: BuildGetDentalsQuery(searchDentalName, status),
                 page: page,
                 size: size
                 );
@@ -93,12 +115,50 @@ namespace DentalLabManagement.API.Services.Implements
 
             updateDental.Name = string.IsNullOrEmpty(updateDentalRequest.Name) ? updateDental.Name : updateDentalRequest.Name;
             updateDental.Address = string.IsNullOrEmpty(updateDentalRequest.Address) ? updateDental.Address : updateDentalRequest.Address;
+            updateDental.Status = updateDentalRequest.Status.GetDescriptionFromEnum();
+
+            Account accountDental = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(updateDental.AccountId));
+            if (accountDental != null && updateDental.Status.Equals(DentalStatus.Activate.GetDescriptionFromEnum()))
+            {
+                accountDental.Status = AccountStatus.Activate.GetDescriptionFromEnum();
+            }
+            if (accountDental != null && updateDental.Status.Equals(DentalStatus.Deactivate.GetDescriptionFromEnum()))
+            {
+                accountDental.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
+            }
 
             _unitOfWork.GetRepository<Dental>().UpdateAsync(updateDental);
+            _unitOfWork.GetRepository<Account>().UpdateAsync(accountDental);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Dental.UpdateDentalFailedMessage);
-            return new DentalResponse(updateDental.Id, updateDental.Name, updateDental.Address, updateDental.AccountId);
+            return new DentalResponse(updateDental.Id, updateDental.Name, updateDental.Address, 
+                EnumUtil.ParseEnum<DentalStatus>(updateDental.Status), updateDental.AccountId);
 
         }
+
+        public async Task<bool> UpdateDentalStatus(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
+
+            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id));
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
+
+            dental.Status = DentalStatus.Deactivate.GetDescriptionFromEnum();
+
+            Account accountDental = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(dental.AccountId));
+
+            if (accountDental != null && dental.Status.Equals(DentalStatus.Deactivate.GetDescriptionFromEnum()))
+            {
+                accountDental.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
+            }
+            _unitOfWork.GetRepository<Dental>().UpdateAsync(dental);
+            _unitOfWork.GetRepository<Account>().UpdateAsync(accountDental);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessful;
+        }
+
     }
 }

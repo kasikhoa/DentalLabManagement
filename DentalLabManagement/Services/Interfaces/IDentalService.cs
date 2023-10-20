@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.BusinessTier.Payload.Dental;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Payload.Dental;
 using DentalLabManagement.DataTier.Paginate;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         public Task<DentalResponse> CreateDentalAccount(DentalRequest dentalRequest);
         public Task<DentalAccountResponse> GetAccountDentalById(int dentalId);
-        public Task<IPaginate<DentalResponse>> GetDentalAccounts(string? name, int page, int size);
+        public Task<IPaginate<DentalResponse>> GetDentals(string? name, DentalStatus? status, int page, int size);
         public Task<DentalResponse> UpdateDentalInfo(int id, UpdateDentalRequest updateDentalRequest);
+        public Task<bool> UpdateDentalStatus(int id);
     }
 }

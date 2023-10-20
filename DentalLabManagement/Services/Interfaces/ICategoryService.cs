@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.BusinessTier.Payload.Account;
+﻿using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.DataTier.Models;
@@ -15,13 +16,12 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         public Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
 
-        public Task<IPaginate<GetCategoriesResponse>> GetCategories(string? searchCategoryName, int page, int size);
+        public Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size);
 
-        public Task<GetCategoriesResponse> GetCategoryById(int id);
+        public Task<CategoryResponse> GetCategoryById(int id);
         public Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
         public Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
         public Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
-
-
+        public Task<bool> UpdateCategoryStatus(int id);
     }
 }
