@@ -255,7 +255,6 @@ namespace DentalLabManagement.API.Services.Implements
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(updateOrderRequest.UpdatedBy)
                 );
-
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);          
 
             Order updateOrder = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
@@ -287,12 +286,14 @@ namespace DentalLabManagement.API.Services.Implements
                             updateOrder.UpdatedAt, MessageConstant.Order.CannotChangeToStatusMessage);
 
                     List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
+
                     foreach (var item in orderItems)
                     {
                         ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
                             predicate: p => p.CategoryId.Equals(item.Product.CategoryId),
                             include: x => x.Include(x => x.ProductStage)
                             );
+
                         foreach (var itemStage in stageList)
                         {
                             OrderItemStage newStage = new OrderItemStage()
@@ -326,15 +327,13 @@ namespace DentalLabManagement.API.Services.Implements
 
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                        selector: x => x.FullName, predicate: x => x.Id.Equals(updateOrder.UpdatedBy)), 
-                            updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusRepeatMessage);
+                            updateOrder.UpdatedByNavigation.FullName, updateOrder.UpdatedAt, 
+                            MessageConstant.Order.CompletedStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                        selector: x => x.FullName, predicate: x => x.Id.Equals(updateOrder.UpdatedBy)),
-                            updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusRepeatMessage);
+                            updateOrder.UpdatedByNavigation.FullName,updateOrder.UpdatedAt, 
+                            MessageConstant.Order.CanceledStatusRepeatMessage);
 
                     foreach (var orderItem in orderItems)
                     {
