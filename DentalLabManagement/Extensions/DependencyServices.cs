@@ -23,11 +23,11 @@ namespace DentalLabManagement.API.Extensions
             return services;
         }
 
-        public static IServiceCollection AddDatabase(this IServiceCollection services)
-        {
-            services.AddDbContext<DentalLabManagementContext>(options => options.UseSqlServer($"Server=Khoa\\SQLEXPRESS;Database=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345"));
-            return services;
-        }
+        //public static IServiceCollection AddDatabase(this IServiceCollection services)
+        //{
+        //    services.AddDbContext<DentalLabManagementContext>(options => options.UseSqlServer($"Server=Khoa\\SQLEXPRESS;Database=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345"));
+        //    return services;
+        //}
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {

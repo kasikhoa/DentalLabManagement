@@ -74,7 +74,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpDelete(ApiEndPointConstant.Category.CategoryEndpoint)]
-        public async Task<IActionResult> UpdateProductStatus(int id)
+        public async Task<IActionResult> UpdateCategoryStatus(int id)
         {
             var isSuccessful = await _categoryService.UpdateCategoryStatus(id);
             if (!isSuccessful) return Ok(MessageConstant.Category.UpdateStatusFailedMessage);

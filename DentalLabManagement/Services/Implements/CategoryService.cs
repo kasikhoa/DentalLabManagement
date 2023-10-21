@@ -177,7 +177,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             IPaginate<ProductStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
                 selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: x => categoryIds.Equals(x.Id),
+                predicate: x => categoryIds.Contains(x.Id),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
                 size: size

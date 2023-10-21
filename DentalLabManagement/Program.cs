@@ -5,6 +5,9 @@ using DentalLabManagement.API.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Text.Json.Serialization;
 using DentalLabManagement.DataTier.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace DentalLabManagement.API
 {
@@ -36,8 +39,13 @@ namespace DentalLabManagement.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddConfigSwagger();
 
-            builder.Configuration.GetConnectionString("SQLServerDatabase");
-            builder.Services.AddDbContext<DentalLabManagementContext>();
+            //builder.Configuration.GetConnectionString("SQLServerDatabase");
+            //builder.Services.AddDbContext<DentalLabManagementContext>();
+
+            builder.Services.AddDbContext<DentalLabManagementContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerDatabase"));
+            });
 
             var app = builder.Build();
 
