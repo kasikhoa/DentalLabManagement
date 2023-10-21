@@ -137,6 +137,9 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
 
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;  
+
             Category category = await _unitOfWork.GetRepository<Category>()
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
