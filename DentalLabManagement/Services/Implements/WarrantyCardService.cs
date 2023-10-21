@@ -7,6 +7,7 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 
 namespace DentalLabManagement.API.Services.Implements
@@ -32,6 +33,7 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 CardCode = warrantyCardRequest.CardCode,
                 CategoryId = warrantyCardRequest.CategoryId,
+                StartDate = TimeUtils.GetCurrentSEATime(),
                 Description = warrantyCardRequest.Description,
                 Image = warrantyCardRequest.Image,
                 LinkCategory = warrantyCardRequest.LinkCategory,
@@ -45,8 +47,8 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 Id = warrantyCard.Id,
                 CardCode = warrantyCard.CardCode,
-                CategoryName = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-                    selector: x => x.Name, predicate: x => x.Id.Equals(warrantyCard.CategoryId)),
+                CategoryName = category.Name,
+                StartDate = warrantyCard.StartDate,
                 Image = warrantyCard.Image,
                 LinkCategory = warrantyCard.LinkCategory,
                 Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
@@ -88,7 +90,7 @@ namespace DentalLabManagement.API.Services.Implements
                     PatientName = x.PatientName,    
                     DentalName = x.DentalName,
                     LaboName = x.LaboName,
-                    StartDate= x.StartDate,
+                    StartDate = x.StartDate,
                     ExpDate= x.ExpDate,
                     Description= x.Description,
                     Image = x.Image,
@@ -104,13 +106,13 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<WarrantyCardResponse> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
         {
-            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyWarrantyCardIdMessage);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id));
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
-            request.TrimString(); TimeUtils.GetCurrentSEATime();
+            request.TrimString(); 
 
             warrantyCard.CardCode = string.IsNullOrEmpty(request.CardCode) ? warrantyCard.CardCode : request.CardCode;
             warrantyCard.Image = string.IsNullOrEmpty(request.Image) ? warrantyCard.Image : request.Image;

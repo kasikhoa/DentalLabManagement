@@ -29,6 +29,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
+        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -179,9 +180,9 @@ namespace DentalLabManagement.DataTier.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItems_TeethPosition");
 
-                entity.HasOne(d => d.Warranty)
+                entity.HasOne(d => d.WarrantyCard)
                     .WithMany(p => p.OrderItems)
-                    .HasForeignKey(d => d.WarrantyId)
+                    .HasForeignKey(d => d.WarrantyCardId)
                     .HasConstraintName("FK_OrderItems_WarrantyCard");
             });
 
@@ -317,6 +318,19 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_Category");
+            });
+
+            modelBuilder.Entity<staff>(entity =>
+            {
+                entity.ToTable("Staff");
+
+                entity.Property(e => e.FullName).HasMaxLength(50);
+
+                entity.HasOne(d => d.ProductStage)
+                    .WithMany(p => p.staff)
+                    .HasForeignKey(d => d.ProductStageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Staff_ProductStage");
             });
 
             OnModelCreatingPartial(modelBuilder);

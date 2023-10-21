@@ -14,7 +14,7 @@ namespace DentalLabManagement.DataTier.Models
         public int OrderId { get; set; }
         public int ProductId { get; set; }
         public int TeethPositionId { get; set; }
-        public int? WarrantyId { get; set; }
+        public int? WarrantyCardId { get; set; }
         public string? Note { get; set; }
         public double SellingPrice { get; set; }
         public int Quantity { get; set; }
@@ -23,7 +23,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual Order Order { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;
         public virtual TeethPosition TeethPosition { get; set; } = null!;
-        public virtual WarrantyCard? Warranty { get; set; }
+        public virtual WarrantyCard? WarrantyCard { get; set; }
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
     }
 }
