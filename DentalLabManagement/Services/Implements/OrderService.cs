@@ -115,8 +115,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<GetOrderDetailResponse>> GetOrders(string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
 
             var orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: x => new GetOrderDetailResponse()
@@ -257,8 +257,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);          
 
             Order updateOrder = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderId),
-                include: x => x.Include(x => x.UpdatedByNavigation)
+                predicate: x => x.Id.Equals(orderId)
                 );
             if (updateOrder == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
@@ -275,13 +274,13 @@ namespace DentalLabManagement.API.Services.Implements
 
                     if (updateOrder.Status.Equals(OrderStatus.Producing.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(
-                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),updateOrder.UpdatedByNavigation.FullName, 
+                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),account.FullName, 
                             updateOrder.UpdatedAt, MessageConstant.Order.ProducingStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()) ||
                         updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(
-                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.UpdatedByNavigation.FullName,
+                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), account.FullName,
                             updateOrder.UpdatedAt, MessageConstant.Order.CannotChangeToStatusMessage);
 
                     List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
@@ -319,20 +318,18 @@ namespace DentalLabManagement.API.Services.Implements
                     bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                     if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
 
-                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                        updateOrder.UpdatedByNavigation.FullName, updateOrder.UpdatedAt, MessageConstant.Order.ProducingStatusMessage);
+                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), account.FullName,
+                        updateOrder.UpdatedAt, MessageConstant.Order.ProducingStatusMessage);
 
                 case OrderStatus.Completed:
 
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            updateOrder.UpdatedByNavigation.FullName, updateOrder.UpdatedAt, 
-                            MessageConstant.Order.CompletedStatusRepeatMessage);
+                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            updateOrder.UpdatedByNavigation.FullName,updateOrder.UpdatedAt, 
-                            MessageConstant.Order.CanceledStatusRepeatMessage);
+                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusRepeatMessage);
 
 
                     List<int> orderItemIds = (List<int>) await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
@@ -356,21 +353,17 @@ namespace DentalLabManagement.API.Services.Implements
                     isSuccessful = await _unitOfWork.CommitAsync() > 0;
                     if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
 
-                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                    updateOrder.UpdatedByNavigation.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
+                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), account.FullName, 
+                        updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
 
                 case OrderStatus.Canceled:
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                            selector: x => x.FullName, predicate: x => x.Id.Equals(updateOrder.UpdatedBy)), 
-                            updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusRepeatMessage);
+                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                            await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                            selector: x => x.FullName, predicate: x => x.Id.Equals(updateOrder.UpdatedBy)), 
-                            updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusRepeatMessage);
+                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusRepeatMessage);
 
                     updateOrder.Status = OrderStatus.Canceled.GetDescriptionFromEnum();
                     updateOrder.UpdatedBy = updateOrderRequest.UpdatedBy;
@@ -380,22 +373,22 @@ namespace DentalLabManagement.API.Services.Implements
                     isSuccessful = await _unitOfWork.CommitAsync() > 0;
                     if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
                     return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                        updateOrder.UpdatedByNavigation.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusMessage);
+                        account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusMessage);
                     
                 default:
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()) ||
                         updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(
-                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.UpdatedByNavigation.FullName,
+                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), account.FullName,
                             updateOrder.UpdatedAt, MessageConstant.Order.CannotChangeToStatusMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Producing.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(
-                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.UpdatedByNavigation.FullName,
+                            EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), account.FullName,
                             updateOrder.UpdatedAt, MessageConstant.Order.StatusErrorMessage);
 
                     return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status),
-                        null, updateOrder.UpdatedAt, MessageConstant.Order.NewStatusMessage);
+                        account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.NewStatusMessage);
                     
             }
         }

@@ -97,8 +97,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, AccountStatus? status, int page, int size)
         {
             searchUsername = searchUsername?.Trim().ToLower();
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
 
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
                 selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),

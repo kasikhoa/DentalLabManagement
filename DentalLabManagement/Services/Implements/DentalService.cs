@@ -94,8 +94,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<DentalResponse>> GetDentals(string? searchDentalName, DentalStatus? status, int page, int size)
         {
             searchDentalName = searchDentalName?.Trim().ToLower();
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
             IPaginate<DentalResponse> response = await _unitOfWork.GetRepository<Dental>().GetPagingListAsync(
                 selector: x => new DentalResponse(x.Id, x.Name, x.Address, EnumUtil.ParseEnum<DentalStatus>(x.Status), x.AccountId),
                 predicate: BuildGetDentalsQuery(searchDentalName, status),

@@ -10,7 +10,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
     public class UpdateOrderItemStageResponse
     {
         public int OrderItemId { get; set; }
-        public string StaffName { get; set; }
+        public string? StaffName { get; set; }
         public int IndexStage { get; set; }
         public string StageName { get; set; }
         public double ExecutionTime { get; set; }
@@ -21,7 +21,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
         public string? Image { get; set; }
         public string Message { get; set; }
 
-        public UpdateOrderItemStageResponse(int orderItemId, string staffName, int indexStage, string stageName, double executionTime, OrderItemStageStatus status, DateTime startDate, DateTime? endDate, string? note, string? image, string message)
+        public UpdateOrderItemStageResponse(int orderItemId, string? staffName, int indexStage, string stageName, double executionTime, OrderItemStageStatus status, DateTime startDate, DateTime? endDate, string? note, string? image, string message)
         {
             OrderItemId = orderItemId;
             StaffName = staffName;

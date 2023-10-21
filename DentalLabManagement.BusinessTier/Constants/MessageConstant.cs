@@ -16,7 +16,6 @@ public static class MessageConstant
         public const string AccountExisted = "Tài khoản đã tồn tại";
         public const string CreateAccountFailed = "Tạo tài khoản thất bại";
         public const string CreateAccountWithWrongRoleMessage = "Please create with acceptent role";
-        public const string CreateDentalAccountFailMessage = "Tạo tài khoản mới cho nhãn hiệu thất bại";
         public const string CreateStaffAccountFailMessage = "Tạo tài khoản nhân viên thất bại";
         public const string UserUnauthorizedMessage = "Bạn không được phép cập nhật status cho tài khoản này";
 
@@ -28,6 +27,8 @@ public static class MessageConstant
         public const string UpdateAccountStatusFailedMessage = "Vô hiệu hóa tài khoản thất bại";
         public const string UpdateAccountStatusSuccessfulMessage = "Vô hiệu hóa tài khoản thành công";
         public const string EmptyAccountIdMessage = "Account Id không hợp lệ";
+
+        public const string StaffNotFoundMessage = "Không tìm thấy nhân viên";
     }
 
     public static class Dental
@@ -108,13 +109,14 @@ public static class MessageConstant
         public const string UpdateStatusFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
     }
 
-    public static class OrderItemStage 
+    public static class OrderItemStage
     {
         public const string EmptyOrderItemStageIdMessage = "Id của order không hợp lệ";
-        public const string IndexStageNotFoundMessage = "Không tìm thấy khâu sản xuất";
+        public const string OrderItemStageNotFoundMessage = "Không tìm thấy khâu sản xuất";
         public const string UpdateStatusStageSuccessMessage = "Cập nhật trạng thái khâu sản xuất thành công";
         public const string UpdateStatusStageFailedMessage = "Cập nhật trạng thái khâu sản xuất thất bại";
-        
+        public const string PreviousStageNotCompletedMessage = "Khâu sản xuất trước chưa hoàn thành";
+
     }
 
     public static class WarrantyCard

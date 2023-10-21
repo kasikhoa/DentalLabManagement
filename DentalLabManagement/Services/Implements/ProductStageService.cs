@@ -59,8 +59,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size)
         {
             name = name?.Trim().ToLower();
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
             IPaginate<ProductStageResponse> response = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync
                 (selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: string.IsNullOrEmpty(name) && !index.HasValue

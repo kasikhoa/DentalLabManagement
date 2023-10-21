@@ -77,8 +77,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? categoryId, WarrantyCardStatus? status, int page, int size)
         {
             cardCode = cardCode?.Trim().ToLower();
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
             IPaginate<WarrantyCardResponse> result = await _unitOfWork.GetRepository<WarrantyCard>().GetPagingListAsync(
                 selector: x => new WarrantyCardResponse()
                 {

@@ -40,12 +40,12 @@ namespace DentalLabManagement.API
             builder.Services.AddConfigSwagger();
 
             //builder.Configuration.GetConnectionString("SQLServerDatabase");
-            //builder.Services.AddDbContext<DentalLabManagementContext>();
+            builder.Services.AddDbContext<DentalLabManagementContext>();
 
-            builder.Services.AddDbContext<DentalLabManagementContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerDatabase"));
-            });
+            //builder.Services.AddDbContext<DentalLabManagementContext>(options =>
+            //{
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerDatabase"));
+            //});
 
             var app = builder.Build();
 

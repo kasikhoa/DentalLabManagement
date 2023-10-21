@@ -71,8 +71,8 @@ namespace DentalLabManagement.API.Services.Implements
         {
             searchCategoryName = searchCategoryName?.Trim().ToLower();
 
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
 
             IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
                 selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
@@ -167,8 +167,8 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
         {
-            page = (page == 0) ? page = 1 : page;
-            size = (size == 0) ? size = 10 : size;
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
 
             List<int> categoryIds = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
              selector: x => x.ProductStageId,
