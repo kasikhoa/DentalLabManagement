@@ -31,6 +31,7 @@ namespace DentalLabManagement.API.Services.Implements
             Expression<Func<Account, bool>> searchFilter = p =>
                 p.UserName.Equals(loginRequest.Username) &&
                 p.Password.Equals(PasswordUtil.HashPassword(loginRequest.Password));
+
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: searchFilter);
             if (account == null) return null;
@@ -53,6 +54,7 @@ namespace DentalLabManagement.API.Services.Implements
             Account account = await _unitOfWork.GetRepository<Account>()
                 .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
             if (account != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
+
             account = new Account()
             {
                 UserName = createNewAccountRequest.Username,
@@ -97,6 +99,7 @@ namespace DentalLabManagement.API.Services.Implements
             searchUsername = searchUsername?.Trim().ToLower();
             page = (page == 0) ? page = 1 : page;
             size = (size == 0) ? size = 10 : size;
+
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
                 selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),
                 predicate: BuildGetAccountsQuery(searchUsername, role, status),
