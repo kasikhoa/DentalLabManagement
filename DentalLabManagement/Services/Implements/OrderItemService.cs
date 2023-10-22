@@ -93,11 +93,44 @@ namespace DentalLabManagement.API.Services.Implements
                 OrderId = orderItem.Id,
                 ProductName = product.Name,
                 TeethPosition = teethPosition.PositionName,
-                //WarrantyCardCode = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                //    selector: x => x.CardCode, predicate: x => x.Id.Equals(orderItem.WarrantyCardId)),
                 Note = orderItem.Note,
                 SellingPrice = orderItem.SellingPrice,
                 Quantity = orderItem.Quantity,
+                TotalAmount = orderItem.TotalAmount,
+            };
+        }
+
+        public async Task<GetOrderItemResponse> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
+
+            OrderItem orderItem = await _unitOfWork.GetRepository<OrderItem>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.Product).Include(x => x.TeethPosition)
+                );
+            if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
+
+            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(updateRequest.WarrantyCardId));
+            if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
+
+            if (!warrantyCard.CategoryId.Equals(orderItem.Product.CategoryId))
+                throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
+
+            orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
+            _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.OrderItem.UpdateCardFailedMessage);
+            return new GetOrderItemResponse()
+            {
+                Id = orderItem.Id,
+                OrderId= orderItem.OrderId,
+                ProductName = orderItem.Product.Name,
+                TeethPosition = orderItem.TeethPosition.PositionName,
+                WarrantyCardCode = warrantyCard.CardCode,
+                Note = orderItem.Note,
+                SellingPrice = orderItem.SellingPrice,
+                Quantity= orderItem.Quantity,
                 TotalAmount = orderItem.TotalAmount,
             };
         }

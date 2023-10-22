@@ -7,5 +7,6 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         public Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, int page, int size);
         public Task<GetOrderItemResponse> UpdateOrderItem(int id, UpdateOrderItemRequest request);
+        public Task<GetOrderItemResponse> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest);
     }
 }

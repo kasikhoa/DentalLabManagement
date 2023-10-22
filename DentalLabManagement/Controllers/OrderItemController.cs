@@ -1,6 +1,5 @@
 ﻿using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.OrderItem;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,7 @@ namespace DentalLabManagement.API.Controllers
         {
             var response = await _orderItemService.GetOrderItems(orderId, warrantyCardCode, page, size);
             return Ok(response);
-        }
+        }       
 
         [HttpPut(ApiEndPointConstant.OrderItem.OrderItemEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
@@ -32,5 +31,14 @@ namespace DentalLabManagement.API.Controllers
             var response = await _orderItemService.UpdateOrderItem(id, request);
             return Ok(response);
         }
+
+        [HttpPut(ApiEndPointConstant.OrderItem.OrderItemCardEndPoint)]
+        [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
+        {
+            var response = await _orderItemService.UpdateWarrantyCard(id, updateRequest);
+            return Ok(response);
+        }
+
     }
 }

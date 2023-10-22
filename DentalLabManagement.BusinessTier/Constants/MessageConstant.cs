@@ -114,6 +114,7 @@ public static class MessageConstant
         public const string EmptyIdMessage = "Id của item không hợp lệ";
         public const string NotFoundMessage = "Item không tồn tại trong hệ thống";
         public const string UpdateFailedMessage = "Cập nhật thông tin Item thất bại";
+        public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
     }
 
     public static class OrderItemStage
@@ -133,6 +134,7 @@ public static class MessageConstant
         public const string CardCodeExistedMessage = "Mã thẻ đã tồn tại";
         public const string CreateCardFailedMessage = "Tạo mới thẻ bảo hành thất bại";
         public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
+        public const string CardNotMatchedCategoryMessage = "Thẻ không đúng với sản phẩm";
 
     }
     

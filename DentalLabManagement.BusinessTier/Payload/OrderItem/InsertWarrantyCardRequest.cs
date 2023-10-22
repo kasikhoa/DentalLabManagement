@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Payload.OrderItem
 {
-    public class UpdateWarrantyCardRequest
+    public class InsertWarrantyCardRequest
     {
         public int WarrantyCardId { get; set; }
 
