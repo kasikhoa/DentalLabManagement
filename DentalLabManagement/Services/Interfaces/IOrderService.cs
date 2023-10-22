@@ -15,6 +15,6 @@ namespace DentalLabManagement.API.Services.Interfaces
         public Task<GetOrderDetailResponse> GetOrderTeethDetail(int id);
         public Task<IPaginate<GetOrderDetailResponse>> GetOrders(
             string? InvoiceId, OrderMode? mode, OrderStatus? status, int page, int size);
-        public Task<UpdateOrderResponse> UpdateOrder(int orderId, UpdateOrderRequest updateOrderRequest);
+        public Task<UpdateOrderResponse> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest);
     }
 }

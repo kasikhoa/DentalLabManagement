@@ -40,6 +40,7 @@ namespace DentalLabManagement.API.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderItemStageService, OrderItemStageService>();
             services.AddScoped<IWarrantyCardService, WarrantyCardService>();
+            services.AddScoped<IOrderItemService, OrderItemService>();
             return services;
         }
 

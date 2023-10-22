@@ -138,6 +138,7 @@ namespace DentalLabManagement.API.Services.Implements
                     CreatedDate = x.CreatedDate,
                     CompletedDate = x.CompletedDate,
                     UpdatedBy = x.UpdatedByNavigation.FullName,
+                    Note = x.Note
                 },
                 predicate: BuildGetOrdersQuery(InvoiceId, mode, status),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
@@ -211,6 +212,7 @@ namespace DentalLabManagement.API.Services.Implements
             orderItemResponse.FinalAmount = order.FinalAmount;
             orderItemResponse.CreatedDate = order.CreatedDate;
             orderItemResponse.UpdatedBy = order.UpdatedByNavigation.FullName;
+            orderItemResponse.Note = order.Note;
 
 
             orderItemResponse.ToothList = (List<OrderItemResponse>) await _unitOfWork.GetRepository<OrderItem>()
@@ -246,7 +248,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        public async Task<UpdateOrderResponse> UpdateOrder(int orderId, UpdateOrderRequest updateOrderRequest)
+        public async Task<UpdateOrderResponse> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest)
         {
             if (orderId < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
 
@@ -362,7 +364,7 @@ namespace DentalLabManagement.API.Services.Implements
                 case OrderStatus.Canceled:
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
-                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CanceledStatusRepeatMessage);
+                            account.FullName, updateOrder.UpdatedAt, updateOrder.Note, MessageConstant.Order.CanceledStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
@@ -371,6 +373,7 @@ namespace DentalLabManagement.API.Services.Implements
                     updateOrder.Status = OrderStatus.Canceled.GetDescriptionFromEnum();
                     updateOrder.UpdatedBy = updateOrderRequest.UpdatedBy;
                     updateOrder.UpdatedAt = currentTime;
+                    updateOrder.Note = updateOrderRequest.Note;
 
                     _unitOfWork.GetRepository<Order>().UpdateAsync(updateOrder);
                     isSuccessful = await _unitOfWork.CommitAsync() > 0;

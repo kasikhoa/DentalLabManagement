@@ -30,7 +30,7 @@ public static class ApiEndPointConstant
 
     public static class Dental
     {
-        public const string DentalsEndPoint = ApiEndpoint + "/dental";
+        public const string DentalsEndPoint = ApiEndpoint + "/dentals";
         public const string DentalEndPoint = DentalsEndPoint + "/{id}";
     }
 
@@ -59,6 +59,12 @@ public static class ApiEndPointConstant
     {
         public const string OrdersEndPoint = ApiEndpoint + "/orders";
         public const string OrderEndPoint = OrdersEndPoint + "/{id}";
+    }
+
+    public static class OrderItem
+    {
+        public const string OrderItemsEndPoint = ApiEndpoint + "/orderItems";
+        public const string OrderItemEndPoint = OrderItemsEndPoint + "/{id}";
     }
 
     public static class OrderItemStage

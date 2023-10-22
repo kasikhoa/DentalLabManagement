@@ -11,5 +11,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     {
         public OrderStatus Status { get; set; }
         public int? UpdatedBy { get; set; }
+        public string? Note { get; set; }
     }
 }

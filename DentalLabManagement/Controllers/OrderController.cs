@@ -45,7 +45,7 @@ namespace DentalLabManagement.API.Controllers
         [ProducesResponseType(typeof(UpdateOrderResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
         {
-            var response = await _orderService.UpdateOrder(id, updateOrderRequest);
+            var response = await _orderService.UpdateOrderStatus(id, updateOrderRequest);
             return Ok(response);
         }
     }

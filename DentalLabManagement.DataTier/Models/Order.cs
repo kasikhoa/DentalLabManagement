@@ -29,6 +29,7 @@ namespace DentalLabManagement.DataTier.Models
         public DateTime? CompletedDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? Note { get; set; }
 
         public virtual Dental Dental { get; set; } = null!;
         public virtual Account? UpdatedByNavigation { get; set; }

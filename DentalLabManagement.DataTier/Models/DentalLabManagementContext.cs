@@ -29,7 +29,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
-        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -127,6 +126,8 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Mode)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Note).HasMaxLength(50);
 
                 entity.Property(e => e.PatientGender)
                     .HasMaxLength(50)
@@ -318,19 +319,6 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_Category");
-            });
-
-            modelBuilder.Entity<staff>(entity =>
-            {
-                entity.ToTable("Staff");
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.HasOne(d => d.ProductStage)
-                    .WithMany(p => p.staff)
-                    .HasForeignKey(d => d.ProductStageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Staff_ProductStage");
             });
 
             OnModelCreatingPartial(modelBuilder);
