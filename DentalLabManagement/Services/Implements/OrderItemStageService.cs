@@ -55,7 +55,7 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Id = x.Id,
                     OrderItemId = x.OrderItemId,
-                    StaffId = x.StaffId,
+                    StaffName = x.Staff.FullName,
                     IndexStage = x.IndexStage,
                     StageName = x.StageName,
                     Description = x.Description,
@@ -71,6 +71,33 @@ namespace DentalLabManagement.API.Services.Implements
                 size: size
                 );
             return result;
+        }
+
+        public async Task<OrderItemStageResponse> GetOrderItemStageById(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItemStage.EmptyOrderItemStageIdMessage);
+            OrderItemStage orderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.Staff)
+                );
+            if (orderItemStage == null) throw new BadHttpRequestException(MessageConstant.OrderItemStage.OrderItemStageNotFoundMessage);
+
+            string staffName = (orderItemStage.Staff != null) ? orderItemStage.Staff.FullName : null;
+            return new OrderItemStageResponse()
+            {
+                Id = orderItemStage.Id,
+                OrderItemId = orderItemStage.Id,
+                StaffName = staffName,
+                IndexStage = orderItemStage.IndexStage,
+                StageName= orderItemStage.StageName,
+                Description = orderItemStage.Description,
+                Execution = orderItemStage.ExecutionTime,
+                Status = EnumUtil.ParseEnum<OrderItemStageStatus>(orderItemStage.Status),
+                StartDate = orderItemStage.StartDate,
+                EndDate = orderItemStage.EndDate,
+                Note = orderItemStage.Note,
+                Image = orderItemStage.Image,
+            };
         }
 
         public async Task<UpdateOrderItemStageResponse> UpdateOrderItemStage(int orderItemStageId, UpdateOrderItemStageRequest updateOrderItemStageRequest)
@@ -196,6 +223,6 @@ namespace DentalLabManagement.API.Services.Implements
             }
 
         }
-
+        
     }
 }

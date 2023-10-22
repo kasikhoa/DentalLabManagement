@@ -40,5 +40,13 @@ namespace DentalLabManagement.API.Controllers
             var response = await _warrantyCardService.UpdateWarrantyCard(id, request);
             return Ok(response);
         }
+
+        [HttpGet(ApiEndPointConstant.WarrantyCard.WarrantyCardEndPoint)]
+        [ProducesResponseType(typeof(WarrantyCardResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetWarrantyCardById(int id)
+        {
+            var response = await _warrantyCardService.GetWarrantyCardById(id);
+            return Ok(response);
+        }
     }
 }

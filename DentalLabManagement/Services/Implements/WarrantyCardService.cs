@@ -7,6 +7,7 @@ using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 
@@ -21,13 +22,14 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<WarrantyCardResponse> InseartNewWarrantyCard(WarrantyCardRequest warrantyCardRequest)
         {
-            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.CardCode.Equals(warrantyCardRequest.CardCode));
-            if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
-
+            
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(warrantyCardRequest.CategoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
+
+            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
+                predicate: x => x.CardCode.Equals(warrantyCardRequest.CardCode) && x.CategoryId.Equals(category.Id));
+            if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
 
             warrantyCard = new WarrantyCard()
             {
@@ -133,6 +135,27 @@ namespace DentalLabManagement.API.Services.Implements
                 Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
             };
 
+        }
+
+        public async Task<WarrantyCardResponse> GetWarrantyCardById(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);
+
+            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.Category));
+            if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
+
+            return new WarrantyCardResponse()
+            {
+                Id = warrantyCard.Id,
+                CardCode = warrantyCard.CardCode,
+                CategoryName = warrantyCard.Category.Name,
+                Description = warrantyCard.Description,
+                Image = warrantyCard.Image,
+                LinkCategory = warrantyCard.LinkCategory,
+                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
+            };
         }
     }
 }

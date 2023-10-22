@@ -59,6 +59,31 @@ namespace DentalLabManagement.API.Services.Implements
             return result;
         }
 
+        public async Task<GetOrderItemResponse> GetOrderItemById(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
+            OrderItem orderItem = await _unitOfWork.GetRepository<OrderItem>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.Product).Include(x => x.TeethPosition).Include(x => x.WarrantyCard)
+                );
+            if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
+
+            string cardCode = orderItem.WarrantyCard != null ? orderItem.WarrantyCard.CardCode : null;
+
+            return new GetOrderItemResponse()
+            {
+                Id = orderItem.Id,
+                OrderId = orderItem.OrderId,
+                ProductName = orderItem.Product.Name,
+                TeethPosition = orderItem.TeethPosition.PositionName,
+                WarrantyCardCode = cardCode,
+                Note = orderItem.Note,
+                SellingPrice = orderItem.SellingPrice,
+                Quantity = orderItem.Quantity,
+                TotalAmount = orderItem.TotalAmount,
+            };
+        }
+
         public async Task<GetOrderItemResponse> UpdateOrderItem(int id, UpdateOrderItemRequest request)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
@@ -100,7 +125,7 @@ namespace DentalLabManagement.API.Services.Implements
             };
         }
 
-        public async Task<GetOrderItemResponse> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
+        public async Task<GetOrderItemResponse> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
 
@@ -134,5 +159,6 @@ namespace DentalLabManagement.API.Services.Implements
                 TotalAmount = orderItem.TotalAmount,
             };
         }
+       
     }
 }

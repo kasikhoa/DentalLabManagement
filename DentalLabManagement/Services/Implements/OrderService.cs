@@ -195,6 +195,8 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(order.DentalId));
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
+            string updateBy = order.UpdatedByNavigation != null ? order.UpdatedByNavigation.FullName : null;
+
             GetOrderDetailResponse orderItemResponse = new GetOrderDetailResponse();
             orderItemResponse.Id = order.Id;
             orderItemResponse.InvoiceId = order.InvoiceId;
@@ -211,7 +213,7 @@ namespace DentalLabManagement.API.Services.Implements
             orderItemResponse.Discount = order.Discount;
             orderItemResponse.FinalAmount = order.FinalAmount;
             orderItemResponse.CreatedDate = order.CreatedDate;
-            orderItemResponse.UpdatedBy = order.UpdatedByNavigation.FullName;
+            orderItemResponse.UpdatedBy = updateBy;
             orderItemResponse.Note = order.Note;
 
 
@@ -359,6 +361,10 @@ namespace DentalLabManagement.API.Services.Implements
                     if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
 
                     return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate, 
+                        account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
+
+                case OrderStatus.Paid:
+                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
                         account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
 
                 case OrderStatus.Canceled:

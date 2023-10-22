@@ -22,7 +22,15 @@ namespace DentalLabManagement.API.Controllers
         {
             var response = await _orderItemService.GetOrderItems(orderId, warrantyCardCode, page, size);
             return Ok(response);
-        }       
+        }
+
+        [HttpGet(ApiEndPointConstant.OrderItem.OrderItemEndPoint)]
+        [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrderItemById(int id)
+        {
+            var response = await _orderItemService.GetOrderItemById(id);
+            return Ok(response);
+        }
 
         [HttpPut(ApiEndPointConstant.OrderItem.OrderItemEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
@@ -34,9 +42,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpPut(ApiEndPointConstant.OrderItem.OrderItemCardEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
+        public async Task<IActionResult> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
         {
-            var response = await _orderItemService.UpdateWarrantyCard(id, updateRequest);
+            var response = await _orderItemService.InsertWarrantyCard(id, updateRequest);
             return Ok(response);
         }
 

@@ -8,5 +8,6 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         public Task<UpdateOrderItemStageResponse> UpdateOrderItemStage(int orderItemStageId, UpdateOrderItemStageRequest updateOrderItemStageRequest);
         public Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, int page, int size);
+        public Task<OrderItemStageResponse> GetOrderItemStageById(int id);
     }
 }

@@ -5,8 +5,9 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IOrderItemService
     {
-        public Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, int page, int size);
-        public Task<GetOrderItemResponse> UpdateOrderItem(int id, UpdateOrderItemRequest request);
-        public Task<GetOrderItemResponse> UpdateWarrantyCard(int id, InsertWarrantyCardRequest updateRequest);
+        Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, int page, int size);
+        Task<GetOrderItemResponse> UpdateOrderItem(int id, UpdateOrderItemRequest request);
+        Task<GetOrderItemResponse> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest);
+        Task<GetOrderItemResponse> GetOrderItemById(int id);
     }
 }
