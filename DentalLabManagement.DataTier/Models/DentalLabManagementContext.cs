@@ -68,6 +68,10 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Image).IsUnicode(false);
 
+                entity.Property(e => e.LinkBrand)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.Status).HasMaxLength(50);
@@ -296,6 +300,8 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.DentalName).HasMaxLength(50);
 
+                entity.Property(e => e.DentistName).HasMaxLength(50);
+
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.ExpDate).HasColumnType("date");
@@ -319,6 +325,12 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_Category");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.WarrantyCards)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WarrantyCard_Order");
             });
 
             OnModelCreatingPartial(modelBuilder);

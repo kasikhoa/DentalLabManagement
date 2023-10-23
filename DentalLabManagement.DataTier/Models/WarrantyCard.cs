@@ -15,6 +15,7 @@ namespace DentalLabManagement.DataTier.Models
         public int CategoryId { get; set; }
         public string? PatientName { get; set; }
         public string? DentalName { get; set; }
+        public string? DentistName { get; set; }
         public string? LaboName { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpDate { get; set; }
@@ -22,8 +23,10 @@ namespace DentalLabManagement.DataTier.Models
         public string? Image { get; set; }
         public string? LinkCategory { get; set; }
         public string Status { get; set; } = null!;
+        public int OrderId { get; set; }
 
         public virtual Category Category { get; set; } = null!;
+        public virtual Order Order { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }
