@@ -101,12 +101,16 @@ public static class MessageConstant
         public const string ProducingStatusMessage = "Order đang được sản xuất";
         public const string ProducingStatusRepeatMessage = "Order đã được đưa vào sản xuất";
         public const string CompletedStatusMessage = "Order đã hoàn thành";
+        public const string PaidStatusMessage = "Order đã thanh toán";
         public const string CompletedStatusRepeatMessage = "Không thể thay đổi trạng thái Order đã hoàn thành";
         public const string CanceledStatusMessage = "Order đã bị hủy";
         public const string CanceledStatusRepeatMessage = "Không thể thay đổi trạng thái Order đã hủy";
         public const string CannotChangeToStatusMessage = "Không thể thay đổi trạng thái Order đã hoàn thành hoặc đã hủy";
-
         public const string UpdateStatusFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
+        public const string OrderNotCompletedMessage = "Order chưa hoàn thành";
+        public const string PaymentFailedMessage = "Thanh toán Order thất bại";
+        public const string OrderPaidFullMessage = "Order đã thanh toán đầy đủ";
+        public const string OrderNotPaidMessage = "Order chưa thanh toán xong";
     }
 
     public static class OrderItem
@@ -134,7 +138,7 @@ public static class MessageConstant
         public const string CardCodeExistedMessage = "Mã thẻ đã tồn tại";
         public const string CreateCardFailedMessage = "Tạo mới thẻ bảo hành thất bại";
         public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
-        public const string CardNotMatchedCategoryMessage = "Thẻ không đúng với sản phẩm";
+        public const string CardNotMatchedCategoryMessage = "Thẻ không đúng với loại sản phẩm";
 
     }
     

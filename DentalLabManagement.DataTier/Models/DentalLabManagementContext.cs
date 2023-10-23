@@ -227,9 +227,13 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 
-                entity.Property(e => e.Status).HasMaxLength(50);
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Type).HasMaxLength(50);
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Payments)

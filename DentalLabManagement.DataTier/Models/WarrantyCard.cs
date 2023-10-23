@@ -19,7 +19,7 @@ namespace DentalLabManagement.DataTier.Models
         public string? LaboName { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? ExpDate { get; set; }
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; }
         public string? Image { get; set; }
         public string? LinkCategory { get; set; }
         public string Status { get; set; } = null!;

@@ -13,11 +13,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Category
         public string? Description { get; set; }
         public CategoryStatus Status { get; set; }
         public string? Image { get; set; }
+        public string? LinkBrand { get; set; }
         public void TrimString()
         {
             CategoryName = CategoryName.Trim();
             Description = Description.Trim();
             Image = Image?.Trim();
+            LinkBrand = LinkBrand?.Trim();
         }
 
     }

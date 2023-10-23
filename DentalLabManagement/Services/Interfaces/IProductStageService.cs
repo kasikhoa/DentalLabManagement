@@ -10,10 +10,10 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IProductStageService
     {
-        public Task<ProductStageResponse> CreateProductStage(ProductStageRequest productStageRequest);
-        public Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size);
-        public Task<ProductStageResponse> GetProductStageById(int id);
-        public Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest);
+        Task<ProductStageResponse> CreateProductStage(ProductStageRequest productStageRequest);
+        Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size);
+        Task<ProductStageResponse> GetProductStageById(int id);
+        Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest);
         
     }
 }

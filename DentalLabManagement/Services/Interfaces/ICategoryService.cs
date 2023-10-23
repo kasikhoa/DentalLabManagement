@@ -14,14 +14,14 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface ICategoryService
     {
-        public Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
+        Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
 
-        public Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size);
+        Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size);
 
-        public Task<CategoryResponse> GetCategoryById(int id);
-        public Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
-        public Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
-        public Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
-        public Task<bool> UpdateCategoryStatus(int id);
+        Task<CategoryResponse> GetCategoryById(int id);
+        Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
+        Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
+        Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
+        Task<bool> UpdateCategoryStatus(int id);
     }
 }

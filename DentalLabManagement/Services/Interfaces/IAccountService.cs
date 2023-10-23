@@ -7,11 +7,11 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Task<LoginResponse> Login(LoginRequest loginRequest);
-        public Task<GetAccountsResponse> CreateNewAccount(AccountRequest createNewAccountRequest);
-        public Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, AccountStatus? status , int page, int size);
-        public Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);
-        public Task<GetAccountsResponse> GetAccountDetail(int id);
-        public Task<bool> UpdateAccountStatus(int id);
+        Task<LoginResponse> Login(LoginRequest loginRequest);
+        Task<GetAccountsResponse> CreateNewAccount(AccountRequest createNewAccountRequest);
+        Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, AccountStatus? status , int page, int size);
+        Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);
+        Task<GetAccountsResponse> GetAccountDetail(int id);
+        Task<bool> UpdateAccountStatus(int id);
     }
 }

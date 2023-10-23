@@ -34,7 +34,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.CardCode.Equals(warrantyCardRequest.CardCode) && x.CategoryId.Equals(category.Id));
+                predicate: x => x.CardCode.Equals(warrantyCardRequest.CardCode) && x.CategoryId.Equals(warrantyCardRequest.CategoryId));
             if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
 
             string cardCode = string.IsNullOrEmpty(warrantyCardRequest.CardCode) ? null : warrantyCardRequest.CardCode;
@@ -71,7 +71,7 @@ namespace DentalLabManagement.API.Services.Implements
                 PatientName = warrantyCard.PatientName,
                 DentalName = warrantyCard.DentalName,
                 DentistName = warrantyCard.DentistName,
-
+                LaboName = warrantyCard.LaboName,
                 StartDate = warrantyCard.StartDate,
                 Description = warrantyCard.Description,
                 Image = warrantyCard.Image,
@@ -184,7 +184,7 @@ namespace DentalLabManagement.API.Services.Implements
                 PatientName = warrantyCard.PatientName,
                 DentalName = warrantyCard.DentalName,
                 DentistName = warrantyCard.DentistName,
-
+                LaboName = warrantyCard.LaboName,
                 StartDate = warrantyCard.StartDate,
                 Description = warrantyCard.Description,
                 Image = warrantyCard.Image,

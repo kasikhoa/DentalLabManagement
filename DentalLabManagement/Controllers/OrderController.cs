@@ -4,6 +4,7 @@ using DentalLabManagement.BusinessTier.Payload.Order;
 using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DentalLabManagement.BusinessTier.Payload.Payment;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -46,6 +47,14 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
         {
             var response = await _orderService.UpdateOrderStatus(id, updateOrderRequest);
+            return Ok(response);
+        }
+
+        [HttpPost(ApiEndPointConstant.Order.OrderPaymentEndPoint)]
+        [ProducesResponseType(typeof(UpdateOrderResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateOrderPayment(int id, PaymentRequest paymentRequest)
+        {
+            var response = await _orderService.UpdateOrderPayment(id, paymentRequest);
             return Ok(response);
         }
     }

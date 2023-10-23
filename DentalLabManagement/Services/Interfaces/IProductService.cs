@@ -12,11 +12,11 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IProductService
     {
-        public Task<ProductResponse> CreateProduct(ProductRequest productRequest);
-        public Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size);
-        public Task<ProductResponse> GetProductById(int productId);
-        public Task<ProductResponse> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
-        public Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size);
-        public Task<bool> UpdateProductStatus(int id);
+        Task<ProductResponse> CreateProduct(ProductRequest productRequest);
+        Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size);
+        Task<ProductResponse> GetProductById(int productId);
+        Task<ProductResponse> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
+        Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size);
+        Task<bool> UpdateProductStatus(int id);
     }
 }

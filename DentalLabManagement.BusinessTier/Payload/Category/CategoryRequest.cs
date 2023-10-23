@@ -17,5 +17,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Category
         [Required(ErrorMessage = "Category Status is missing")]
         public CategoryStatus Status { get; set; }
         public string? Image { get; set; }
+        public string? LinkBrand { get; set; }
     }
 }

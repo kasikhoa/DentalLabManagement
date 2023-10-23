@@ -1,8 +1,10 @@
 ﻿using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Order;
 using DentalLabManagement.BusinessTier.Payload.OrderItem;
+using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
@@ -136,11 +138,17 @@ namespace DentalLabManagement.API.Services.Implements
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(updateRequest.WarrantyCardId));
+                predicate: x => x.Id.Equals(updateRequest.WarrantyCardId)
+                );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
             if (!warrantyCard.CategoryId.Equals(orderItem.Product.CategoryId))
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
+
+            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(orderItem.OrderId));
+            if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
+                throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
 
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);

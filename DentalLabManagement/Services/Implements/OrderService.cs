@@ -20,6 +20,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using DentalLabManagement.BusinessTier.Payload.Payment;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -254,17 +255,17 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (orderId < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
 
+            Order updateOrder = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(orderId)
+                );
+            if (updateOrder == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
+
             DateTime currentTime = TimeUtils.GetCurrentSEATime();
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(updateOrderRequest.UpdatedBy)
                 );
-            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);          
-
-            Order updateOrder = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderId)
-                );
-            if (updateOrder == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);                   
 
             ICollection<OrderItem> orderItems = await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
                 predicate: x => x.OrderId.Equals(orderId),
@@ -364,9 +365,24 @@ namespace DentalLabManagement.API.Services.Implements
                         account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
 
                 case OrderStatus.Paid:
-                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
-                        account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.CompletedStatusMessage);
+                    ICollection<Payment> payments = await _unitOfWork.GetRepository<Payment>().GetListAsync(
+                        predicate: x => x.OrderId.Equals(orderId));
+                    var totalPayments = payments.Sum(p => p.Amount);
 
+                    if (totalPayments >= updateOrder.FinalAmount)
+                    {
+                        updateOrder.Status = OrderStatus.Paid.GetDescriptionFromEnum();
+                        updateOrder.UpdatedBy = updateOrderRequest.UpdatedBy;
+                        updateOrder.UpdatedAt = currentTime;
+                        _unitOfWork.GetRepository<Order>().UpdateAsync(updateOrder);
+                        isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                        if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
+                        return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
+                            account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.PaidStatusMessage);
+                    }
+                    return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
+                        account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.OrderNotPaidMessage);
+                    
                 case OrderStatus.Canceled:
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         return new UpdateOrderResponse(EnumUtil.ParseEnum<OrderStatus>(updateOrder.Status), updateOrder.CompletedDate,
@@ -403,6 +419,48 @@ namespace DentalLabManagement.API.Services.Implements
                         updateOrder.CompletedDate, account.FullName, updateOrder.UpdatedAt, MessageConstant.Order.NewStatusMessage);
                     
             }
+        }
+
+        public async Task<PaymentResponse> UpdateOrderPayment(int orderId, PaymentRequest paymentRequest)
+        {
+            if (orderId < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
+
+            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(orderId));
+            if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);          
+            
+            ICollection<Payment> prevPayments = await _unitOfWork.GetRepository<Payment>().GetListAsync(
+               predicate: x => x.OrderId.Equals(orderId));
+
+            var totalPreviousPayments = prevPayments.Sum(p => p.Amount);
+
+            if (totalPreviousPayments >= order.FinalAmount)
+                throw new BadHttpRequestException(MessageConstant.Order.OrderPaidFullMessage);
+
+            Payment payment = new Payment()
+            {
+                OrderId = orderId,
+                Note = paymentRequest.Note,
+                Type = paymentRequest.Type.GetDescriptionFromEnum(),
+                Amount = paymentRequest.Amount,
+                Status = PaymentStatus.Success.GetDescriptionFromEnum(),
+            };
+
+            await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.PaymentFailedMessage);
+
+            var restAmount = order.FinalAmount - totalPreviousPayments - paymentRequest.Amount;
+            return new PaymentResponse()
+            {
+                Id = payment.Id,
+                OrderId = payment.OrderId,
+                Note = payment.Note,
+                PaymentType = EnumUtil.ParseEnum<PaymentType>(payment.Type),
+                Amount = payment.Amount,
+                Remaining = restAmount,
+                Status = EnumUtil.ParseEnum<PaymentStatus>(payment.Status),
+            };
         }
     }
 }

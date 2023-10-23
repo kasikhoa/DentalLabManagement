@@ -81,6 +81,8 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.runtimeconfig.json
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.pdb
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Humanizer.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
@@ -89,6 +91,7 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
@@ -150,7 +153,3 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Humanizer.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
-D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Production.json

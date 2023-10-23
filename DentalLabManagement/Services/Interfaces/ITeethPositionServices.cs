@@ -11,9 +11,9 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface ITeethPositionServices
     {
-        public Task<TeethPositionResponse> CreateTeethPosition(TeethPositionRequest teethPositionRequest);
-        public Task<IPaginate<TeethPositionResponse>> GetTeethPositions(string? positionName, ToothArch? toothArch, int page, int size);
-        public Task<TeethPositionResponse> GetTeethPositionById (int id);
-        public Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest);
+        Task<TeethPositionResponse> CreateTeethPosition(TeethPositionRequest teethPositionRequest);
+        Task<IPaginate<TeethPositionResponse>> GetTeethPositions(string? positionName, ToothArch? toothArch, int page, int size);
+        Task<TeethPositionResponse> GetTeethPositionById (int id);
+        Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest);
     }
 }
