@@ -11,7 +11,6 @@ namespace DentalLabManagement.BusinessTier.Enums
         New,
         Producing,
         Completed, 
-        Paid,
         Canceled
     }
 }

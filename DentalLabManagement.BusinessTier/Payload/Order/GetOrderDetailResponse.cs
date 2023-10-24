@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Payload.Payment;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Payload.TeethPosition;
 using System;
@@ -29,7 +30,9 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public DateTime? CompletedDate { get; set; }
         public string? UpdatedBy { get; set; }
         public string? Note { get; set; }
+        public OrderPaymentStatus? PaymentStatus { get; set; }
         public List<OrderItemResponse> ToothList { get; set; } = new List<OrderItemResponse>();
+        public List<PaymentResponse> PaymentList { get; set; } = new List<PaymentResponse>();
     }
 
     public class OrderItemResponse

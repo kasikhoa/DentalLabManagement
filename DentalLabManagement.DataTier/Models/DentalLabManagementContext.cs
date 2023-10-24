@@ -143,6 +143,10 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
+                entity.Property(e => e.PaymentStatus)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Status)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -289,11 +293,13 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 
-                entity.Property(e => e.PaymentId)
-                    .HasMaxLength(20)
-                    .IsFixedLength();
-
                 entity.Property(e => e.Status).HasMaxLength(50);
+
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(d => d.PaymentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transaction_Payment");
             });
 
             modelBuilder.Entity<WarrantyCard>(entity =>

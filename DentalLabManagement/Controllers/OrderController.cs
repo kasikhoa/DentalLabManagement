@@ -36,9 +36,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrders(string? invoiceId, OrderMode? mode,OrderStatus? status, int page, int size)
+        public async Task<IActionResult> GetOrders(string? invoiceId, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus, int page, int size)
         {
-            var response = await _orderService.GetOrders(invoiceId, mode, status, page, size);
+            var response = await _orderService.GetOrders(invoiceId, mode, status, paymentStatus, page, size);
             return Ok(response);
         }
 
@@ -51,10 +51,18 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.Order.OrderPaymentEndPoint)]
-        [ProducesResponseType(typeof(UpdateOrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderPayment(int id, PaymentRequest paymentRequest)
         {
             var response = await _orderService.UpdateOrderPayment(id, paymentRequest);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.Order.OrderPaymentsEndPoint)]
+        [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrderPayments(int? orderId, PaymentType? type, PaymentStatus? status, int page, int size)
+        {
+            var response = await _orderService.GetOrderPayments(orderId, type, status, page, size);
             return Ok(response);
         }
     }
