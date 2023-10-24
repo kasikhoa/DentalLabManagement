@@ -15,6 +15,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Payment
         public PaymentType PaymentType { get; set; }
         public double Amount { get; set; }
         public double Remaining { get; set; }
+        public DateTime PaymentTime { get; set; }
         public PaymentStatus Status { get; set; }
 
         public PaymentResponse() { }
