@@ -60,7 +60,8 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrderPaymentsEndPoint)]
         [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderPayments(int? orderId, PaymentType? type, PaymentStatus? status, int page, int size)
+        public async Task<IActionResult> GetOrderPayments(int? orderId, PaymentType? type, PaymentStatus? status, 
+            int page, int size)
         {
             var response = await _orderService.GetOrderPayments(orderId, type, status, page, size);
             return Ok(response);

@@ -11,7 +11,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
     public class GetAccountsResponse
     {
         public int Id { get; set; }
-
         public string Username { get; set; }
         public string Name { get; set; }
         public RoleEnum Role { get; set; }

@@ -42,7 +42,7 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Name = dentalRequest.DentalName,
                     Address = dentalRequest.Address,
-                    Status = dentalRequest.Status.GetDescriptionFromEnum(),
+                    Status = DentalStatus.Activate.GetDescriptionFromEnum(),
                     AccountId = dentalRequest.AccountId,                  
                 };
             } 
@@ -71,6 +71,22 @@ namespace DentalLabManagement.API.Services.Implements
             return new DentalAccountResponse(dental.Id, dental.Name, dental.Address, dentalAccount.UserName, 
                 EnumUtil.ParseEnum<AccountStatus>(dentalAccount.Status));
 
+        }
+
+        public async Task<DentalResponse> GetDentalByAccountId(int accountId)
+        {
+            if (accountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(accountId) && x.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()));
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.AccountId.Equals(account.Id));
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.AccountDentalNotFoundMessage);
+
+            return new DentalResponse(dental.Id, dental.Name, dental.Address,
+                EnumUtil.ParseEnum<DentalStatus>(dental.Status), dental.AccountId);
         }
 
         private Expression<Func<Dental, bool>> BuildGetDentalsQuery(string? searchDentalName, DentalStatus? status)
@@ -161,6 +177,6 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
         }
-
+       
     }
 }

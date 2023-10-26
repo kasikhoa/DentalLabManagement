@@ -62,14 +62,14 @@ namespace DentalLabManagement.API.Services.Implements
                 Password = PasswordUtil.HashPassword(request.Password),
                 FullName = request.Name,
                 Role = EnumUtil.GetDescriptionFromEnum(request.Role),
-                Status = EnumUtil.GetDescriptionFromEnum(request.Status)
+                Status = AccountStatus.Activate.GetDescriptionFromEnum(),
             };
             
             await _unitOfWork.GetRepository<Account>().InsertAsync(account);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Account.CreateAccountFailed);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName,
-                request.Role, request.Status);
+                request.Role, EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
         private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, AccountStatus? status)

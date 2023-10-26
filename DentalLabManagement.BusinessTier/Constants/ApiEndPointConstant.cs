@@ -32,6 +32,7 @@ public static class ApiEndPointConstant
     {
         public const string DentalsEndPoint = ApiEndpoint + "/dentals";
         public const string DentalEndPoint = DentalsEndPoint + "/{id}";
+        public const string DentalAcccountEndPoint = DentalsEndPoint + "/accountId/{id}";
     }
 
     public static class Product

@@ -48,7 +48,8 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Account.AccountsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role, AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role,
+            AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
         {
             var response = await _accountService.GetAccounts(username, role, status , page, size);
             return Ok(response);

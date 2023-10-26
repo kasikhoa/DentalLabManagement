@@ -38,6 +38,16 @@ namespace DentalLabManagement.API.Controllers
 
         }
 
+        [HttpGet(ApiEndPointConstant.Dental.DentalAcccountEndPoint)]
+        [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetDentalByAccountId(int id)
+        {
+            var response = await _dentalService.GetDentalByAccountId(id);
+            return Ok(response);
+
+        }
+
         [HttpGet(ApiEndPointConstant.Dental.DentalsEndPoint)]
         [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
