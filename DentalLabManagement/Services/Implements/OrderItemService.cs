@@ -50,10 +50,7 @@ namespace DentalLabManagement.API.Services.Implements
                     TeethPosition = x.TeethPosition.PositionName,
                     WarrantyCardCode = x.WarrantyCard.CardCode,
                     Note = x.Note,
-                    SellingPrice = x.SellingPrice,
-                    Quantity = x.Quantity,
                     TotalAmount = x.TotalAmount,
-
                 },
                 predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode),
                 page: page,
@@ -80,8 +77,6 @@ namespace DentalLabManagement.API.Services.Implements
                 TeethPosition = orderItem.TeethPosition.PositionName,
                 WarrantyCardCode = cardCode,
                 Note = orderItem.Note,
-                SellingPrice = orderItem.SellingPrice,
-                Quantity = orderItem.Quantity,
                 TotalAmount = orderItem.TotalAmount,
             };
         }
@@ -107,8 +102,7 @@ namespace DentalLabManagement.API.Services.Implements
             orderItem.ProductId = request.ProductId;
             orderItem.TeethPositionId = request.TeethPositionId;
             orderItem.Note = string.IsNullOrEmpty(request.Note) ? orderItem.Note : request.Note;
-            orderItem.SellingPrice = (request.SellingPrice < 0) ? orderItem.SellingPrice : request.SellingPrice;
-            orderItem.TotalAmount = orderItem.SellingPrice * orderItem.Quantity;
+            orderItem.TotalAmount = (request.TotalAmount < 0) ? orderItem.TotalAmount : request.TotalAmount;
 
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -121,8 +115,6 @@ namespace DentalLabManagement.API.Services.Implements
                 ProductName = product.Name,
                 TeethPosition = teethPosition.PositionName,
                 Note = orderItem.Note,
-                SellingPrice = orderItem.SellingPrice,
-                Quantity = orderItem.Quantity,
                 TotalAmount = orderItem.TotalAmount,
             };
         }
@@ -162,8 +154,6 @@ namespace DentalLabManagement.API.Services.Implements
                 TeethPosition = orderItem.TeethPosition.PositionName,
                 WarrantyCardCode = warrantyCard.CardCode,
                 Note = orderItem.Note,
-                SellingPrice = orderItem.SellingPrice,
-                Quantity= orderItem.Quantity,
                 TotalAmount = orderItem.TotalAmount,
             };
         }

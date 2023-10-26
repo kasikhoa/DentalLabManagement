@@ -14,8 +14,6 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItem
         public string TeethPosition { get; set; }
         public string? WarrantyCardCode { get; set; }
         public string? Note { get; set; } 
-        public double SellingPrice { get; set; }
-        public int Quantity { get; set; }
         public double TotalAmount { get; set; }
 
         public GetOrderItemResponse()

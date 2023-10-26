@@ -24,8 +24,8 @@ public static class ApiEndPointConstant
 
     public static class Account
     {
-        public const string AccountsEndpoint = ApiEndpoint + "/accounts";
-        public const string AccountEndpoint = AccountsEndpoint + "/{id}";
+        public const string AccountsEndPoint = ApiEndpoint + "/accounts";
+        public const string AccountEndPoint = AccountsEndPoint + "/{id}";
     }
 
     public static class Dental

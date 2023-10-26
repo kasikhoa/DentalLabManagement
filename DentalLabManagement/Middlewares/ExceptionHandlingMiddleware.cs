@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using DentalLabManagement.BusinessTier.Error;
-using DentalLabManagement.BusinessTier.Payload.Login;
 
 namespace DentalLabManagement.API.Middlewares;
 public class ExceptionHandlingMiddleware

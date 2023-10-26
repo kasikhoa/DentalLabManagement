@@ -316,7 +316,7 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.ExpDate).HasColumnType("date");
+                entity.Property(e => e.ExpDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Image).IsUnicode(false);
 
@@ -326,7 +326,7 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.PatientName).HasMaxLength(50);
 
-                entity.Property(e => e.StartDate).HasColumnType("date");
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)

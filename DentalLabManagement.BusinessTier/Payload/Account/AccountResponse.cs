@@ -9,7 +9,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
 {
     public class AccountResponse
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         public string UserName { get; set; }
 

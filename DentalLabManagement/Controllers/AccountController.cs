@@ -35,7 +35,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [CustomAuthorize(RoleEnum.Admin)]
-        [HttpPost(ApiEndPointConstant.Account.AccountsEndpoint)]
+        [HttpPost(ApiEndPointConstant.Account.AccountsEndPoint)]
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
@@ -45,17 +45,17 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [CustomAuthorize(RoleEnum.Admin)]
-        [HttpGet(ApiEndPointConstant.Account.AccountsEndpoint)]
+        [HttpGet(ApiEndPointConstant.Account.AccountsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role, AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
         {
-            var accounts = await _accountService.GetAccounts(username, role, status , page, size);
-            return Ok(accounts);
+            var response = await _accountService.GetAccounts(username, role, status , page, size);
+            return Ok(response);
         }
 
         [CustomAuthorize(RoleEnum.Admin)]
-        [HttpPut(ApiEndPointConstant.Account.AccountEndpoint)]
+        [HttpPut(ApiEndPointConstant.Account.AccountEndPoint)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> UpdateAccountInformation(int id, [FromBody] UpdateAccountRequest updateAccountRequest)
         {
@@ -64,17 +64,17 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Account.UpdateAccountSuccessfulMessage);
         }
 
-        [HttpGet(ApiEndPointConstant.Account.AccountEndpoint)]
+        [HttpGet(ApiEndPointConstant.Account.AccountEndPoint)]
         [ProducesResponseType(typeof(GetAccountsResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> GetAccountDetail(int id)
         {
-            var accountDetails = await _accountService.GetAccountDetail(id);
-            return Ok(accountDetails);
+            var response = await _accountService.GetAccountDetail(id);
+            return Ok(response);
         }
 
         [CustomAuthorize(RoleEnum.Admin)]
-        [HttpDelete(ApiEndPointConstant.Account.AccountEndpoint)]
+        [HttpDelete(ApiEndPointConstant.Account.AccountEndPoint)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> UpdateAccountStatus(int id)
         {

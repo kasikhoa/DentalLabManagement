@@ -30,8 +30,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     {
         public int ProductId { get; set; }
         public int TeethPositionId { get; set; }
-        public float SellingPrice { get; set; }
-        public int Quantity { get; set; }
+        public float TotalAmount { get; set; }
         public string? Note { get; set; }
     }
 }

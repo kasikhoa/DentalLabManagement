@@ -32,8 +32,9 @@ namespace DentalLabManagement.API.Services.Implements
                 p.UserName.Equals(loginRequest.Username) &&
                 p.Password.Equals(PasswordUtil.HashPassword(loginRequest.Password));
 
-            Account account = await _unitOfWork.GetRepository<Account>()
-                .SingleOrDefaultAsync(predicate: searchFilter);
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: searchFilter
+                );
             if (account == null) return null;
            
             var token = JwtUtil.GenerateJwtToken(account);
@@ -49,26 +50,26 @@ namespace DentalLabManagement.API.Services.Implements
             return loginResponse;
         }
 
-        public async Task<GetAccountsResponse> CreateNewAccount(AccountRequest createNewAccountRequest)
+        public async Task<GetAccountsResponse> CreateNewAccount(AccountRequest request)
         {
             Account account = await _unitOfWork.GetRepository<Account>()
-                .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(createNewAccountRequest.Username));
+                .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
             if (account != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
 
             account = new Account()
             {
-                UserName = createNewAccountRequest.Username,
-                Password = PasswordUtil.HashPassword(createNewAccountRequest.Password),
-                FullName = createNewAccountRequest.Name,
-                Role = EnumUtil.GetDescriptionFromEnum(createNewAccountRequest.Role),
-                Status = EnumUtil.GetDescriptionFromEnum(createNewAccountRequest.Status)
+                UserName = request.Username,
+                Password = PasswordUtil.HashPassword(request.Password),
+                FullName = request.Name,
+                Role = EnumUtil.GetDescriptionFromEnum(request.Role),
+                Status = EnumUtil.GetDescriptionFromEnum(request.Status)
             };
             
             await _unitOfWork.GetRepository<Account>().InsertAsync(account);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Account.CreateAccountFailed);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName,
-                createNewAccountRequest.Role, createNewAccountRequest.Status);
+                request.Role, request.Status);
         }
 
         private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, AccountStatus? status)
@@ -82,12 +83,12 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (role != null)
             {
-                filterQuery = filterQuery.AndAlso(x => x.Role == role.GetDescriptionFromEnum());
+                filterQuery = filterQuery.AndAlso(x => x.Role.Equals(role.GetDescriptionFromEnum()));
             }
 
             if (status != null)
             {
-                filterQuery = filterQuery.AndAlso(x => x.Status == status.GetDescriptionFromEnum());
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
             }
 
             return filterQuery;
@@ -101,7 +102,8 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
-                selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), EnumUtil.ParseEnum<AccountStatus>(x.Status)),
+                selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), 
+                    EnumUtil.ParseEnum<AccountStatus>(x.Status)),
                 predicate: BuildGetAccountsQuery(searchUsername, role, status),
                 orderBy: x => x.OrderBy(x => x.UserName),
                 page: page,

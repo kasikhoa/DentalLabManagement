@@ -64,16 +64,13 @@ namespace DentalLabManagement.API.Services.Implements
             List<OrderItem> orderItems = new List<OrderItem>();
             createOrderRequest.ProductsList.ForEach(product =>
             {
-                double totalProductAmount = product.SellingPrice * product.Quantity;
                 orderItems.Add(new OrderItem()
                 {
                     OrderId = newOrder.Id,
                     ProductId = product.ProductId,
                     TeethPositionId = product.TeethPositionId,
-                    SellingPrice = product.SellingPrice,
-                    Quantity = product.Quantity,
                     Note = product.Note,
-                    TotalAmount = totalProductAmount,
+                    TotalAmount = product.TotalAmount,
                 });
                 count++;
             });
@@ -178,8 +175,6 @@ namespace DentalLabManagement.API.Services.Implements
                                 Description = x.TeethPosition.Description
                             },
                             Note = x.Note,
-                            SellingPrice = x.SellingPrice,
-                            Quantity = x.Quantity,
                             TotalAmount = x.TotalAmount
                         },
                         predicate: x => x.OrderId.Equals(order.Id)
@@ -261,8 +256,6 @@ namespace DentalLabManagement.API.Services.Implements
                             Description = x.TeethPosition.Description
                         },
                         Note = x.Note,
-                        SellingPrice = x.SellingPrice,
-                        Quantity = x.Quantity,
                         TotalAmount = x.TotalAmount
                     },
                     predicate: x => x.OrderId.Equals(id)

@@ -47,7 +47,7 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.CreateNewCategoryFailedMessage);
             return new CategoryResponse(newCategory.Id, newCategory.Name, newCategory.Description,
-                EnumUtil.ParseEnum<CategoryStatus>(newCategory.Status), newCategory.Image, newCategory.LinkBrand);
+                categoryRequest.Status, newCategory.Image, newCategory.LinkBrand);
         }
 
         private Expression<Func<Category, bool>> BuildGetCategoriesQuery(string? searchCategoryName, CategoryStatus? status)

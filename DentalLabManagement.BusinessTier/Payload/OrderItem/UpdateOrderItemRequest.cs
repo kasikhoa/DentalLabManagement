@@ -11,7 +11,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItem
         public int ProductId { get; set; }
         public int TeethPositionId { get; set; }
         public string? Note { get; set; }
-        public double SellingPrice { get; set; }
+        public double TotalAmount { get; set; }
 
         public void TrimString()
         {
