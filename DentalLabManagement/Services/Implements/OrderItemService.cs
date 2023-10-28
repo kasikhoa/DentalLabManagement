@@ -130,11 +130,12 @@ namespace DentalLabManagement.API.Services.Implements
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(updateRequest.WarrantyCardId)
+                predicate: x => x.Id.Equals(updateRequest.WarrantyCardId),
+                include: x => x.Include(x => x.CardType)
                 );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
-            if (!warrantyCard.CategoryId.Equals(orderItem.Product.CategoryId))
+            if (!warrantyCard.CardType.CategoryId.Equals(orderItem.Product.CategoryId))
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
 
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
@@ -143,13 +144,15 @@ namespace DentalLabManagement.API.Services.Implements
                 throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
 
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
+            warrantyCard.ExpDate = order.CompletedDate.Value.AddYears(warrantyCard.CardType.WarrantyYear);
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
+            _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.OrderItem.UpdateCardFailedMessage);
             return new GetOrderItemResponse()
             {
                 Id = orderItem.Id,
-                OrderId= orderItem.OrderId,
+                OrderId = orderItem.OrderId,
                 ProductName = orderItem.Product.Name,
                 TeethPosition = orderItem.TeethPosition.PositionName,
                 WarrantyCardCode = warrantyCard.CardCode,
@@ -157,6 +160,6 @@ namespace DentalLabManagement.API.Services.Implements
                 TotalAmount = orderItem.TotalAmount,
             };
         }
-       
+
     }
 }

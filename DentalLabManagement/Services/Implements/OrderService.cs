@@ -37,7 +37,6 @@ namespace DentalLabManagement.API.Services.Implements
 
             Order newOrder = new Order()
             {
-                LaboName = LaboName.Labo_EMAX.GetDescriptionFromEnum(),
                 DentalId = dental.Id,
                 DentistName = createOrderRequest.DentistName,
                 DentistNote = createOrderRequest.DentistNote,
@@ -85,7 +84,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, string? dentalName, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -94,6 +93,10 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
             }
 
+            if (!string.IsNullOrEmpty(dentalName))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.Dental.Name.Contains(dentalName));
+            }
             if (mode != null)
             {
                 filterQuery = filterQuery.AndAlso(p => p.Mode.Equals(mode.GetDescriptionFromEnum()));
@@ -113,7 +116,7 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? InvoiceId, OrderMode? mode, OrderStatus? status,
+        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? InvoiceId, string? dentalName, OrderMode? mode, OrderStatus? status,
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
             InvoiceId = InvoiceId?.Trim().ToLower();
@@ -143,7 +146,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(InvoiceId, mode, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(InvoiceId, dentalName, mode, status, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

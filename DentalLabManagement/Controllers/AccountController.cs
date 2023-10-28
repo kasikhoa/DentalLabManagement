@@ -8,6 +8,7 @@ using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Validators;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Error;
+using DentalLabManagement.BusinessTier.Payload.Dental;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -73,6 +74,16 @@ namespace DentalLabManagement.API.Controllers
         {
             var response = await _accountService.GetAccountDetail(id);
             return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.Account.DentalAcccountEndPoint)]
+        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> GetDentalByAccountId(int id)
+        {
+            var response = await _accountService.GetDentalByAccountId(id);
+            return Ok(response);
+
         }
 
         [CustomAuthorize(RoleEnum.Admin)]

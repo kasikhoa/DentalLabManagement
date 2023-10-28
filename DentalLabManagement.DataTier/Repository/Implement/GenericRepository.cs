@@ -4,6 +4,7 @@ using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using LAK.Sdk.Core.Utilities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DentalLabManagement.DataTier.Repository.Implement
 {
@@ -121,6 +122,7 @@ namespace DentalLabManagement.DataTier.Repository.Implement
         public void UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
+
         }
 
         public void UpdateRange(IEnumerable<T> entities)

@@ -17,6 +17,7 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Dental> Dentals { get; set; } = null!;
         public virtual DbSet<GroupStage> GroupStages { get; set; } = null!;
@@ -29,6 +30,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
+        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -58,6 +60,29 @@ namespace DentalLabManagement.DataTier.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<CardType>(entity =>
+            {
+                entity.ToTable("CardType");
+
+                entity.Property(e => e.BrandUrl)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.Image).IsUnicode(false);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.CardTypes)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CardType_Category");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -90,7 +115,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Dentals)
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Dental_Account");
             });
 
@@ -126,8 +150,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.InvoiceId)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.LaboName).HasMaxLength(50);
 
                 entity.Property(e => e.Mode)
                     .HasMaxLength(10)
@@ -314,39 +336,38 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DentalName).HasMaxLength(50);
-
-                entity.Property(e => e.DentistName).HasMaxLength(50);
-
-                entity.Property(e => e.Description).HasMaxLength(50);
-
                 entity.Property(e => e.ExpDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Image).IsUnicode(false);
-
-                entity.Property(e => e.LaboName).HasMaxLength(50);
-
-                entity.Property(e => e.LinkCategory).HasMaxLength(50);
-
-                entity.Property(e => e.PatientName).HasMaxLength(50);
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Category)
+                entity.HasOne(d => d.CardType)
                     .WithMany(p => p.WarrantyCards)
-                    .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WarrantyCard_Category");
+                    .HasForeignKey(d => d.CardTypeId)
+                    .HasConstraintName("FK_WarrantyCard_CardType");
+            });
 
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.WarrantyCards)
-                    .HasForeignKey(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WarrantyCard_Order");
+            modelBuilder.Entity<staff>(entity =>
+            {
+                entity.ToTable("Staff");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.FullName).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Stage)
+                    .WithMany(p => p.staff)
+                    .HasForeignKey(d => d.StageId)
+                    .HasConstraintName("FK_Staff_ProductStage");
             });
 
             OnModelCreatingPartial(modelBuilder);

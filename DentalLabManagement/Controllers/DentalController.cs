@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.API.Services.Implements;
 using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Payload.Order;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -36,17 +37,7 @@ namespace DentalLabManagement.API.Controllers
             var response = await _dentalService.GetAccountDentalById(id);          
             return Ok(response);
 
-        }
-
-        [HttpGet(ApiEndPointConstant.Dental.DentalAcccountEndPoint)]
-        [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
-        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetDentalByAccountId(int id)
-        {
-            var response = await _dentalService.GetDentalByAccountId(id);
-            return Ok(response);
-
-        }
+        }    
 
         [HttpGet(ApiEndPointConstant.Dental.DentalsEndPoint)]
         [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
@@ -73,6 +64,15 @@ namespace DentalLabManagement.API.Controllers
             var isSuccessful = await _dentalService.UpdateDentalStatus(id);
             if (!isSuccessful) return Ok(MessageConstant.Dental.UpdateStatusFailedMessage);
             return Ok(MessageConstant.Dental.UpdateStatusSuccessMessage);
+        }
+
+        [HttpGet(ApiEndPointConstant.Dental.OrdersEndPoint)]
+        [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrderDetail(int id, string? invoiceId, OrderMode? mode, OrderStatus? status,
+            OrderPaymentStatus? paymentStatus, int page, int size)
+        {
+            var response = await _dentalService.GetOrderDetails(id, invoiceId, mode, status, paymentStatus, page, size);
+            return Ok(response);
         }
     }
 }

@@ -20,68 +20,46 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        public async Task<WarrantyCardResponse> InseartNewWarrantyCard(WarrantyCardRequest warrantyCardRequest)
+        public async Task<CreateWarrantyCardResponse> CreateNewWarrantyCard(CreateWarrantyCardRequest request)
         {
 
-            Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(warrantyCardRequest.CategoryId));
-            if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
-            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(warrantyCardRequest.OrderId),
-                include: x => x.Include(x => x.Dental)
-                );
-            if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
+            CardType cardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(request.CardTypeId));
+            if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
-            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.CardCode.Equals(warrantyCardRequest.CardCode) && x.CategoryId.Equals(warrantyCardRequest.CategoryId));
-            if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
 
-            string cardCode = string.IsNullOrEmpty(warrantyCardRequest.CardCode) ? null : warrantyCardRequest.CardCode;
+            string cardCode = string.IsNullOrEmpty(request.CardCode) ? null : request.CardCode;
 
-            warrantyCard = new WarrantyCard()
+            WarrantyCard warrantyCard = new WarrantyCard()
             {
+                CardTypeId = request.CardTypeId,
                 CardCode = cardCode,
-                CategoryId = warrantyCardRequest.CategoryId,
-                PatientName = order.PatientName,
-                DentalName = order.Dental.Name,
-                DentistName = order.DentistName,
-                LaboName = order.LaboName,
-                StartDate = TimeUtils.GetCurrentSEATime(),
-                Description = warrantyCardRequest.Description,
-                Image = category.Image,
-                LinkCategory = category.LinkBrand,
-                Status = WarrantyCardStatus.Valid.GetDescriptionFromEnum(),
-                OrderId = order.Id
+                Status = WarrantyCardStatus.Valid.GetDescriptionFromEnum()
             };
-
-            if (warrantyCard.CategoryId >= 1 && warrantyCard.CategoryId <= 4)
-            {
-                warrantyCard.CardCode = order.InvoiceId;
-            }
 
             await _unitOfWork.GetRepository<WarrantyCard>().InsertAsync(warrantyCard);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CreateCardFailedMessage);
-            return new WarrantyCardResponse()
+            var categoryName = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(warrantyCard.CardTypeId),
+                include: x => x.Include(x => x.Category),
+                selector: x => x.Category.Name
+                );
+            return new CreateWarrantyCardResponse()
             {
                 Id = warrantyCard.Id,
                 CardCode = warrantyCard.CardCode,
-                CategoryName = category.Name,
-                PatientName = warrantyCard.PatientName,
-                DentalName = warrantyCard.DentalName,
-                DentistName = warrantyCard.DentistName,
-                LaboName = warrantyCard.LaboName,
-                StartDate = warrantyCard.StartDate,
-                Description = warrantyCard.Description,
-                Image = warrantyCard.Image,
-                LinkCategory = warrantyCard.LinkCategory,
-                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status),
-                OrderId = warrantyCard.OrderId
+                CategoryName = categoryName,
+                ExpDate = warrantyCard.ExpDate,
+                Description = cardType.Description,
+                Image = cardType.Image,
+                BrandUrl = cardType.BrandUrl,
+                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
             };
         }
 
-        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(string? cardCode, int? categoryId, WarrantyCardStatus? status)
+        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(string? cardCode, int? cardTypeId, WarrantyCardStatus? status)
         {
             Expression<Func<WarrantyCard, bool>> filterQuery = x => true;
             if (!string.IsNullOrEmpty(cardCode))
@@ -89,9 +67,9 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.CardCode.Contains(cardCode));
             }
 
-            if (categoryId.HasValue)
+            if (cardTypeId.HasValue)
             {
-                filterQuery = filterQuery.AndAlso(x => x.CategoryId.Equals(categoryId));
+                filterQuery = filterQuery.AndAlso(x => x.CardTypeId.Equals(cardTypeId));
             }
 
             if (status != null)
@@ -102,69 +80,58 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? categoryId, WarrantyCardStatus? status, int page, int size)
+        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? cardTypeId, WarrantyCardStatus? status, int page, int size)
         {
             cardCode = cardCode?.Trim().ToLower();
+
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
+
+
             IPaginate<WarrantyCardResponse> result = await _unitOfWork.GetRepository<WarrantyCard>().GetPagingListAsync(
                 selector: x => new WarrantyCardResponse()
                 {
                     Id = x.Id,
                     CardCode = x.CardCode,
-                    CategoryName = x.Category.Name,
-                    PatientName = x.PatientName,
-                    DentalName = x.DentalName,
-                    LaboName = x.LaboName,
-                    StartDate = x.StartDate,
+                    CategoryName = x.CardType.Category.Name,
+                    PatientName = x.OrderItems.FirstOrDefault().Order.PatientName,
+                    DentalName = x.OrderItems.FirstOrDefault().Order.Dental.Name,
+                    DentistName = x.OrderItems.FirstOrDefault().Order.DentistName,
+                    StartDate = x.OrderItems.FirstOrDefault().Order.CompletedDate,
                     ExpDate = x.ExpDate,
-                    Description = x.Description,
-                    Image = x.Image,
-                    LinkCategory = x.LinkCategory,
-                    Status = EnumUtil.ParseEnum<WarrantyCardStatus>(x.Status),
-                    OrderId = x.OrderId,
+                    Description = x.CardType.Description,
+                    Image = x.CardType.Image,
+                    BrandUrl = x.CardType.BrandUrl,
+                    Status = EnumUtil.ParseEnum<WarrantyCardStatus>(x.Status)
                 },
-                predicate: BuildWarrantyCardsQuery(cardCode, categoryId, status),
+                predicate: BuildWarrantyCardsQuery(cardCode, cardTypeId, status),
                 page: page,
                 size: size
                 );
             return result;
         }
 
-        public async Task<WarrantyCardResponse> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
+        public async Task<bool> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
         {
-            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);           
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Category)
-                );
+               predicate: x => x.Id.Equals(id)
+               );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
-            request.TrimString();
+            CardType cardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(request.CardTypeId)
+                );
+            if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
+            request.CardCode?.Trim();
+            warrantyCard.CardTypeId = request.CardTypeId;
             warrantyCard.CardCode = string.IsNullOrEmpty(request.CardCode) ? warrantyCard.CardCode : request.CardCode;
-            warrantyCard.LinkCategory = string.IsNullOrEmpty(request.LinkCategory) ? warrantyCard.LinkCategory : request.LinkCategory;
 
             _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.WarrantyCard.UpdateCardFailedMessage);
-            return new WarrantyCardResponse()
-            {
-                Id = warrantyCard.Id,
-                CardCode = warrantyCard.CardCode,
-                CategoryName = warrantyCard.Category.Name,
-                PatientName = warrantyCard.PatientName,
-                DentalName = warrantyCard.DentalName,
-                DentistName = warrantyCard.DentistName,
-                StartDate = warrantyCard.StartDate,
-                Description = warrantyCard.Description,
-                Image = warrantyCard.Image,
-                LinkCategory = warrantyCard.LinkCategory,
-                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status),
-                OrderId = warrantyCard.OrderId,
-            };
-
+            return isSuccessful;
         }
 
         public async Task<WarrantyCardResponse> GetWarrantyCardById(int id)
@@ -173,24 +140,25 @@ namespace DentalLabManagement.API.Services.Implements
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Category));
+                include: x => x.Include(x => x.CardType).ThenInclude(x => x.Category).Include(x => x.OrderItems)
+                    .ThenInclude(x => x.Order).ThenInclude(x => x.Dental)
+                );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
             return new WarrantyCardResponse()
             {
                 Id = warrantyCard.Id,
                 CardCode = warrantyCard.CardCode,
-                CategoryName = warrantyCard.Category.Name,
-                PatientName = warrantyCard.PatientName,
-                DentalName = warrantyCard.DentalName,
-                DentistName = warrantyCard.DentistName,
-                LaboName = warrantyCard.LaboName,
-                StartDate = warrantyCard.StartDate,
-                Description = warrantyCard.Description,
-                Image = warrantyCard.Image,
-                LinkCategory = warrantyCard.LinkCategory,
-                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status),
-                OrderId = warrantyCard.OrderId
+                CategoryName = warrantyCard.CardType.Category.Name,
+                PatientName = warrantyCard.OrderItems.FirstOrDefault().Order.PatientName,
+                DentalName = warrantyCard.OrderItems.FirstOrDefault().Order.Dental.Name,
+                DentistName = warrantyCard.OrderItems.FirstOrDefault().Order.DentistName,
+                StartDate = warrantyCard.OrderItems.FirstOrDefault().Order.CompletedDate,
+                ExpDate = warrantyCard.ExpDate,
+                Description = warrantyCard.CardType.Description,
+                Image = warrantyCard.CardType.Image,
+                BrandUrl = warrantyCard.CardType.BrandUrl,
+                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
             };
         }
     }

@@ -14,6 +14,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
+using DentalLabManagement.BusinessTier.Payload.Order;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using DentalLabManagement.BusinessTier.Payload.Payment;
+using DentalLabManagement.BusinessTier.Payload.Product;
+using DentalLabManagement.BusinessTier.Payload.TeethPosition;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Drawing;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -72,23 +81,7 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<AccountStatus>(dentalAccount.Status));
 
         }
-
-        public async Task<DentalResponse> GetDentalByAccountId(int accountId)
-        {
-            if (accountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
-
-            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(accountId) && x.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()));
-            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
-
-            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
-                predicate: x => x.AccountId.Equals(account.Id));
-            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.AccountDentalNotFoundMessage);
-
-            return new DentalResponse(dental.Id, dental.Name, dental.Address,
-                EnumUtil.ParseEnum<DentalStatus>(dental.Status), dental.AccountId);
-        }
-
+   
         private Expression<Func<Dental, bool>> BuildGetDentalsQuery(string? searchDentalName, DentalStatus? status)
         {
             Expression<Func<Dental, bool>> filterQuery = x => true; 
@@ -177,6 +170,81 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
         }
-       
+
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        {
+            Expression<Func<Order, bool>> filterQuery = p => true;
+
+            if (!string.IsNullOrEmpty(InvoiceId))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
+            }
+
+            if (mode != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.Mode.Equals(mode.GetDescriptionFromEnum()));
+            }
+
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
+            }
+
+            if (paymentStatus != null)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.PaymentStatus.Equals(paymentStatus.GetDescriptionFromEnum()));
+            }
+
+            return filterQuery;
+        }
+
+        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderMode? mode, OrderStatus? status, 
+            OrderPaymentStatus? paymentStatus, int page, int size)
+        {
+            page = (page == 0) ? 1 : page;
+            size = (size == 0) ? 10 : size;
+            if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
+            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(dentalId)
+                );
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
+
+            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: x => x.DentalId.Equals(dentalId)
+                );
+            if (order == null) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderMessage);
+
+            string updateBy = (order.UpdatedByNavigation != null) ? order.UpdatedByNavigation.FullName : null;
+
+            IPaginate<GetOrdersResponse> orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
+                selector: x => new GetOrdersResponse()
+                {
+                    Id = x.Id,
+                    InvoiceId = x.InvoiceId,
+                    DentalName = x.Dental.Name,
+                    DentistName = x.DentistName,
+                    DentistNote = x.DentistNote,
+                    PatientName = x.PatientName,
+                    PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
+                    PatientPhoneNumber = x.PatientPhoneNumber,
+                    Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
+                    Mode = EnumUtil.ParseEnum<OrderMode>(x.Mode),
+                    TeethQuantity = x.TeethQuantity,
+                    TotalAmount = x.TotalAmount,
+                    Discount = x.Discount,
+                    FinalAmount = x.FinalAmount,
+                    CreatedDate = x.CreatedDate,
+                    CompletedDate = x.CompletedDate,
+                    UpdatedBy = x.UpdatedByNavigation.FullName,
+                    Note = x.Note,
+                    PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
+                },
+                predicate: BuildGetOrdersQuery(InvoiceId, mode, status, paymentStatus),
+                orderBy: x => x.OrderBy(x => x.InvoiceId),
+                page: page,
+                size: size
+            );
+            return orderList;
+        }
     }
 }

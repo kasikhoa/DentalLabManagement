@@ -9,11 +9,9 @@ namespace DentalLabManagement.DataTier.Models
         {
             OrderItems = new HashSet<OrderItem>();
             Payments = new HashSet<Payment>();
-            WarrantyCards = new HashSet<WarrantyCard>();
         }
 
         public int Id { get; set; }
-        public string LaboName { get; set; } = null!;
         public string? InvoiceId { get; set; }
         public int DentalId { get; set; }
         public string? DentistName { get; set; }
@@ -38,6 +36,5 @@ namespace DentalLabManagement.DataTier.Models
         public virtual Account? UpdatedByNavigation { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
-        public virtual ICollection<WarrantyCard> WarrantyCards { get; set; }
     }
 }

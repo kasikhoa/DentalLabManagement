@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.API.Services.Interfaces;
+﻿using DentalLabManagement.API.Services.Implements;
+using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.WarrantyCard;
@@ -18,27 +19,27 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.WarrantyCard.WarrantyCardsEndPoint)]
-        [ProducesResponseType(typeof(WarrantyCardResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateWarrantyCard(WarrantyCardRequest request)
+        [ProducesResponseType(typeof(CreateWarrantyCardResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateWarrantyCard(CreateWarrantyCardRequest request)
         {
-            var response = await _warrantyCardService.InseartNewWarrantyCard(request);
+            var response = await _warrantyCardService.CreateNewWarrantyCard(request);
             return Ok(response);
         }
 
         [HttpGet(ApiEndPointConstant.WarrantyCard.WarrantyCardsEndPoint)]
         [ProducesResponseType(typeof(WarrantyCardResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetWarrantyCards(string? cardCode, int? categoryId, WarrantyCardStatus? status, int page, int size)
+        public async Task<IActionResult> GetWarrantyCards(string? cardCode, int? cardTypeId, WarrantyCardStatus? status, int page, int size)
         {
-            var response = await _warrantyCardService.GetWarrantyCards(cardCode, categoryId, status, page, size);
+            var response = await _warrantyCardService.GetWarrantyCards(cardCode, cardTypeId, status, page, size);
             return Ok(response);
         }
 
         [HttpPut(ApiEndPointConstant.WarrantyCard.WarrantyCardEndPoint)]
-        [ProducesResponseType(typeof(WarrantyCardResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
         {
-            var response = await _warrantyCardService.UpdateWarrantyCard(id, request);
-            return Ok(response);
+            var isSuccessful = await _warrantyCardService.UpdateWarrantyCard(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.WarrantyCard.UpdateFailedMessage);
+            return Ok(MessageConstant.WarrantyCard.UpdatedSuccessMessage);
         }
 
         [HttpGet(ApiEndPointConstant.WarrantyCard.WarrantyCardEndPoint)]

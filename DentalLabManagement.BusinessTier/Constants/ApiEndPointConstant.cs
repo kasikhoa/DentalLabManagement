@@ -26,13 +26,14 @@ public static class ApiEndPointConstant
     {
         public const string AccountsEndPoint = ApiEndpoint + "/accounts";
         public const string AccountEndPoint = AccountsEndPoint + "/{id}";
+        public const string DentalAcccountEndPoint = AccountEndPoint + "/dental";
     }
 
     public static class Dental
     {
         public const string DentalsEndPoint = ApiEndpoint + "/dentals";
         public const string DentalEndPoint = DentalsEndPoint + "/{id}";
-        public const string DentalAcccountEndPoint = DentalsEndPoint + "/accountId/{id}";
+        public const string OrdersEndPoint = DentalEndPoint + "/orders";
     }
 
     public static class Product
@@ -75,6 +76,12 @@ public static class ApiEndPointConstant
     {
         public const string OrderItemStagesEndPoint = ApiEndpoint + "/orderItemStages";
         public const string OrderItemStageEndPoint = OrderItemStagesEndPoint + "/{id}";
+    }
+
+    public static class CardType
+    {
+        public const string CardTypesEndPoint = ApiEndpoint + "/cardTypes";
+        public const string CardTypeEndPoint = CardTypesEndPoint + "/{id}";
     }
 
     public static class WarrantyCard

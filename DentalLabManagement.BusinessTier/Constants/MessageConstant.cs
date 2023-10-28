@@ -112,6 +112,7 @@ public static class MessageConstant
         public const string PaymentFailedMessage = "Thanh toán Order thất bại";
         public const string OrderPaidFullMessage = "Order đã thanh toán đầy đủ";
         public const string OrderNotPaidMessage = "Order chưa thanh toán xong";
+        public const string EmptyOrderMessage = "Đối tác chưa có Order nào";
     }
 
     public static class OrderItem
@@ -132,6 +133,16 @@ public static class MessageConstant
 
     }
 
+    public static class CardType
+    {
+        public const string EmptyCardIdMessage = "Id của card không hợp lệ";
+        public const string CreateCardFailedMessage = "Tạo mới thẻ thất bại";
+        public const string CardNotFoundMessage = "Thẻ chưa có trong hệ thống";
+        public const string UpdateCardFailedMessage = "Cập nhật thẻ thất bại";
+        public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
+        public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
+    }
+
     public static class WarrantyCard
     {
         public const string EmptyCardIdMessage = "Id của card không hợp lệ";
@@ -140,6 +151,8 @@ public static class MessageConstant
         public const string CreateCardFailedMessage = "Tạo mới thẻ bảo hành thất bại";
         public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
         public const string CardNotMatchedCategoryMessage = "Thẻ không đúng với loại sản phẩm";
+        public const string UpdatedSuccessMessage = "Cập nhật thành công";
+        public const string UpdateFailedMessage = "Cập nhật thất bại";
 
     }
     

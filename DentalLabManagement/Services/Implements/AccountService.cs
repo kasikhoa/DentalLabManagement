@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DentalLabManagement.API.Extensions;
+using DentalLabManagement.BusinessTier.Payload.Dental;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -140,6 +141,22 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<RoleEnum>(account.Role), EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
+        public async Task<DentalAccountResponse> GetDentalByAccountId(int accountId)
+        {
+            if (accountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(accountId) && x.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()));
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.AccountId.Equals(account.Id));
+            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.AccountDentalNotFoundMessage);
+
+            return new DentalAccountResponse(dental.Id, dental.Name, dental.Address, 
+                account.UserName, EnumUtil.ParseEnum<AccountStatus>(account.Status));
+        }
+
         public async Task<bool> UpdateAccountStatus(int id)
         {
 
@@ -156,5 +173,6 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessfull;
             
         }
+
     }
 }

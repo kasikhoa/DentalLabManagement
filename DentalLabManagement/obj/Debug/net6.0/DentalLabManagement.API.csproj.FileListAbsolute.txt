@@ -150,16 +150,6 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Development.json
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.csproj.AssemblyReference.cache
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.GeneratedMSBuildEditorConfig.editorconfig
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.AssemblyInfoInputs.cache
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.AssemblyInfo.cs
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.csproj.CoreCompileInputs.cache
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.MvcApplicationPartsAssemblyInfo.cs
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.MvcApplicationPartsAssemblyInfo.cache
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.dll
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\refint\DentalLabManagement.API.dll
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Development.json
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.json
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.exe
@@ -168,6 +158,7 @@ D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabM
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Humanizer.dll
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
@@ -215,6 +206,13 @@ D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabM
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.DataTier.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.BusinessTier.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.DataTier.pdb
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.csproj.AssemblyReference.cache
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.GeneratedMSBuildEditorConfig.editorconfig
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.AssemblyInfoInputs.cache
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.AssemblyInfo.cs
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.csproj.CoreCompileInputs.cache
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.MvcApplicationPartsAssemblyInfo.cs
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.MvcApplicationPartsAssemblyInfo.cache
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\staticwebassets\msbuild.DentalLabManagement.API.Microsoft.AspNetCore.StaticWebAssets.props
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\staticwebassets\msbuild.build.DentalLabManagement.API.props
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.DentalLabManagement.API.props
@@ -224,6 +222,8 @@ D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\staticweba
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\staticwebassets.development.json
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\scopedcss\bundle\DentalLabManagement.API.styles.css
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.csproj.CopyComplete
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.dll
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\refint\DentalLabManagement.API.dll
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll

@@ -8,6 +8,7 @@ namespace DentalLabManagement.DataTier.Models
         public ProductStage()
         {
             GroupStages = new HashSet<GroupStage>();
+            staff = new HashSet<staff>();
         }
 
         public int Id { get; set; }
@@ -17,5 +18,6 @@ namespace DentalLabManagement.DataTier.Models
         public double ExecutionTime { get; set; }
 
         public virtual ICollection<GroupStage> GroupStages { get; set; }
+        public virtual ICollection<staff> staff { get; set; }
     }
 }

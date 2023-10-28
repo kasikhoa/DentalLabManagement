@@ -1,5 +1,6 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Account;
+using DentalLabManagement.BusinessTier.Payload.Dental;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.DataTier.Paginate;
 
@@ -13,5 +14,6 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);
         Task<GetAccountsResponse> GetAccountDetail(int id);
         Task<bool> UpdateAccountStatus(int id);
+        Task<DentalAccountResponse> GetDentalByAccountId(int accountId);
     }
 }

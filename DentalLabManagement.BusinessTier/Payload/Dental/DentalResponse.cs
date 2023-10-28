@@ -13,9 +13,9 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
         public string Name { get; set; }
         public string Address { get; set; }
         public DentalStatus Status { get; set; }
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
 
-        public DentalResponse(int id, string name, string address, DentalStatus status, int accountId)
+        public DentalResponse(int id, string name, string address, DentalStatus status, int? accountId)
         {
             Id = id;
             Name = name;
