@@ -2,6 +2,6 @@
 	
 public enum DentalStatus
 {
-    Activate,
-	Deactivate
+    Active,
+	Inactive
 }	

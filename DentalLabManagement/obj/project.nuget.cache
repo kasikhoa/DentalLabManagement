@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "n5fECLY6OXmn1uXQTBWFvUXBUKe8DLMRj9P4A71MJsTMI8G5RuJN8iAoCF2MMNJ2IBXVQNfmTdaMN9Gl4QiGxg==",
+  "dgSpecHash": "cx4JwM7KmQacMrJt0ARIO2X34eQDB7eWR9GniHQsD8sRpTgBNiLCjhaHkM2CAj8t8ncjyuBr9Tlg9mnEDX4XbA==",
   "success": true,
-  "projectFilePath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+  "projectFilePath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\lak.sdk.core\\5.0.0\\lak.sdk.core.5.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.22\\microsoft.aspnetcore.authentication.jwtbearer.6.0.22.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.22\\microsoft.aspnetcore.authorization.6.0.22.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http\\2.2.2\\microsoft.aspnetcore.http.2.2.2.nupkg.sha512",

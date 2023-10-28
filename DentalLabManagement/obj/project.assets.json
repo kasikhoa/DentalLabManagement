@@ -15,6 +15,15 @@
           }
         }
       },
+      "LAK.Sdk.Core/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/LAK.Sdk.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/LAK.Sdk.Core.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.22": {
         "type": "package",
         "dependencies": {
@@ -1061,6 +1070,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "LAK.Sdk.Core": "5.0.0",
           "Microsoft.EntityFrameworkCore": "6.0.22",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22"
         },
@@ -1088,6 +1098,18 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "LAK.Sdk.Core/5.0.0": {
+      "sha512": "HIoR35M9trd/wthjjgIbpDypxmYKpLq/5rbDWqhLqoRMlqQ3McN2Zn0VpL3OlzT/EqmIwUH9PTfKf6yDMAi3Dg==",
+      "type": "package",
+      "path": "lak.sdk.core/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lak.sdk.core.5.0.0.nupkg.sha512",
+        "lak.sdk.core.nuspec",
+        "lib/net5.0/LAK.Sdk.Core.dll"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.22": {
@@ -2635,11 +2657,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+      "projectUniqueName": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
       "projectName": "DentalLabManagement.API",
-      "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+      "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\obj\\",
+      "outputPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2656,11 +2678,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj": {
-              "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj"
+            "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj": {
+              "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj"
             },
-            "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
-              "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj"
+            "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
+              "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj"
             }
           }
         }

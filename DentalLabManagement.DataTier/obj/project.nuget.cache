@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ch7CqJIyLtvnrTfu6l1nbKUQPw4Km4qnQ7iUzoWP2IZDRsgoq0mghh3zZ6MQTtPdRK2inyrr5MY0z699eA41HQ==",
+  "dgSpecHash": "5Mx2jDV33Eq9vdewNXzXJZSR5JqjZPLAFQCoJwkBVBMqeYH4dRcBIhkdVGiOfgAb0dGJmnUUTDgvXJimbktuUA==",
   "success": true,
-  "projectFilePath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
+  "projectFilePath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\lak.sdk.core\\5.0.0\\lak.sdk.core.5.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",

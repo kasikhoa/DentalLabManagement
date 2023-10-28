@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {}
+    "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {}
   },
   "projects": {
-    "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
+    "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
+        "projectUniqueName": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
         "projectName": "DentalLabManagement.DataTier",
-        "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
+        "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\obj\\",
+        "outputPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "LAK.Sdk.Core": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.22, )"

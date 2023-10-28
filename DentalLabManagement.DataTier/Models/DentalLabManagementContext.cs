@@ -91,7 +91,7 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.Dentals)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Dental_Account1");
+                    .HasConstraintName("FK_Dental_Account");
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
@@ -121,11 +121,13 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.DentistName).HasMaxLength(50);
 
-                entity.Property(e => e.DentistNote).HasMaxLength(50);
+                entity.Property(e => e.DentistNote).HasMaxLength(200);
 
                 entity.Property(e => e.InvoiceId)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.Property(e => e.LaboName).HasMaxLength(50);
 
                 entity.Property(e => e.Mode)
                     .HasMaxLength(10)
@@ -281,6 +283,8 @@ namespace DentalLabManagement.DataTier.Models
                 entity.ToTable("TeethPosition");
 
                 entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.Image).IsUnicode(false);
 
                 entity.Property(e => e.PositionName)
                     .HasMaxLength(3)

@@ -42,7 +42,7 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Name = dentalRequest.DentalName,
                     Address = dentalRequest.Address,
-                    Status = DentalStatus.Activate.GetDescriptionFromEnum(),
+                    Status = DentalStatus.Active.GetDescriptionFromEnum(),
                     AccountId = dentalRequest.AccountId,                  
                 };
             } 
@@ -135,19 +135,19 @@ namespace DentalLabManagement.API.Services.Implements
             updateDental.Address = string.IsNullOrEmpty(updateDentalRequest.Address) ? updateDental.Address : updateDentalRequest.Address;
             updateDental.Status = updateDentalRequest.Status.GetDescriptionFromEnum();
 
-            Account accountDental = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+            Account dentalAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(updateDental.AccountId));
-            if (accountDental != null && updateDental.Status.Equals(DentalStatus.Activate.GetDescriptionFromEnum()))
+            if (dentalAccount != null && updateDental.Status.Equals(DentalStatus.Active.GetDescriptionFromEnum()))
             {
-                accountDental.Status = AccountStatus.Activate.GetDescriptionFromEnum();
+                dentalAccount.Status = AccountStatus.Activate.GetDescriptionFromEnum();
             }
-            if (accountDental != null && updateDental.Status.Equals(DentalStatus.Deactivate.GetDescriptionFromEnum()))
+            if (dentalAccount != null && updateDental.Status.Equals(DentalStatus.Inactive.GetDescriptionFromEnum()))
             {
-                accountDental.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
+                dentalAccount.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
             }
 
             _unitOfWork.GetRepository<Dental>().UpdateAsync(updateDental);
-            _unitOfWork.GetRepository<Account>().UpdateAsync(accountDental);
+            _unitOfWork.GetRepository<Account>().UpdateAsync(dentalAccount);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Dental.UpdateDentalFailedMessage);
             return new DentalResponse(updateDental.Id, updateDental.Name, updateDental.Address, 
@@ -163,12 +163,12 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(id));
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
-            dental.Status = DentalStatus.Deactivate.GetDescriptionFromEnum();
+            dental.Status = DentalStatus.Inactive.GetDescriptionFromEnum();
 
             Account accountDental = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(dental.AccountId));
 
-            if (accountDental != null && dental.Status.Equals(DentalStatus.Deactivate.GetDescriptionFromEnum()))
+            if (accountDental != null && dental.Status.Equals(DentalStatus.Inactive.GetDescriptionFromEnum()))
             {
                 accountDental.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
             }

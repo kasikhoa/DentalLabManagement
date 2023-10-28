@@ -14,5 +14,6 @@ namespace DentalLabManagement.BusinessTier.Payload.TeethPosition
         public ToothArch ToothArch { get; set; }
         public string PositionName { get; set; }
         public string Description { get; set; }
+        public string? Image { get; set; }
     }
 }

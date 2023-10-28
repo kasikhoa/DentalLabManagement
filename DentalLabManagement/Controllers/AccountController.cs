@@ -65,6 +65,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Account.UpdateAccountSuccessfulMessage);
         }
 
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpGet(ApiEndPointConstant.Account.AccountEndPoint)]
         [ProducesResponseType(typeof(GetAccountsResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]

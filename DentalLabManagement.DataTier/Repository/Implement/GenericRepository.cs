@@ -3,6 +3,7 @@ using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using LAK.Sdk.Core.Utilities;
 
 namespace DentalLabManagement.DataTier.Repository.Implement
 {
@@ -86,9 +87,13 @@ namespace DentalLabManagement.DataTier.Repository.Implement
         }
 
         public Task<IPaginate<TResult>> GetPagingListAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1, int size = 10)
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1, int size = 10, object filter = null)
         {
             IQueryable<T> query = _dbSet;
+            if(filter != null)
+            {
+                query.DynamicFilter(filter);
+            }
             if (include != null) query = include(query);
             if (predicate != null) query = query.Where(predicate);
             if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);

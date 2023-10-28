@@ -14,6 +14,7 @@ namespace DentalLabManagement.DataTier.Models
         public int ToothArch { get; set; }
         public string PositionName { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public string? Image { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }

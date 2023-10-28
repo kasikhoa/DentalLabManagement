@@ -38,7 +38,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     public class OrderItemResponse
     {
         public int Id { get; set; }
-        public int OrderId { get; set; }
         public ProductResponse? Product { get; set; }
         public TeethPositionResponse? TeethPosition { get; set; }
         public string? Note { get; set; }

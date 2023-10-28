@@ -13,15 +13,17 @@ namespace DentalLabManagement.BusinessTier.Payload.TeethPosition
         public ToothArch ToothArch { get; set; }
         public string PositionName { get; set; }
         public string Description { get; set; }
+        public string? Image { get; set; }
 
         public TeethPositionResponse() { }
 
-        public TeethPositionResponse(int id, ToothArch toothArch, string positionName, string description)
+        public TeethPositionResponse(int id, ToothArch toothArch, string positionName, string description, string? image)
         {
             Id = id;
             ToothArch = toothArch;
             PositionName = positionName;
             Description = description;
+            Image = image;
         }
     }
 }

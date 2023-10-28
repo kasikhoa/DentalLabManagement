@@ -86,6 +86,7 @@ public static class MessageConstant
         public const string IdNotFoundMessage = "Teeth Position không tồn tại trong hệ thống";
         public const string UpdateTeethPositionFailedMessage = "Cập nhật thông tin teeth position thất bại";
         public const string ToothArchError = "Tooth Arch phải từ 1 đến 4";
+        public const string NameFormatMessage = "Position Name có dạng (1-1, 1-2, ..)";
 
     }
 

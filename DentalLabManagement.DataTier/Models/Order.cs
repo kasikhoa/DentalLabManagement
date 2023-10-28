@@ -13,6 +13,7 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
+        public string LaboName { get; set; } = null!;
         public string? InvoiceId { get; set; }
         public int DentalId { get; set; }
         public string? DentistName { get; set; }

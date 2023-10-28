@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DentalLabManagement.API.Services;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
+using System.Text.RegularExpressions;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -25,16 +26,26 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
+        private bool IsValidPositionName(string positionName)
+        {
+            string pattern = @"^\d-\d$"; 
+            return Regex.IsMatch(positionName, pattern);
+        }
+
         public async Task<TeethPositionResponse> CreateTeethPosition(TeethPositionRequest teethPositionRequest)
         {
             TeethPosition teethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync
                 (predicate: x => x.PositionName.Equals(teethPositionRequest.PositionName));
             if (teethPosition != null) throw new BadHttpRequestException(MessageConstant.TeethPosition.TeethPositionExisted);
+
+            if (!IsValidPositionName(teethPositionRequest.PositionName))
+                throw new BadHttpRequestException(MessageConstant.TeethPosition.NameFormatMessage);
             teethPosition = new TeethPosition()
             {
                 ToothArch = Convert.ToInt32(teethPositionRequest.ToothArch),
                 PositionName = teethPositionRequest.PositionName,
                 Description = teethPositionRequest.Description,
+                Image = teethPositionRequest.Image
             };
 
             await _unitOfWork.GetRepository<TeethPosition>().InsertAsync(teethPosition);
@@ -43,7 +54,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.TeethPosition.CreateTeethPositionFailed);
             return new TeethPositionResponse(teethPosition.Id, 
                 EnumUtil.ParseEnum<ToothArch>(teethPosition.ToothArch.ToString()), 
-                teethPosition.PositionName, teethPosition.Description);
+                teethPosition.PositionName, teethPosition.Description, teethPosition.Image);
 
         }
 
@@ -72,7 +83,7 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
             IPaginate<TeethPositionResponse> response = await _unitOfWork.GetRepository<TeethPosition>().GetPagingListAsync(
                 selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()),
-                    x.PositionName, x.Description),
+                    x.PositionName, x.Description, x.Image),
                 predicate: BuildGetPositionsQuery(positionName, toothArch),
                 page: page,
                 size: size
@@ -87,7 +98,7 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(id));
             if (teethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
             return new TeethPositionResponse(teethPosition.Id, EnumUtil.ParseEnum<ToothArch>(teethPosition.ToothArch.ToString()),
-                teethPosition.PositionName, teethPosition.Description);
+                teethPosition.PositionName, teethPosition.Description, teethPosition.Image);
         }
 
         public async Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest)
@@ -98,11 +109,16 @@ namespace DentalLabManagement.API.Services.Implements
             if (updateTeethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
             updateTeethPositionRequest.TrimString();
 
+            if (!IsValidPositionName(updateTeethPositionRequest.PositionName))
+                throw new BadHttpRequestException(MessageConstant.TeethPosition.NameFormatMessage);
+
             updateTeethPosition.ToothArch = Convert.ToInt32(updateTeethPositionRequest.ToothArch);
             updateTeethPosition.PositionName = string.IsNullOrEmpty(updateTeethPositionRequest.PositionName)
                 ? updateTeethPosition.PositionName : updateTeethPositionRequest.PositionName;
             updateTeethPosition.Description = string.IsNullOrEmpty(updateTeethPositionRequest.Description)
                 ? updateTeethPosition.Description : updateTeethPositionRequest.Description;
+            updateTeethPosition.Image = string.IsNullOrEmpty(updateTeethPositionRequest.Image)
+                ? updateTeethPosition.Image : updateTeethPositionRequest.Image;
 
             _unitOfWork.GetRepository<TeethPosition>().UpdateAsync(updateTeethPosition);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -110,7 +126,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             return new TeethPositionResponse(
                 updateTeethPosition.Id, EnumUtil.ParseEnum<ToothArch>(updateTeethPosition.ToothArch.ToString()), 
-                updateTeethPosition.PositionName, updateTeethPosition.Description);
+                updateTeethPosition.PositionName, updateTeethPosition.Description, updateTeethPosition.Image);
         }
     }
 }

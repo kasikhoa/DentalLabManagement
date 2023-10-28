@@ -12,13 +12,15 @@ namespace DentalLabManagement.BusinessTier.Payload.TeethPosition
     {
         [EnumDataType(typeof(ToothArch))]
         public ToothArch ToothArch { get; set; }
-        public string PositionName { get; set; }
-        public string Description { get; set; }
+        public string? PositionName { get; set; }
+        public string? Description { get; set; }
+        public string? Image { get; set; }
 
         public void TrimString()
         {
-            PositionName = PositionName.Trim();
-            Description = Description.Trim();
+            PositionName = PositionName?.Trim();
+            Description = Description?.Trim();
+            Image = Image?.Trim();
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace DentalLabManagement.BusinessTier.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+
+namespace DentalLabManagement.BusinessTier.Enums;
 	
 public enum CategoryStatus
 {

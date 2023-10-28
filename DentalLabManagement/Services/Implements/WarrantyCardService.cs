@@ -18,11 +18,11 @@ namespace DentalLabManagement.API.Services.Implements
         public WarrantyCardService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<WarrantyCardService> logger) : base(unitOfWork, logger)
         {
 
-        }    
+        }
 
         public async Task<WarrantyCardResponse> InseartNewWarrantyCard(WarrantyCardRequest warrantyCardRequest)
         {
-            
+
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(warrantyCardRequest.CategoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
@@ -46,7 +46,7 @@ namespace DentalLabManagement.API.Services.Implements
                 PatientName = order.PatientName,
                 DentalName = order.Dental.Name,
                 DentistName = order.DentistName,
-                
+                LaboName = order.LaboName,
                 StartDate = TimeUtils.GetCurrentSEATime(),
                 Description = warrantyCardRequest.Description,
                 Image = category.Image,
@@ -113,7 +113,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Id = x.Id,
                     CardCode = x.CardCode,
                     CategoryName = x.Category.Name,
-                    PatientName = x.PatientName,    
+                    PatientName = x.PatientName,
                     DentalName = x.DentalName,
                     LaboName = x.LaboName,
                     StartDate = x.StartDate,
@@ -141,7 +141,7 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
-            request.TrimString(); 
+            request.TrimString();
 
             warrantyCard.CardCode = string.IsNullOrEmpty(request.CardCode) ? warrantyCard.CardCode : request.CardCode;
             warrantyCard.LinkCategory = string.IsNullOrEmpty(request.LinkCategory) ? warrantyCard.LinkCategory : request.LinkCategory;

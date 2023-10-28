@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "DentalLabManagement.DataTier/1.0.0": {
         "dependencies": {
+          "LAK.Sdk.Core": "5.0.0",
           "Microsoft.EntityFrameworkCore": "6.0.22",
           "Microsoft.EntityFrameworkCore.Design": "6.0.22",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22",
@@ -22,6 +23,14 @@
           "lib/netstandard2.0/Humanizer.dll": {
             "assemblyVersion": "2.8.0.0",
             "fileVersion": "2.8.26.1919"
+          }
+        }
+      },
+      "LAK.Sdk.Core/5.0.0": {
+        "runtime": {
+          "lib/net5.0/LAK.Sdk.Core.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
           }
         }
       },
@@ -504,6 +513,13 @@
       "sha512": "sha512-OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A==",
       "path": "humanizer.core/2.8.26",
       "hashPath": "humanizer.core.2.8.26.nupkg.sha512"
+    },
+    "LAK.Sdk.Core/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HIoR35M9trd/wthjjgIbpDypxmYKpLq/5rbDWqhLqoRMlqQ3McN2Zn0VpL3OlzT/EqmIwUH9PTfKf6yDMAi3Dg==",
+      "path": "lak.sdk.core/5.0.0",
+      "hashPath": "lak.sdk.core.5.0.0.nupkg.sha512"
     },
     "Microsoft.CSharp/4.5.0": {
       "type": "package",
