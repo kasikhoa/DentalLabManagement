@@ -12,6 +12,7 @@ namespace DentalLabManagement.BusinessTier.Payload.WarrantyCard
         public int Id { get; set; }       
         public string? CardCode { get; set; }
         public string? CategoryName { get; set; }
+        public string? CountryOrigin { get; set; }
         public DateTime? ExpDate { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }

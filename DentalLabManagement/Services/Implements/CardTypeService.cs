@@ -29,6 +29,8 @@ namespace DentalLabManagement.API.Services.Implements
             CardType newCardType = new CardType()
             {
                 CategoryId = category.Id,
+                Code = request.Code,
+                CountryOrigin = request.CountryOrigin,
                 WarrantyYear = request.WarrantyYear,
                 Description = request.Description,
                 Image = request.Image,
@@ -40,7 +42,7 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSucessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSucessful) throw new BadHttpRequestException(MessageConstant.CardType.CreateCardFailedMessage);
 
-            return new CardTypeResponse(newCardType.Id, category.Name, newCardType.WarrantyYear, 
+            return new CardTypeResponse(newCardType.Id, category.Name, newCardType.Code, newCardType.CountryOrigin, newCardType.WarrantyYear,
                 newCardType.Description, newCardType.Image, newCardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(newCardType.Status));
         }
 
@@ -52,8 +54,8 @@ namespace DentalLabManagement.API.Services.Implements
                 include: x => x.Include(x => x.Category)
                 );
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
-            return new CardTypeResponse(cardType.Id, cardType.Category.Name, cardType.WarrantyYear, cardType.Description, 
-                cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
+            return new CardTypeResponse(cardType.Id, cardType.Category.Name, cardType.Code, cardType.CountryOrigin, cardType.WarrantyYear, 
+                cardType.Description, cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
         }
 
         private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(int? categoryId, CardTypeStatus? status)
@@ -75,12 +77,12 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<CardTypeResponse>> GetCardTypes(int? categoryId, CardTypeStatus? status, int page, int size)
         {
-            page = (page == 0) ? 1: page;
+            page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
             IPaginate<CardTypeResponse> result = await _unitOfWork.GetRepository<CardType>().GetPagingListAsync(
-                selector: x => new CardTypeResponse(x.Id, x.Category.Name, x.WarrantyYear, x.Description, x.Image, 
-                    x.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(x.Status)),
+                selector: x => new CardTypeResponse(x.Id, x.Category.Name, x.Code, x.CountryOrigin, x.WarrantyYear, x.Description,
+                x.Image, x.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(x.Status)),
                 predicate: BuildGetCardTypesQuery(categoryId, status),
                 page: page,
                 size: size
@@ -97,6 +99,8 @@ namespace DentalLabManagement.API.Services.Implements
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
             request.TrimString();
+            cardType.Code = string.IsNullOrEmpty(request.Code) ? cardType.Code : request.Code;
+            cardType.CountryOrigin = string.IsNullOrEmpty(request.CountryOrigin) ? cardType.CountryOrigin : request.CountryOrigin;
             cardType.WarrantyYear = (request.WarrantyYear < 1) ? cardType.WarrantyYear : request.WarrantyYear;
             cardType.Description = string.IsNullOrEmpty(request.Description) ? cardType.Description : request.Description;
             cardType.Image = string.IsNullOrEmpty(request.Image) ? cardType.Image : request.Image;

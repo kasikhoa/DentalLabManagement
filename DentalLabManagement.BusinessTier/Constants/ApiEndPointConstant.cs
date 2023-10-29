@@ -88,6 +88,7 @@ public static class ApiEndPointConstant
     {
         public const string WarrantyCardsEndPoint = ApiEndpoint + "/warrantyCards";
         public const string WarrantyCardEndPoint = WarrantyCardsEndPoint + "/{id}";
+        public const string WarrantyCardEndPointv2 = ApiEndpoint + "/warrantyCard";
     }
 
 }

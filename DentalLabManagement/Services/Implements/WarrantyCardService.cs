@@ -9,6 +9,7 @@ using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace DentalLabManagement.API.Services.Implements
@@ -28,10 +29,16 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(request.CardTypeId));
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
+            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
+                include: x => x.Include(x => x.CardType),
+                predicate: x => x.CardTypeId.Equals(request.CardTypeId) && x.CardCode.Equals(request.CardCode)
+
+                );
+            if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
 
             string cardCode = string.IsNullOrEmpty(request.CardCode) ? null : request.CardCode;
 
-            WarrantyCard warrantyCard = new WarrantyCard()
+            warrantyCard = new WarrantyCard()
             {
                 CardTypeId = request.CardTypeId,
                 CardCode = cardCode,
@@ -51,6 +58,7 @@ namespace DentalLabManagement.API.Services.Implements
                 Id = warrantyCard.Id,
                 CardCode = warrantyCard.CardCode,
                 CategoryName = categoryName,
+                CountryOrigin = cardType.CountryOrigin,
                 ExpDate = warrantyCard.ExpDate,
                 Description = cardType.Description,
                 Image = cardType.Image,
@@ -93,6 +101,9 @@ namespace DentalLabManagement.API.Services.Implements
                     Id = x.Id,
                     CardCode = x.CardCode,
                     CategoryName = x.CardType.Category.Name,
+                    CountryOrigin = x.CardType.CountryOrigin,
+                    TeethQuantity = x.OrderItems.Count,
+                    TeethPositions = x.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
                     PatientName = x.OrderItems.FirstOrDefault().Order.PatientName,
                     DentalName = x.OrderItems.FirstOrDefault().Order.Dental.Name,
                     DentistName = x.OrderItems.FirstOrDefault().Order.DentistName,
@@ -108,6 +119,43 @@ namespace DentalLabManagement.API.Services.Implements
                 size: size
                 );
             return result;
+        }
+        public async Task<WarrantyCardResponse> GetWarrantyCardById(int id)
+        {
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);
+
+            WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.CardType).ThenInclude(x => x.Category).Include(x => x.OrderItems).ThenInclude(x => x.TeethPosition)
+                    .Include(x => x.OrderItems).ThenInclude(x => x.Order).ThenInclude(x => x.Dental)
+                );
+            if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
+
+            List<int> teethPositionIds = (List<int>) await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
+                selector: x => x.TeethPositionId,
+                predicate: x => x.WarrantyCardId.Equals(id)
+                );
+
+            
+
+            return new WarrantyCardResponse()
+            {
+                Id = warrantyCard.Id,
+                CardCode = warrantyCard.CardCode,
+                CategoryName = warrantyCard.CardType.Category.Name,
+                CountryOrigin = warrantyCard.CardType.CountryOrigin,
+                TeethQuantity = warrantyCard.OrderItems.Count,
+                TeethPositions = warrantyCard.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
+                PatientName = warrantyCard.OrderItems.FirstOrDefault().Order.PatientName,
+                DentalName = warrantyCard.OrderItems.FirstOrDefault().Order.Dental.Name,
+                DentistName = warrantyCard.OrderItems.FirstOrDefault().Order.DentistName,
+                StartDate = warrantyCard.OrderItems.FirstOrDefault().Order.CompletedDate,
+                ExpDate = warrantyCard.ExpDate,
+                Description = warrantyCard.CardType.Description,
+                Image = warrantyCard.CardType.Image,
+                BrandUrl = warrantyCard.CardType.BrandUrl,
+                Status = EnumUtil.ParseEnum<WarrantyCardStatus>(warrantyCard.Status)
+            };
         }
 
         public async Task<bool> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
@@ -133,14 +181,15 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        public async Task<WarrantyCardResponse> GetWarrantyCardById(int id)
+        public async Task<WarrantyCardResponse> GetWarrantyCardByCode(string cardCode, string cardTypeCode)
         {
-            if (id < 1) throw new BadHttpRequestException(MessageConstant.WarrantyCard.EmptyCardIdMessage);
+            cardCode = cardCode.Trim().ToLower();
+            cardTypeCode = cardTypeCode.Trim().ToLower();
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.CardType).ThenInclude(x => x.Category).Include(x => x.OrderItems)
-                    .ThenInclude(x => x.Order).ThenInclude(x => x.Dental)
+                predicate: x => x.CardCode.Equals(cardCode) && x.CardType.Code.Equals(cardTypeCode),
+                include: x => x.Include(x => x.CardType).ThenInclude(x => x.Category).Include(x => x.OrderItems).ThenInclude(x => x.TeethPosition)
+                    .Include(x => x.OrderItems).ThenInclude(x => x.Order).ThenInclude(x => x.Dental)
                 );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
 
@@ -149,6 +198,9 @@ namespace DentalLabManagement.API.Services.Implements
                 Id = warrantyCard.Id,
                 CardCode = warrantyCard.CardCode,
                 CategoryName = warrantyCard.CardType.Category.Name,
+                CountryOrigin = warrantyCard.CardType.CountryOrigin,
+                TeethQuantity = warrantyCard.OrderItems.Count,
+                TeethPositions = warrantyCard.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
                 PatientName = warrantyCard.OrderItems.FirstOrDefault().Order.PatientName,
                 DentalName = warrantyCard.OrderItems.FirstOrDefault().Order.Dental.Name,
                 DentistName = warrantyCard.OrderItems.FirstOrDefault().Order.DentistName,

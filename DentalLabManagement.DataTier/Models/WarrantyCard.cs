@@ -11,12 +11,12 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
-        public int? CardTypeId { get; set; }
+        public int CardTypeId { get; set; }
         public string? CardCode { get; set; }
         public DateTime? ExpDate { get; set; }
         public string Status { get; set; } = null!;
 
-        public virtual CardType? CardType { get; set; }
+        public virtual CardType CardType { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

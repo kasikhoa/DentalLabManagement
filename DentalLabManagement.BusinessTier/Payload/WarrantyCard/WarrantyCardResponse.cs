@@ -1,4 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Payload.TeethPosition;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace DentalLabManagement.BusinessTier.Payload.WarrantyCard
         public int Id { get; set; }       
         public string? CardCode { get; set; }
         public string? CategoryName { get; set; }
+        public string? CountryOrigin { get; set; }
+        public int? TeethQuantity { get; set; }
+        public List<string> TeethPositions { get; set; }
         public string? PatientName { get; set; }
         public string? DentalName { get; set; }
         public string? DentistName { get; set; }

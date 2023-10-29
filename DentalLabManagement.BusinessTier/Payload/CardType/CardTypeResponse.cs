@@ -11,6 +11,8 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }
+        public string Code { get; set; }
+        public string CountryOrigin { get; set; }
         public int WarrantyYear { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
@@ -18,10 +20,13 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
         public CardTypeStatus Status { get; set; }
 
         public CardTypeResponse() { }
-        public CardTypeResponse(int id, string categoryName, int warrantyYear, string? description, string? image, string? brandUrl, CardTypeStatus status)
+
+        public CardTypeResponse(int id, string categoryName, string code, string countryOrigin, int warrantyYear, string? description, string? image, string? brandUrl, CardTypeStatus status)
         {
             Id = id;
             CategoryName = categoryName;
+            Code = code;
+            CountryOrigin = countryOrigin;
             WarrantyYear = warrantyYear;
             Description = description;
             Image = image;

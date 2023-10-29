@@ -9,6 +9,8 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
 {
     public class UpdateCardRequest
     {
+        public string? Code { get; set; }
+        public string? CountryOrigin { get; set; }
         public int WarrantyYear { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }

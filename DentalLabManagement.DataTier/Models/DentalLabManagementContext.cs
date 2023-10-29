@@ -70,6 +70,12 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Code)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CountryOrigin).HasMaxLength(50);
+
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.Image).IsUnicode(false);
@@ -345,6 +351,7 @@ namespace DentalLabManagement.DataTier.Models
                 entity.HasOne(d => d.CardType)
                     .WithMany(p => p.WarrantyCards)
                     .HasForeignKey(d => d.CardTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_CardType");
             });
 
