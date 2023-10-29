@@ -92,8 +92,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.CardType.EmptyCardIdMessage);
             CardType cardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Category)
+                predicate: x => x.Id.Equals(id)
                 );
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 

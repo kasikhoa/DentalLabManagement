@@ -22,7 +22,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status)
         {
-            Expression<Func<OrderItemStage, bool>> filterQuery = x => true; 
+            Expression<Func<OrderItemStage, bool>> filterQuery = x => true;
 
             if (orderItemId.HasValue)
             {
@@ -63,7 +63,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Execution = x.ExecutionTime,
                     Status = EnumUtil.ParseEnum<OrderItemStageStatus>(x.Status),
                     StartDate = x.StartDate,
-                    EndDate= x.EndDate,
+                    EndDate = x.EndDate,
                     Note = x.Note,
                     Image = x.Image
                 },
@@ -83,14 +83,14 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (orderItemStage == null) throw new BadHttpRequestException(MessageConstant.OrderItemStage.OrderItemStageNotFoundMessage);
 
-            string staffName = (orderItemStage.Staff != null) ? orderItemStage.Staff.FullName : null;
+            string staffName = (orderItemStage.Staff == null) ? null : orderItemStage.Staff.FullName;
             return new OrderItemStageResponse()
             {
                 Id = orderItemStage.Id,
                 OrderItemId = orderItemStage.Id,
                 StaffName = staffName,
                 IndexStage = orderItemStage.IndexStage,
-                StageName= orderItemStage.StageName,
+                StageName = orderItemStage.StageName,
                 Description = orderItemStage.Description,
                 Execution = orderItemStage.ExecutionTime,
                 Status = EnumUtil.ParseEnum<OrderItemStageStatus>(orderItemStage.Status),
@@ -113,7 +113,7 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(request.StaffId) && x.Role.Equals(RoleEnum.Staff.GetDescriptionFromEnum()));
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.StaffNotFoundMessage);
 
-            List<int> listIndexStages = (List<int>) await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync( 
+            List<int> listIndexStages = (List<int>)await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync(
                 selector: x => x.IndexStage,
                 predicate: x => x.OrderItemId.Equals(orderItemStage.OrderItemId),
                 orderBy: x => x.OrderBy(x => x.IndexStage)
@@ -150,7 +150,7 @@ namespace DentalLabManagement.API.Services.Implements
                     _unitOfWork.GetRepository<OrderItemStage>().UpdateAsync(orderItemStage);
                     break;
 
-                 case OrderItemStageStatus.Completed:
+                case OrderItemStageStatus.Completed:
 
                     if (orderItemStage.IndexStage == listIndexStages[0])
                     {
@@ -187,7 +187,7 @@ namespace DentalLabManagement.API.Services.Implements
 
                     _unitOfWork.GetRepository<OrderItemStage>().UpdateAsync(orderItemStage);
                     break;
-                    
+
                 default:
 
                     throw new BadHttpRequestException(MessageConstant.OrderItemStage.UpdateStatusStageFailedMessage);
@@ -196,6 +196,6 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
 
         }
-        
+
     }
 }

@@ -53,12 +53,12 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Product.CreateNewProductFailedMessage);
             return new ProductResponse(newProduct.Id, newProduct.Name, newProduct.Description, newProduct.CostPrice, 
-                newProduct.CategoryId, EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
+                category.Name, EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
         }
 
         private Expression<Func<Product, bool>> BuildGetProductsQuery(string? searchProductName, int? categoryId, ProductStatus? status)
         {
-            Expression<Func<Product, bool>> filterQuery = x => true; // Bắt đầu với một điều kiện luôn đúng.
+            Expression<Func<Product, bool>> filterQuery = x => true; 
 
             if (!string.IsNullOrEmpty(searchProductName))
             {
@@ -84,7 +84,7 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId, 
+                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.Category.Name, 
                 EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: BuildGetProductsQuery(searchProductName, categoryId, status),
                 page: page,
@@ -97,11 +97,13 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<ProductResponse> GetProductById(int productId)
         {
             if (productId < 1) throw new BadHttpRequestException(MessageConstant.Product.EmptyProductIdMessage);
-            Product product = await _unitOfWork.GetRepository<Product>()
-                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(productId));
+            Product product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(productId),
+                include: x => x.Include(x => x.Category)
+                );
             if (product == null) throw new BadHttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
 
-            return new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.CategoryId, 
+            return new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.Category.Name, 
                 EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
         }
 
@@ -131,7 +133,7 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)
+        public async Task<IPaginate<ProductResponse>> GetProductsByCategory(int categoryId, int page, int size)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
 
@@ -142,14 +144,15 @@ namespace DentalLabManagement.API.Services.Implements
                  .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
-            IPaginate<GetProductsInCategory> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new GetProductsInCategory(x.Id, x.Name, x.Description, x.CostPrice, x.CategoryId),
+            IPaginate<ProductResponse> result = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
+                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.Category.Name, 
+                    EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: x => x.CategoryId.Equals(categoryId),
                 page: page,
                 size: size,
                 orderBy: x => x.OrderBy(x => x.CostPrice)
                );
-            return productsResponse;
+            return result;
         }
 
         public async Task<bool> UpdateProductStatus(int id)

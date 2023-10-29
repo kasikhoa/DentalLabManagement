@@ -84,13 +84,14 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, string? dentalName, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, string? dentalName, OrderMode? mode, 
+            OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
-            if (!string.IsNullOrEmpty(InvoiceId))
+            if (!string.IsNullOrEmpty(invoiceId))
             {
-                filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
+                filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(invoiceId));
             }
 
             if (!string.IsNullOrEmpty(dentalName))
@@ -116,10 +117,10 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? InvoiceId, string? dentalName, OrderMode? mode, OrderStatus? status,
+        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, string? dentalName, OrderMode? mode, OrderStatus? status,
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
-            InvoiceId = InvoiceId?.Trim().ToLower();
+            invoiceId = invoiceId?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
@@ -146,7 +147,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(InvoiceId, dentalName, mode, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(invoiceId, dentalName, mode, status, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size
@@ -201,7 +202,7 @@ namespace DentalLabManagement.API.Services.Implements
                             Name = x.Product.Name,
                             Description = x.Product.Description,
                             CostPrice = x.Product.CostPrice,
-                            CategoryId = x.Product.CategoryId
+                            CategoryName = x.Product.Category.Name
                         },
                         TeethPosition = new TeethPositionResponse()
                         {

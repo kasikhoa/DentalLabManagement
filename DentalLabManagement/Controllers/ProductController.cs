@@ -56,10 +56,10 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Product.ProductsInCategory)]
-        [ProducesResponseType(typeof(IPaginate<GetProductsInCategory>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProductsInCategory(int categoryId, [FromQuery] int page, [FromQuery] int size)
+        [ProducesResponseType(typeof(IPaginate<ProductResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProductsByCategory(int categoryId, [FromQuery] int page, [FromQuery] int size)
         {
-            var response = await _productService.GetProductsInCategory(categoryId, page, size);
+            var response = await _productService.GetProductsByCategory(categoryId, page, size);
             return Ok(response);
         }
 

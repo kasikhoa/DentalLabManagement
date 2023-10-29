@@ -14,7 +14,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public string Name { get; set; }     
         public string Description { get; set; }      
         public double CostPrice { get; set; }
-        public int CategoryId { get; set; }
+        public string? CategoryName { get; set; }
         public ProductStatus Status { get; set; }
         public string? Image { get; set; }
 
@@ -22,13 +22,13 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         {
         }
 
-        public ProductResponse(int id, string name, string description, double costPrice, int categoryId, ProductStatus status, string? image)
+        public ProductResponse(int id, string name, string description, double costPrice, string? categoryName, ProductStatus status, string? image)
         {
             Id = id;
             Name = name;
             Description = description;
             CostPrice = costPrice;
-            CategoryId = categoryId;
+            CategoryName = categoryName;
             Status = status;
             Image = image;
         }

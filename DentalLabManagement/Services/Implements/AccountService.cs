@@ -159,7 +159,6 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<bool> UpdateAccountStatus(int id)
         {
-
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(

@@ -14,7 +14,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest);
         Task<GetOrderDetailResponse> GetOrderTeethDetail(int id);
-        Task<IPaginate<GetOrdersResponse>> GetOrders(string? InvoiceId, string? dentalName, OrderMode? mode, 
+        Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, string? dentalName, OrderMode? mode, 
             OrderStatus? status, OrderPaymentStatus? paymentStatus, int page, int size);
         Task<bool> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest);
         Task<PaymentResponse> UpdateOrderPayment(int orderId, PaymentRequest paymentRequest);
