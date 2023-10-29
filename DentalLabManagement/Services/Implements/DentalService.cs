@@ -114,7 +114,7 @@ namespace DentalLabManagement.API.Services.Implements
             return response;
         }
 
-        public async Task<DentalResponse> UpdateDentalInfo(int dentalId, UpdateDentalRequest updateDentalRequest)
+        public async Task<bool> UpdateDentalInfo(int dentalId, UpdateDentalRequest request)
         {
             if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
 
@@ -122,11 +122,11 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(dentalId));
             if (updateDental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
-            updateDentalRequest.TrimString();
+            request.TrimString();
 
-            updateDental.Name = string.IsNullOrEmpty(updateDentalRequest.Name) ? updateDental.Name : updateDentalRequest.Name;
-            updateDental.Address = string.IsNullOrEmpty(updateDentalRequest.Address) ? updateDental.Address : updateDentalRequest.Address;
-            updateDental.Status = updateDentalRequest.Status.GetDescriptionFromEnum();
+            updateDental.Name = string.IsNullOrEmpty(request.Name) ? updateDental.Name : request.Name;
+            updateDental.Address = string.IsNullOrEmpty(request.Address) ? updateDental.Address : request.Address;
+            updateDental.Status = request.Status.GetDescriptionFromEnum();
 
             Account dentalAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(updateDental.AccountId));
@@ -142,9 +142,7 @@ namespace DentalLabManagement.API.Services.Implements
             _unitOfWork.GetRepository<Dental>().UpdateAsync(updateDental);
             _unitOfWork.GetRepository<Account>().UpdateAsync(dentalAccount);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Dental.UpdateDentalFailedMessage);
-            return new DentalResponse(updateDental.Id, updateDental.Name, updateDental.Address, 
-                EnumUtil.ParseEnum<DentalStatus>(updateDental.Status), updateDental.AccountId);
+            return isSuccessful;
 
         }
 
@@ -171,9 +169,12 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? InvoiceId, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(int dentalId, string? InvoiceId, OrderMode? mode, 
+            OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
+
+            filterQuery = filterQuery.AndAlso(p => p.DentalId.Equals(dentalId));
 
             if (!string.IsNullOrEmpty(InvoiceId))
             {
@@ -204,17 +205,11 @@ namespace DentalLabManagement.API.Services.Implements
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
+
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(dentalId)
                 );
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
-
-            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.DentalId.Equals(dentalId)
-                );
-            if (order == null) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderMessage);
-
-            string updateBy = (order.UpdatedByNavigation != null) ? order.UpdatedByNavigation.FullName : null;
 
             IPaginate<GetOrdersResponse> orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: x => new GetOrdersResponse()
@@ -239,7 +234,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(InvoiceId, mode, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, mode, status, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

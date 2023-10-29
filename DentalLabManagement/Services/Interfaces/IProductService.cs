@@ -15,7 +15,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<ProductResponse> CreateProduct(ProductRequest productRequest);
         Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size);
         Task<ProductResponse> GetProductById(int productId);
-        Task<ProductResponse> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
+        Task<bool> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
         Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size);
         Task<bool> UpdateProductStatus(int id);
     }

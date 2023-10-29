@@ -9,7 +9,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<CardTypeResponse> CreateCardType(CardTypeRequest request);
         Task<IPaginate<CardTypeResponse>> GetCardTypes(int? categoryId, CardTypeStatus? status, int page, int size);
         Task<CardTypeResponse> GetCardTypeById(int id);
-        Task<CardTypeResponse> UpdateCardType(int id, UpdateCardRequest request);
+        Task<bool> UpdateCardType(int id, UpdateCardRequest request);
         Task<bool> DeleteCardType(int id);
     }
 }

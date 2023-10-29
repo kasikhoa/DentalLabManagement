@@ -36,18 +36,19 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(GetOrdersResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrders(string? invoiceId, string? dentalName, OrderMode? mode, OrderStatus? status, OrderPaymentStatus? paymentStatus, int page, int size)
+        public async Task<IActionResult> GetOrders(string? invoiceId, string? dentalName, OrderMode? mode, OrderStatus? status, 
+            OrderPaymentStatus? paymentStatus, int page, int size)
         {
             var response = await _orderService.GetOrders(invoiceId, dentalName, mode, status, paymentStatus, page, size);
             return Ok(response);
         }
 
         [HttpPut(ApiEndPointConstant.Order.OrderEndPoint)]
-        [ProducesResponseType(typeof(UpdateOrderResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
         {
-            var response = await _orderService.UpdateOrderStatus(id, updateOrderRequest);
-            return Ok(response);
+            var isSuccessful = await _orderService.UpdateOrderStatus(id, updateOrderRequest);
+            if (!isSuccessful) return Ok(MessageConstant.Order.UpdateStatusFailedMessage);
+            return Ok(MessageConstant.Order.UpdateStatusSuccessMessage);
         }
 
         [HttpPost(ApiEndPointConstant.Order.OrderPaymentEndPoint)]
@@ -60,10 +61,10 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrderPaymentsEndPoint)]
         [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderPayments(int? orderId, PaymentType? type, PaymentStatus? status, 
+        public async Task<IActionResult> GetOrderPayments(int id, PaymentType? type, PaymentStatus? status, 
             int page, int size)
         {
-            var response = await _orderService.GetOrderPayments(orderId, type, status, page, size);
+            var response = await _orderService.GetOrderPayments(id, type, status, page, size);
             return Ok(response);
         }
     }

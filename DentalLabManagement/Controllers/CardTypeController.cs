@@ -42,11 +42,11 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.CardType.CardTypeEndPoint)]
-        [ProducesResponseType(typeof(CardTypeResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCardTypes(int id, UpdateCardRequest request)
+        public async Task<IActionResult> UpdateCardType(int id, UpdateCardRequest request)
         {
-            var response = await _cardTypeService.UpdateCardType(id, request);
-            return Ok(response);
+            var isSuccessful = await _cardTypeService.UpdateCardType(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.CardType.UpdateCardFailedMessage);
+            return Ok(MessageConstant.CardType.UpdateCardSuccessMessage);
         }
 
         [HttpDelete(ApiEndPointConstant.CardType.CardTypeEndPoint)]

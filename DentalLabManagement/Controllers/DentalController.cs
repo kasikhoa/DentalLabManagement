@@ -49,12 +49,12 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.Dental.DentalEndPoint)]
-        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> UpdateDentalInfo(int id, UpdateDentalRequest updateDentalRequest)
+        public async Task<IActionResult> UpdateDentalInfo(int id, UpdateDentalRequest request)
         {
-            var response = await _dentalService.UpdateDentalInfo(id, updateDentalRequest);
-            return Ok(response);
+            var isSuccessful = await _dentalService.UpdateDentalInfo(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.Dental.UpdateDentalFailedMessage);
+            return Ok(MessageConstant.Dental.UpdateDentalSuccessMessage);
 
         }
 

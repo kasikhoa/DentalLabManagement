@@ -87,7 +87,6 @@ namespace DentalLabManagement.API.Services.Implements
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
-
             IPaginate<WarrantyCardResponse> result = await _unitOfWork.GetRepository<WarrantyCard>().GetPagingListAsync(
                 selector: x => new WarrantyCardResponse()
                 {
@@ -126,7 +125,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
             request.CardCode?.Trim();
-            warrantyCard.CardTypeId = request.CardTypeId;
+            warrantyCard.CardTypeId = (request.CardTypeId < 1) ? warrantyCard.CardTypeId: request.CardTypeId;
             warrantyCard.CardCode = string.IsNullOrEmpty(request.CardCode) ? warrantyCard.CardCode : request.CardCode;
 
             _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);

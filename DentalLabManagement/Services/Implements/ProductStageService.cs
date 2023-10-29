@@ -77,7 +77,7 @@ namespace DentalLabManagement.API.Services.Implements
             return response;
         }
 
-        public async Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest)
+        public async Task<bool> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
             ProductStage updateProductStage = await _unitOfWork.GetRepository<ProductStage>()
@@ -88,13 +88,11 @@ namespace DentalLabManagement.API.Services.Implements
             updateProductStage.IndexStage = (updateProductStageRequest.IndexStage) < 1 ? updateProductStage.IndexStage : updateProductStageRequest.IndexStage;
             updateProductStage.Name = string.IsNullOrEmpty(updateProductStageRequest.Name) ? updateProductStage.Name : updateProductStageRequest.Name;
             updateProductStage.Description = string.IsNullOrEmpty(updateProductStageRequest.Description) ? updateProductStage.Description : updateProductStageRequest.Description;
-            updateProductStage.ExecutionTime = (updateProductStageRequest.ExecutionTime) < 0 ? updateProductStage.ExecutionTime : updateProductStageRequest.ExecutionTime;
+            updateProductStage.ExecutionTime = (updateProductStageRequest.ExecutionTime) < 1 ? updateProductStage.ExecutionTime : updateProductStageRequest.ExecutionTime;
 
             _unitOfWork.GetRepository<ProductStage>().UpdateAsync(updateProductStage);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.ProductStage.UpdateProductStageFailedMessage);
-            return new ProductStageResponse(updateProductStage.Id, updateProductStage.IndexStage, 
-                updateProductStage.Name, updateProductStage.Description, updateProductStage.ExecutionTime);
+            return isSuccessful;
         }     
      
     }

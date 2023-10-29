@@ -94,18 +94,18 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image, category.LinkBrand);
         }     
 
-        public async Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest)
+        public async Task<bool> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest request)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
 
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
-            updateCategoryRequest.TrimString();
-            category.Name = string.IsNullOrEmpty(updateCategoryRequest.CategoryName) ? category.Name : updateCategoryRequest.CategoryName;
-            category.Description = string.IsNullOrEmpty(updateCategoryRequest.Description) ? category.Description : updateCategoryRequest.Description;
-            category.Status = updateCategoryRequest.Status.GetDescriptionFromEnum();
-            category.Image = string.IsNullOrEmpty(updateCategoryRequest.Image) ? category.Image : updateCategoryRequest.Image; ;
+            request.TrimString();
+            category.Name = string.IsNullOrEmpty(request.CategoryName) ? category.Name : request.CategoryName;
+            category.Description = string.IsNullOrEmpty(request.Description) ? category.Description : request.Description;
+            category.Status = request.Status.GetDescriptionFromEnum();
+            category.Image = string.IsNullOrEmpty(request.Image) ? category.Image : request.Image; ;
 
             ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
                 predicate: x => x.CategoryId.Equals(category.Id));
@@ -128,9 +128,7 @@ namespace DentalLabManagement.API.Services.Implements
             _unitOfWork.GetRepository<Product>().UpdateRange(products);
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.UpdateCategoryFailedMessage);
-            return new CategoryResponse(categoryId, category.Name, category.Description, 
-                EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image, category.LinkBrand);
+            return isSuccessful;
         }
 
         public async Task<bool> CategoryMappingProductStage(int categoryId, List<int> request)

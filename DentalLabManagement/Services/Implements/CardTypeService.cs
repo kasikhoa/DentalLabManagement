@@ -88,7 +88,7 @@ namespace DentalLabManagement.API.Services.Implements
             return result;
         }
 
-        public async Task<CardTypeResponse> UpdateCardType(int id, UpdateCardRequest request)
+        public async Task<bool> UpdateCardType(int id, UpdateCardRequest request)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.CardType.EmptyCardIdMessage);
             CardType cardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
@@ -106,9 +106,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             _unitOfWork.GetRepository<CardType>().UpdateAsync(cardType);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.CardType.UpdateCardFailedMessage);
-            return new CardTypeResponse(cardType.Id, cardType.Category.Name, cardType.WarrantyYear, 
-                cardType.Description, cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
+            return isSuccessful;
         }
 
         public async Task<bool> DeleteCardType(int id)

@@ -13,7 +13,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<ProductStageResponse> CreateProductStage(ProductStageRequest productStageRequest);
         Task<IPaginate<ProductStageResponse>> GetProductStages(string? name, int? index, int page, int size);
         Task<ProductStageResponse> GetProductStageById(int id);
-        Task<ProductStageResponse> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest);
+        Task<bool> UpdateProductStage(int id, UpdateProductStageRequest updateProductStageRequest);
         
     }
 }

@@ -81,7 +81,7 @@ namespace DentalLabManagement.API.Services.Implements
             };
         }
 
-        public async Task<GetOrderItemResponse> UpdateOrderItem(int id, UpdateOrderItemRequest request)
+        public async Task<bool> UpdateOrderItem(int id, UpdateOrderItemRequest request)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
             OrderItem orderItem = await _unitOfWork.GetRepository<OrderItem>().SingleOrDefaultAsync(
@@ -106,17 +106,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.OrderItem.UpdateFailedMessage);
-
-            return new GetOrderItemResponse()
-            {
-                Id = orderItem.Id,
-                OrderId = orderItem.Id,
-                ProductName = product.Name,
-                TeethPosition = teethPosition.PositionName,
-                Note = orderItem.Note,
-                TotalAmount = orderItem.TotalAmount,
-            };
+            return isSuccessful;
         }
 
         public async Task<GetOrderItemResponse> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
@@ -129,6 +119,11 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
+            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(orderItem.OrderId));
+            if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
+                throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);               
+
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(updateRequest.WarrantyCardId),
                 include: x => x.Include(x => x.CardType)
@@ -138,10 +133,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (!warrantyCard.CardType.CategoryId.Equals(orderItem.Product.CategoryId))
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
 
-            Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderItem.OrderId));
-            if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
-                throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
+            
 
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
             warrantyCard.ExpDate = order.CompletedDate.Value.AddYears(warrantyCard.CardType.WarrantyYear);

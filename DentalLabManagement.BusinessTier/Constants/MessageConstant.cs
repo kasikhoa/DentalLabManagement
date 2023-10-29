@@ -38,6 +38,7 @@ public static class MessageConstant
         public const string DentalNotFoundMessage = "Dental không có trong hệ thống";
         public const string AccountDentalNotFoundMessage = "Dental chưa có account";
         public const string UpdateDentalFailedMessage = "Cập nhật thông tin Dental thất bại";
+        public const string UpdateDentalSuccessMessage = "Cập nhật thông tin Dental thành công";
         public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
@@ -48,7 +49,7 @@ public static class MessageConstant
         public const string CreateNewCategoryFailedMessage = "Tạo mới Category thất bại";
         public const string EmptyCategoryIdMessage = "Category Id không hợp lệ";
         public const string CategoryNotFoundMessage = "Category không có trong hệ thống";
-        public const string UpdateCategorySuccessfulMessage = "Category được cập nhật thành công";
+        public const string UpdateCategorySuccessMessage = "Category được cập nhật thành công";
         public const string UpdateCategoryFailedMessage = "Category cập nhật thất bại";
         public const string StageForCategorySuccessfulMessage = "Stage cho Category được cập nhật thành công";
         public const string StageForCategoryFailedMessage = "Stage cho Category cập nhật thất bại";
@@ -61,6 +62,7 @@ public static class MessageConstant
         public const string ProductNameExisted = "Product đã tồn tại";
         public const string CreateNewProductFailedMessage = "Tạo mới product thất bại";
         public const string UpdateProductFailedMessage = "Cập nhật thông tin product thất bại";
+        public const string UpdateProductSuccessMessage = "Cập nhật thông tin product thành công";
         public const string EmptyProductIdMessage = "Product Id không hợp lệ";
         public const string ProductNotFoundMessage = "Product không tồn tại trong hệ thống";
         public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
@@ -75,7 +77,8 @@ public static class MessageConstant
         public const string CreateNewProductStageFailed = "Tạo mới product stage thất bại";
         public const string IndexStageNotFoundMessage = "Index Stage không tồn tại trong hệ thống";
         public const string IdNotFoundMessage = "Id không tồn tại trong hệ thống";
-        public const string UpdateProductStageFailedMessage = "Cập nhật thông tin product stage thất bại";
+        public const string UpdateProductStageFailedMessage = "Cập nhật thông tin thất bại";
+        public const string UpdateProductStageSuccessMessage = "Cập nhật thông tin thành công";
     }
 
     public static class TeethPosition
@@ -84,7 +87,8 @@ public static class MessageConstant
         public const string CreateTeethPositionFailed = "Tạo mới teeth position thất bại";
         public const string EmptyTeethPositionIdMessage = "Id không hợp lệ";
         public const string IdNotFoundMessage = "Teeth Position không tồn tại trong hệ thống";
-        public const string UpdateTeethPositionFailedMessage = "Cập nhật thông tin teeth position thất bại";
+        public const string UpdateFailedMessage = "Cập nhật thông tin thất bại";
+        public const string UpdateSucessMessage = "Cập nhật thông tin thành công";
         public const string ToothArchError = "Tooth Arch phải từ 1 đến 4";
         public const string NameFormatMessage = "Position Name có dạng (1-1, 1-2, ..)";
 
@@ -98,7 +102,7 @@ public static class MessageConstant
         public const string OrderNotFoundMessage = "Order không tồn tại trong hệ thống";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái Order thất bại";
         public const string NewStatusMessage = "Order đã được tạo";
-        public const string StatusErrorMessage = "Thay đổi trạng thái Order thất bại";
+        public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái Order thành công";
         public const string ProducingStatusMessage = "Order đang được sản xuất";
         public const string ProducingStatusRepeatMessage = "Order đã được đưa vào sản xuất";
         public const string CompletedStatusMessage = "Order đã hoàn thành";
@@ -120,7 +124,9 @@ public static class MessageConstant
         public const string EmptyIdMessage = "Id của item không hợp lệ";
         public const string NotFoundMessage = "Item không tồn tại trong hệ thống";
         public const string UpdateFailedMessage = "Cập nhật thông tin Item thất bại";
+        public const string UpdateSuccessMessage = "Cập nhật thông tin Item thành công";
         public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
+        public const string OrderItemNotMatchOrder = "Item không khớp Order";
     }
 
     public static class OrderItemStage
@@ -139,6 +145,7 @@ public static class MessageConstant
         public const string CreateCardFailedMessage = "Tạo mới thẻ thất bại";
         public const string CardNotFoundMessage = "Thẻ chưa có trong hệ thống";
         public const string UpdateCardFailedMessage = "Cập nhật thẻ thất bại";
+        public const string UpdateCardSuccessMessage = "Cập nhật thẻ thành công";
         public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }

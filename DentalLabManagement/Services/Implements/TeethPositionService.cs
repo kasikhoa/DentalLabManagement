@@ -101,32 +101,25 @@ namespace DentalLabManagement.API.Services.Implements
                 teethPosition.PositionName, teethPosition.Description, teethPosition.Image);
         }
 
-        public async Task<TeethPositionResponse> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest)
+        public async Task<bool> UpdateTeethPosition(int id, UpdateTeethPositionRequest request)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.TeethPosition.EmptyTeethPositionIdMessage);
-            TeethPosition updateTeethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
+            TeethPosition teethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id));
-            if (updateTeethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
-            updateTeethPositionRequest.TrimString();
+            if (teethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
+            request.TrimString();
 
-            if (!IsValidPositionName(updateTeethPositionRequest.PositionName))
+            if (!IsValidPositionName(request.PositionName))
                 throw new BadHttpRequestException(MessageConstant.TeethPosition.NameFormatMessage);
 
-            updateTeethPosition.ToothArch = Convert.ToInt32(updateTeethPositionRequest.ToothArch);
-            updateTeethPosition.PositionName = string.IsNullOrEmpty(updateTeethPositionRequest.PositionName)
-                ? updateTeethPosition.PositionName : updateTeethPositionRequest.PositionName;
-            updateTeethPosition.Description = string.IsNullOrEmpty(updateTeethPositionRequest.Description)
-                ? updateTeethPosition.Description : updateTeethPositionRequest.Description;
-            updateTeethPosition.Image = string.IsNullOrEmpty(updateTeethPositionRequest.Image)
-                ? updateTeethPosition.Image : updateTeethPositionRequest.Image;
+            teethPosition.ToothArch = Convert.ToInt32(request.ToothArch);
+            teethPosition.PositionName = request.PositionName;
+            teethPosition.Description = string.IsNullOrEmpty(request.Description) ? teethPosition.Description : request.Description;
+            teethPosition.Image = string.IsNullOrEmpty(request.Image) ? teethPosition.Image : request.Image;
 
-            _unitOfWork.GetRepository<TeethPosition>().UpdateAsync(updateTeethPosition);
+            _unitOfWork.GetRepository<TeethPosition>().UpdateAsync(teethPosition);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.TeethPosition.UpdateTeethPositionFailedMessage);
-
-            return new TeethPositionResponse(
-                updateTeethPosition.Id, EnumUtil.ParseEnum<ToothArch>(updateTeethPosition.ToothArch.ToString()), 
-                updateTeethPosition.PositionName, updateTeethPosition.Description, updateTeethPosition.Image);
+            return isSuccessful;
         }
     }
 }

@@ -46,12 +46,12 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.TeethPosition.TeethPositonEndPoint)]
-        [ProducesResponseType(typeof(IPaginate<TeethPositionResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> UpdateTeethPosition(int id, UpdateTeethPositionRequest updateTeethPositionRequest)
+        public async Task<IActionResult> UpdateTeethPosition(int id, UpdateTeethPositionRequest request)
         {
-            var response = await _teethPositionServices.UpdateTeethPosition(id, updateTeethPositionRequest);
-            return Ok(response);
+            var isSuccessful = await _teethPositionServices.UpdateTeethPosition(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.TeethPosition.UpdateFailedMessage);
+            return Ok(MessageConstant.TeethPosition.UpdateSucessMessage);
         }
     }
 }

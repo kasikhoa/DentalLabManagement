@@ -48,12 +48,12 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.Category.CategoryEndpoint)]
-        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> UpdateCategoryInformation(int id, UpdateCategoryRequest updateCategoryRequest)
+        public async Task<IActionResult> UpdateCategoryInformation(int id, UpdateCategoryRequest request)
         {
-            var response = await _categoryService.UpdateCategoryInformation(id, updateCategoryRequest);
-            return Ok(response);
+            var isSuccessful = await _categoryService.UpdateCategoryInformation(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.Category.UpdateCategoryFailedMessage);
+            return Ok(MessageConstant.Category.UpdateCategorySuccessMessage);
         }
 
         [HttpPost(ApiEndPointConstant.Category.CategoryMappingProductStage)]

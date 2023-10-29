@@ -33,11 +33,11 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.OrderItem.OrderItemEndPoint)]
-        [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderItem(int id, UpdateOrderItemRequest request)
         {
-            var response = await _orderItemService.UpdateOrderItem(id, request);
-            return Ok(response);
+            var isSuccessful = await _orderItemService.UpdateOrderItem(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.OrderItem.UpdateFailedMessage);
+            return Ok(MessageConstant.OrderItem.UpdateSuccessMessage);
         }
 
         [HttpPut(ApiEndPointConstant.OrderItem.OrderItemCardEndPoint)]

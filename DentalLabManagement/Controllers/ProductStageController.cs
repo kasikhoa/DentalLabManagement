@@ -45,12 +45,12 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPut(ApiEndPointConstant.ProductStage.ProductStageEndPoint)]
-        [ProducesResponseType(typeof(ProductStageResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> UpdateProductStage(int id, [FromBody] UpdateProductStageRequest updateProductStageRequest)
         {
-            var productStage = await _productStageService.UpdateProductStage(id, updateProductStageRequest);
-            return Ok(productStage);
+            var isSuccessful = await _productStageService.UpdateProductStage(id, updateProductStageRequest);
+            if (!isSuccessful) return Ok(MessageConstant.ProductStage.UpdateProductStageFailedMessage);
+            return Ok(MessageConstant.ProductStage.UpdateProductStageSuccessMessage);
         }
         
     }

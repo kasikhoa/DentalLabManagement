@@ -105,7 +105,7 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
         }
 
-        public async Task<ProductResponse> UpdateProduct(int productId, UpdateProductRequest updateProductRequest)
+        public async Task<bool> UpdateProduct(int productId, UpdateProductRequest updateProductRequest)
         {
             if (productId < 1) throw new BadHttpRequestException(MessageConstant.Product.EmptyProductIdMessage);         
 
@@ -121,17 +121,14 @@ namespace DentalLabManagement.API.Services.Implements
 
             updateProduct.Name = string.IsNullOrEmpty(updateProductRequest.Name) ? updateProduct.Name : updateProductRequest.Name;
             updateProduct.Description = string.IsNullOrEmpty(updateProductRequest.Description) ? updateProduct.Description : updateProductRequest.Description;
-            updateProduct.CostPrice = (updateProductRequest.CostPrice < 0) ? updateProduct.CostPrice : updateProductRequest.CostPrice;
+            updateProduct.CostPrice = (updateProductRequest.CostPrice < 1) ? updateProduct.CostPrice : updateProductRequest.CostPrice;
             updateProduct.CategoryId = updateProductRequest.CategoryId;
             updateProduct.Status = updateProductRequest.Status.GetDescriptionFromEnum();
             updateProduct.Image = string.IsNullOrEmpty(updateProductRequest.Image) ? updateProduct.Image : updateProductRequest.Image;
 
             _unitOfWork.GetRepository<Product>().UpdateAsync(updateProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Product.UpdateProductFailedMessage);
-            return new ProductResponse(updateProduct.Id, updateProduct.Name, 
-                updateProduct.Description, updateProduct.CostPrice, updateProduct.CategoryId, 
-                EnumUtil.ParseEnum<ProductStatus>(updateProduct.Status), updateProduct.Image);
+            return isSuccessful;
         }
 
         public async Task<IPaginate<GetProductsInCategory>> GetProductsInCategory(int categoryId, int page, int size)

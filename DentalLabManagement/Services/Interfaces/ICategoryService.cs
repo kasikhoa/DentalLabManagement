@@ -19,7 +19,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size);
 
         Task<CategoryResponse> GetCategoryById(int id);
-        Task<CategoryResponse> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest updateCategoryRequest);
+        Task<bool> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest request);
         Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
         Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size);
         Task<bool> UpdateCategoryStatus(int id);
