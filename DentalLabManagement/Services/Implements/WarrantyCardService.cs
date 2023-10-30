@@ -30,9 +30,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
-                include: x => x.Include(x => x.CardType),
                 predicate: x => x.CardTypeId.Equals(request.CardTypeId) && x.CardCode.Equals(request.CardCode)
-
                 );
             if (warrantyCard != null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardCodeExistedMessage);
 
@@ -130,13 +128,6 @@ namespace DentalLabManagement.API.Services.Implements
                     .Include(x => x.OrderItems).ThenInclude(x => x.Order).ThenInclude(x => x.Dental)
                 );
             if (warrantyCard == null) throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotFoundMessage);
-
-            List<int> teethPositionIds = (List<int>) await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
-                selector: x => x.TeethPositionId,
-                predicate: x => x.WarrantyCardId.Equals(id)
-                );
-
-            
 
             return new WarrantyCardResponse()
             {

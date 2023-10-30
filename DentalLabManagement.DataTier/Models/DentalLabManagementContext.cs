@@ -74,7 +74,7 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CountryOrigin).HasMaxLength(50);
+                entity.Property(e => e.CountryOrigin).HasMaxLength(20);
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
@@ -98,10 +98,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.Image).IsUnicode(false);
-
-                entity.Property(e => e.LinkBrand)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 

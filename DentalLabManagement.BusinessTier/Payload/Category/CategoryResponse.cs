@@ -14,16 +14,14 @@ namespace DentalLabManagement.BusinessTier.Payload.Category
         public string Description { get; set; }
         public CategoryStatus Status { get; set; }
         public string? Image { get; set; }
-        public string? LinkBrand { get; set; }
 
-        public CategoryResponse(int id, string categoryName, string description, CategoryStatus status, string? image, string? linkBrand)
+        public CategoryResponse(int id, string categoryName, string description, CategoryStatus status, string? image)
         {
             Id = id;
             CategoryName = categoryName;
             Description = description;
             Status = status;
             Image = image;
-            LinkBrand = linkBrand;
         }
     }
 }

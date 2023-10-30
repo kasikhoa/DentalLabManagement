@@ -17,7 +17,6 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public string Status { get; set; } = null!;
         public string? Image { get; set; }
-        public string? LinkBrand { get; set; }
 
         public virtual ICollection<CardType> CardTypes { get; set; }
         public virtual ICollection<GroupStage> GroupStages { get; set; }

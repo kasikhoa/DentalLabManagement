@@ -41,13 +41,12 @@ namespace DentalLabManagement.API.Services.Implements
                 Description = categoryRequest.Description,
                 Status = categoryRequest.Status.GetDescriptionFromEnum(),
                 Image = categoryRequest.Image,
-                LinkBrand = categoryRequest.LinkBrand,
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(newCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Category.CreateNewCategoryFailedMessage);
             return new CategoryResponse(newCategory.Id, newCategory.Name, newCategory.Description,
-                categoryRequest.Status, newCategory.Image, newCategory.LinkBrand);
+                categoryRequest.Status, newCategory.Image);
         }
 
         private Expression<Func<Category, bool>> BuildGetCategoriesQuery(string? searchCategoryName, CategoryStatus? status)
@@ -76,7 +75,7 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
-                selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image, x.LinkBrand),
+                selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
                 predicate: BuildGetCategoriesQuery(searchCategoryName, status),
                 page: page,
                 size: size
@@ -91,7 +90,7 @@ namespace DentalLabManagement.API.Services.Implements
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage); ;
             return new CategoryResponse(category.Id, category.Name, category.Description, 
-                EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image, category.LinkBrand);
+                EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);
         }     
 
         public async Task<bool> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest request)
