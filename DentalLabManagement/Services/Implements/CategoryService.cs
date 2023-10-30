@@ -163,7 +163,7 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccesful;
         }
 
-        public async Task<IPaginate<ProductStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
+        public async Task<IPaginate<ProductionStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -173,8 +173,8 @@ namespace DentalLabManagement.API.Services.Implements
              predicate: x => x.CategoryId.Equals(categoryId)
              );
 
-            IPaginate<ProductStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductStage>().GetPagingListAsync(
-                selector: x => new ProductStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
+            IPaginate<ProductionStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductionStage>().GetPagingListAsync(
+                selector: x => new ProductionStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
                 predicate: x => categoryIds.Contains(x.Id),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,

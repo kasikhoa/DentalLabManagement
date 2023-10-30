@@ -263,7 +263,6 @@ namespace DentalLabManagement.API.Services.Implements
             switch (status)
             {
                 case OrderStatus.Producing:
-
                     if (updateOrder.Status.Equals(OrderStatus.Producing.GetDescriptionFromEnum()))
                         throw new BadHttpRequestException(MessageConstant.Order.ProducingStatusRepeatMessage);
 
@@ -307,24 +306,23 @@ namespace DentalLabManagement.API.Services.Implements
                     break;
                     
                 case OrderStatus.Completed:
-
                     if (updateOrder.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                         throw new BadHttpRequestException(MessageConstant.Order.CompletedStatusRepeatMessage);
 
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         throw new BadHttpRequestException(MessageConstant.Order.CanceledStatusRepeatMessage);
 
-                    List<int> orderItemIds = (List<int>)await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
+                    List<int> orderItemIds = (List<int>) await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
                         selector: x => x.Id, predicate: x => x.OrderId.Equals(orderId));
 
                     ICollection<OrderItemStage> itemStageList = await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync(
-                       predicate: x => orderItemIds.Contains(x.OrderItemId));
+                        predicate: x => orderItemIds.Contains(x.OrderItemId));
 
                     bool allCompleted = itemStageList.All(itemStage => itemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()));
 
                     if (!allCompleted)
                     {
-                        throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedByStageMessage);
+                        throw new BadHttpRequestException(MessageConstant.Order.UpdateFailedByStageMessage);
                     }
 
                     updateOrder.Status = OrderStatus.Completed.GetDescriptionFromEnum();

@@ -10,6 +10,6 @@ namespace DentalLabManagement.DataTier.Models
         public int ProductStageId { get; set; }
 
         public virtual Category Category { get; set; } = null!;
-        public virtual ProductStage ProductStage { get; set; } = null!;
+        public virtual ProductionStage ProductStage { get; set; } = null!;
     }
 }

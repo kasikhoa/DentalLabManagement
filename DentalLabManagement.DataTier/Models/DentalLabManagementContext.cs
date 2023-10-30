@@ -20,17 +20,17 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Dental> Dentals { get; set; } = null!;
+        public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<GroupStage> GroupStages { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<OrderItemStage> OrderItemStages { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<ProductStage> ProductStages { get; set; } = null!;
+        public virtual DbSet<ProductionStage> ProductionStages { get; set; } = null!;
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
-        public virtual DbSet<staff> staff { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -118,6 +118,28 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.Dentals)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK_Dental_Account");
+            });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.ToTable("Employee");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.FullName).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Stage)
+                    .WithMany(p => p.Employees)
+                    .HasForeignKey(d => d.StageId)
+                    .HasConstraintName("FK_Staff_ProductStage");
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
@@ -293,9 +315,9 @@ namespace DentalLabManagement.DataTier.Models
                     .HasConstraintName("FK_Product_Category");
             });
 
-            modelBuilder.Entity<ProductStage>(entity =>
+            modelBuilder.Entity<ProductionStage>(entity =>
             {
-                entity.ToTable("ProductStage");
+                entity.ToTable("ProductionStage");
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
@@ -349,28 +371,6 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.CardTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WarrantyCard_CardType");
-            });
-
-            modelBuilder.Entity<staff>(entity =>
-            {
-                entity.ToTable("Staff");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
-                entity.Property(e => e.Status)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Stage)
-                    .WithMany(p => p.staff)
-                    .HasForeignKey(d => d.StageId)
-                    .HasConstraintName("FK_Staff_ProductStage");
             });
 
             OnModelCreatingPartial(modelBuilder);

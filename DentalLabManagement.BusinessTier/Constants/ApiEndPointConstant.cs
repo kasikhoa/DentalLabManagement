@@ -19,7 +19,7 @@ public static class ApiEndPointConstant
     {
         public const string CategoriesEndpoint = ApiEndpoint + "/categories";
         public const string CategoryEndpoint = CategoriesEndpoint + "/{id}";
-        public const string CategoryMappingProductStage = CategoryEndpoint + "/productStages";
+        public const string CategoryMappingProductStage = CategoryEndpoint + "/productionStages";
     }
 
     public static class Account
@@ -45,9 +45,8 @@ public static class ApiEndPointConstant
 
     public static class ProductStage
     {
-        public const string ProductStagesEndPoint = ApiEndpoint + "/productStages";
+        public const string ProductStagesEndPoint = ApiEndpoint + "/productionStages";
         public const string ProductStageEndPoint = ProductStagesEndPoint + "/{id}";
-        public const string ProductStageIndexEndPoint = ProductStagesEndPoint + "/indexStage/{indexStage}";
         public const string ProductStageByCategoryEndPoint = ProductStagesEndPoint + "/category/{categoryId}";
     }
 
@@ -61,7 +60,6 @@ public static class ApiEndPointConstant
     {
         public const string OrdersEndPoint = ApiEndpoint + "/orders";
         public const string OrderEndPoint = OrdersEndPoint + "/{id}";
-        public const string OrderPaymentEndPoint = OrderEndPoint + "/payment";
         public const string OrderPaymentsEndPoint = OrderEndPoint + "/payment";
     }
 

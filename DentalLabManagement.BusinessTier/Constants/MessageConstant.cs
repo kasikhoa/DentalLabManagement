@@ -111,7 +111,7 @@ public static class MessageConstant
         public const string CanceledStatusMessage = "Order đã bị hủy";
         public const string CanceledStatusRepeatMessage = "Không thể thay đổi trạng thái Order đã hủy";
         public const string CannotChangeToStatusMessage = "Không thể thay đổi trạng thái Order đã hoàn thành hoặc đã hủy";
-        public const string UpdateStatusFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
+        public const string UpdateFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
         public const string OrderNotCompletedMessage = "Order chưa hoàn thành";
         public const string PaymentFailedMessage = "Thanh toán Order thất bại";
         public const string OrderPaidFullMessage = "Order đã thanh toán đầy đủ";

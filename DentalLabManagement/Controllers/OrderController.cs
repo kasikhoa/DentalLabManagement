@@ -51,7 +51,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Order.UpdateStatusSuccessMessage);
         }
 
-        [HttpPost(ApiEndPointConstant.Order.OrderPaymentEndPoint)]
+        [HttpPost(ApiEndPointConstant.Order.OrderPaymentsEndPoint)]
         [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateOrderPayment(int id, PaymentRequest paymentRequest)
         {

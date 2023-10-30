@@ -65,7 +65,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Category.CategoryMappingProductStage)]
-        [ProducesResponseType(typeof(IPaginate<ProductStageResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IPaginate<ProductionStageResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProductStageByCategory(int id, int page, int size)
         {
             var response = await _categoryService.GetProductStageByCategory(id, page, size);
