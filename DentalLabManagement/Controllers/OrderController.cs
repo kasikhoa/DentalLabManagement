@@ -5,6 +5,7 @@ using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Payload.Payment;
+using DentalLabManagement.BusinessTier.Payload.OrderHistory;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -36,10 +37,10 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(GetOrdersResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrders(string? invoiceId, string? dentalName, OrderMode? mode, OrderStatus? status, 
+        public async Task<IActionResult> GetOrders(string? invoiceId, string? dentalName, OrderStatus? status, 
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
-            var response = await _orderService.GetOrders(invoiceId, dentalName, mode, status, paymentStatus, page, size);
+            var response = await _orderService.GetOrders(invoiceId, dentalName, status, paymentStatus, page, size);
             return Ok(response);
         }
 
@@ -65,6 +66,14 @@ namespace DentalLabManagement.API.Controllers
             int page, int size)
         {
             var response = await _orderService.GetOrderPayments(id, type, status, page, size);
+            return Ok(response);
+        }
+
+        [HttpPost(ApiEndPointConstant.Order.WarrantyRequestsEndPoint)]
+        [ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateWarrantyRequest(int id, CreateWarrantyRequest request)
+        {
+            var response = await _orderService.CreateWarrantyRequest(id, request);
             return Ok(response);
         }
     }

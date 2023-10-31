@@ -16,14 +16,14 @@ using DentalLabManagement.API.Services;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
 using System.Text.RegularExpressions;
+using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class TeethPositionService : BaseService<TeethPositionService>, ITeethPositionServices
     {
-        public TeethPositionService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<TeethPositionService> logger) : base(unitOfWork, logger)
+        public TeethPositionService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<TeethPositionService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         private bool IsValidPositionName(string positionName)

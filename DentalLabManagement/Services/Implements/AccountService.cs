@@ -17,14 +17,14 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using DentalLabManagement.API.Extensions;
 using DentalLabManagement.BusinessTier.Payload.Dental;
+using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class AccountService : BaseService<AccountService>, IAccountService
     {
-        public AccountService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<AccountService> logger ) : base(unitOfWork, logger)
+        public AccountService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<AccountService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<LoginResponse> Login(LoginRequest loginRequest)

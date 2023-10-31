@@ -23,6 +23,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<GroupStage> GroupStages { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderHistory> OrderHistories { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<OrderItemStage> OrderItemStages { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
@@ -175,10 +176,6 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Mode)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Note).HasMaxLength(50);
 
                 entity.Property(e => e.PatientGender)
@@ -199,18 +196,38 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-
                 entity.HasOne(d => d.Dental)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.DentalId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Dental");
+            });
 
-                entity.HasOne(d => d.UpdatedByNavigation)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.UpdatedBy)
-                    .HasConstraintName("FK_Order_Account1");
+            modelBuilder.Entity<OrderHistory>(entity =>
+            {
+                entity.ToTable("OrderHistory");
+
+                entity.Property(e => e.CompletedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Note).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.OrderHistories)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WarrantyHistory_Account1");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderHistories)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WarrantyHistory_Order");
             });
 
             modelBuilder.Entity<OrderItem>(entity =>
@@ -218,6 +235,10 @@ namespace DentalLabManagement.DataTier.Models
                 entity.ToTable("OrderItem");
 
                 entity.Property(e => e.Note).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderItems)
@@ -252,6 +273,10 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Image).IsUnicode(false);
+
+                entity.Property(e => e.Mode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 

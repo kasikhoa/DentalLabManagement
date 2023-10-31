@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.API.Extensions;
+﻿using AutoMapper;
+using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
@@ -14,10 +15,8 @@ namespace DentalLabManagement.API.Services.Implements
 {
     public class CardTypeService : BaseService<CardTypeService>, ICardTypeService
     {
-
-        public CardTypeService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CardTypeService> logger) : base(unitOfWork, logger)
+        public CardTypeService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CardTypeService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<CardTypeResponse> CreateCardType(CardTypeRequest request)

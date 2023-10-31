@@ -1,5 +1,6 @@
 ﻿using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
+using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.OrderItem;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.OrderItem.OrderItemsEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderItems(int? orderId, string? warrantyCardCode, int page, int size)
+        public async Task<IActionResult> GetOrderItems(int? orderId, string? warrantyCardCode, OrderItemStatus? status, int page, int size)
         {
-            var response = await _orderItemService.GetOrderItems(orderId, warrantyCardCode, page, size);
+            var response = await _orderItemService.GetOrderItems(orderId, warrantyCardCode, status, page, size);
             return Ok(response);
         }
 

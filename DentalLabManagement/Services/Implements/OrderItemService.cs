@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.API.Extensions;
+﻿using AutoMapper;
+using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
@@ -15,12 +16,11 @@ namespace DentalLabManagement.API.Services.Implements
 {
     public class OrderItemService : BaseService<OrderItemService>, IOrderItemService
     {
-        public OrderItemService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<OrderItemService> logger) : base(unitOfWork, logger)
+        public OrderItemService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<OrderItemService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
-        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, string? warrantyCardCode)
+        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, string? warrantyCardCode, OrderItemStatus? status)
         {
             Expression<Func<OrderItem, bool>> filterQuery = x => true; 
 
@@ -34,10 +34,15 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.WarrantyCard.CardCode.Contains(warrantyCardCode));
             }
 
+            if (status != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
+            }
+
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, int page, int size)
+        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, OrderItemStatus? status, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -47,12 +52,13 @@ namespace DentalLabManagement.API.Services.Implements
                     Id = x.Id,
                     OrderId = x.OrderId,
                     ProductName= x.Product.Name,
-                    TeethPosition = x.TeethPosition.PositionName,
-                    WarrantyCardCode = x.WarrantyCard.CardCode,
+                    TeethPosition = x.TeethPosition.PositionName,                   
                     Note = x.Note,
                     TotalAmount = x.TotalAmount,
+                    WarrantyCardCode = x.WarrantyCard.CardCode,
+                    Status = EnumUtil.ParseEnum<OrderItemStatus>(x.Status), 
                 },
-                predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode),
+                predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode, status),
                 page: page,
                 size: size);
             return result;
@@ -74,10 +80,11 @@ namespace DentalLabManagement.API.Services.Implements
                 Id = orderItem.Id,
                 OrderId = orderItem.OrderId,
                 ProductName = orderItem.Product.Name,
-                TeethPosition = orderItem.TeethPosition.PositionName,
-                WarrantyCardCode = cardCode,
+                TeethPosition = orderItem.TeethPosition.PositionName,             
                 Note = orderItem.Note,
                 TotalAmount = orderItem.TotalAmount,
+                WarrantyCardCode = cardCode,
+                Status = EnumUtil.ParseEnum<OrderItemStatus>(orderItem.Status),
             };
         }
 
@@ -146,10 +153,11 @@ namespace DentalLabManagement.API.Services.Implements
                 Id = orderItem.Id,
                 OrderId = orderItem.OrderId,
                 ProductName = orderItem.Product.Name,
-                TeethPosition = orderItem.TeethPosition.PositionName,
-                WarrantyCardCode = warrantyCard.CardCode,
+                TeethPosition = orderItem.TeethPosition.PositionName,                
                 Note = orderItem.Note,
                 TotalAmount = orderItem.TotalAmount,
+                WarrantyCardCode = warrantyCard.CardCode,
+                Status = EnumUtil.ParseEnum<OrderItemStatus>(orderItem.Status),
             };
         }
 

@@ -1,6 +1,6 @@
-﻿using DentalLabManagement.DataTier.Models;
+﻿using AutoMapper;
+using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 
@@ -10,13 +10,27 @@ namespace DentalLabManagement.API.Services
     {
         protected IUnitOfWork<DentalLabManagementContext> _unitOfWork;
         protected ILogger<T> _logger;
+        protected IMapper _mapper;
+        protected IHttpContextAccessor _httpContextAccessor;
 
-        public BaseService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<T> logger)
+        protected BaseService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<T> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        protected string GetUsernameFromJwt()
+        {
+            string username = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return username;
+        }
+
+        protected string GetRoleFromJwt()
+        {
+            string role = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
+            return role;
+        }
     }
 }

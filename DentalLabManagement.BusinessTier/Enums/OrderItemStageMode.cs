@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Enums
 {
-    public enum OrderStatus
+    public enum OrderItemStageMode
     {
         New,
-        Producing,
-        Completed, 
-        Warranty,
-        Canceled,
-
-        Pending,
-        Confirmed,
+        Warranty
     }
 }

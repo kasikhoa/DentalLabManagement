@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.API.Extensions;
+﻿using AutoMapper;
+using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
@@ -15,9 +16,8 @@ namespace DentalLabManagement.API.Services.Implements
 {
     public class OrderItemStageService : BaseService<OrderItemStageService>, IOrderItemStageService
     {
-        public OrderItemStageService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<OrderItemStageService> logger) : base(unitOfWork, logger)
+        public OrderItemStageService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<OrderItemStageService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status)

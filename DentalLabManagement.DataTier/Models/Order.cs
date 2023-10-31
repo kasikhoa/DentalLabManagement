@@ -7,6 +7,7 @@ namespace DentalLabManagement.DataTier.Models
     {
         public Order()
         {
+            OrderHistories = new HashSet<OrderHistory>();
             OrderItems = new HashSet<OrderItem>();
             Payments = new HashSet<Payment>();
         }
@@ -19,7 +20,6 @@ namespace DentalLabManagement.DataTier.Models
         public string? PatientName { get; set; }
         public string? PatientPhoneNumber { get; set; }
         public string? PatientGender { get; set; }
-        public string Mode { get; set; } = null!;
         public string Status { get; set; } = null!;
         public int TeethQuantity { get; set; }
         public double TotalAmount { get; set; }
@@ -27,13 +27,11 @@ namespace DentalLabManagement.DataTier.Models
         public double FinalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
-        public int? UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
         public string? Note { get; set; }
         public string PaymentStatus { get; set; } = null!;
 
         public virtual Dental Dental { get; set; } = null!;
-        public virtual Account? UpdatedByNavigation { get; set; }
+        public virtual ICollection<OrderHistory> OrderHistories { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
     }

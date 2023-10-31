@@ -18,15 +18,14 @@ using DentalLabManagement.BusinessTier.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
+using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class ProductService : BaseService<ProductService>, IProductService
     {
-
-        public ProductService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<ProductService> logger) : base(unitOfWork, logger)
+        public ProductService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<ProductService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<ProductResponse> CreateProduct(ProductRequest productRequest)

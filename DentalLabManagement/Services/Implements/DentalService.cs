@@ -23,14 +23,14 @@ using DentalLabManagement.BusinessTier.Payload.TeethPosition;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Drawing;
+using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class DentalService : BaseService<IDentalService>, IDentalService
     {
-        public DentalService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<DentalService> logger) : base(unitOfWork, logger)
+        public DentalService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<IDentalService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<DentalResponse> CreateDentalAccount(DentalRequest dentalRequest)
@@ -169,7 +169,7 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(int dentalId, string? InvoiceId, OrderMode? mode, 
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(int dentalId, string? InvoiceId, 
             OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
@@ -179,11 +179,6 @@ namespace DentalLabManagement.API.Services.Implements
             if (!string.IsNullOrEmpty(InvoiceId))
             {
                 filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
-            }
-
-            if (mode != null)
-            {
-                filterQuery = filterQuery.AndAlso(p => p.Mode.Equals(mode.GetDescriptionFromEnum()));
             }
 
             if (status != null)
@@ -199,7 +194,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderMode? mode, OrderStatus? status, 
+        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderStatus? status, 
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
             page = (page == 0) ? 1 : page;
@@ -223,18 +218,16 @@ namespace DentalLabManagement.API.Services.Implements
                     PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
                     PatientPhoneNumber = x.PatientPhoneNumber,
                     Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
-                    Mode = EnumUtil.ParseEnum<OrderMode>(x.Mode),
                     TeethQuantity = x.TeethQuantity,
                     TotalAmount = x.TotalAmount,
                     Discount = x.Discount,
                     FinalAmount = x.FinalAmount,
                     CreatedDate = x.CreatedDate,
                     CompletedDate = x.CompletedDate,
-                    UpdatedBy = x.UpdatedByNavigation.FullName,
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, mode, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, status, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

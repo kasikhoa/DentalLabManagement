@@ -18,7 +18,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? PatientPhoneNumber { get; set; }
         public string? DentistNote { get; set; }
         public OrderStatus Status { get; set; }
-        public OrderMode Mode { get; set; }
         public List<OrderProduct> ProductsList { get; set; } = new List<OrderProduct>();
         public double TotalAmount { get; set; }
         public double Discount { get; set; }

@@ -15,15 +15,14 @@ using System.Threading.Tasks;
 using DentalLabManagement.BusinessTier.Enums;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
+using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class ProductionStageService : BaseService<ProductionStageService>, IProductionStageService
     {
-
-        public ProductionStageService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<ProductionStageService> logger) : base(unitOfWork, logger)
+        public ProductionStageService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<ProductionStageService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<ProductionStageResponse> CreateProductionStage(ProductionStageRequest request)

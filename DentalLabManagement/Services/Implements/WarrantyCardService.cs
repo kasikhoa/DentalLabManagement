@@ -1,4 +1,5 @@
-﻿using DentalLabManagement.API.Extensions;
+﻿using AutoMapper;
+using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
@@ -16,9 +17,8 @@ namespace DentalLabManagement.API.Services.Implements
 {
     public class WarrantyCardService : BaseService<WarrantyCardService>, IWarrantyCardService
     {
-        public WarrantyCardService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<WarrantyCardService> logger) : base(unitOfWork, logger)
+        public WarrantyCardService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<WarrantyCardService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
         }
 
         public async Task<CreateWarrantyCardResponse> CreateNewWarrantyCard(CreateWarrantyCardRequest request)
@@ -102,6 +102,7 @@ namespace DentalLabManagement.API.Services.Implements
                     CountryOrigin = x.CardType.CountryOrigin,
                     TeethQuantity = x.OrderItems.Count,
                     TeethPositions = x.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
+                    OrderId = x.OrderItems.FirstOrDefault().OrderId,
                     PatientName = x.OrderItems.FirstOrDefault().Order.PatientName,
                     DentalName = x.OrderItems.FirstOrDefault().Order.Dental.Name,
                     DentistName = x.OrderItems.FirstOrDefault().Order.DentistName,
@@ -137,6 +138,7 @@ namespace DentalLabManagement.API.Services.Implements
                 CountryOrigin = warrantyCard.CardType.CountryOrigin,
                 TeethQuantity = warrantyCard.OrderItems.Count,
                 TeethPositions = warrantyCard.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
+                OrderId = warrantyCard.OrderItems.FirstOrDefault().OrderId,
                 PatientName = warrantyCard.OrderItems.FirstOrDefault().Order.PatientName,
                 DentalName = warrantyCard.OrderItems.FirstOrDefault().Order.Dental.Name,
                 DentistName = warrantyCard.OrderItems.FirstOrDefault().Order.DentistName,

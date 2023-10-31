@@ -8,8 +8,8 @@ namespace DentalLabManagement.DataTier.Models
         public Account()
         {
             Dentals = new HashSet<Dental>();
+            OrderHistories = new HashSet<OrderHistory>();
             OrderItemStages = new HashSet<OrderItemStage>();
-            Orders = new HashSet<Order>();
         }
 
         public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace DentalLabManagement.DataTier.Models
         public string Status { get; set; } = null!;
 
         public virtual ICollection<Dental> Dentals { get; set; }
+        public virtual ICollection<OrderHistory> OrderHistories { get; set; }
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
     }
 }

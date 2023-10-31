@@ -21,14 +21,12 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public PatientGender? PatientGender { get; set; }
         public string? PatientPhoneNumber { get; set; }
         public OrderStatus Status { get; set; }
-        public OrderMode Mode { get; set; }
         public int TeethQuantity { get; set; }
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
-        public string? UpdatedBy { get; set; }
         public string? Note { get; set; }
         public OrderPaymentStatus? PaymentStatus { get; set; }
         public List<OrderItemResponse> ToothList { get; set; } = new List<OrderItemResponse>();

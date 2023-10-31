@@ -23,11 +23,9 @@ namespace DentalLabManagement.API.Services.Implements
 {
     public class CategoryService : BaseService<CategoryService>, ICategoryService
     {
-
-        public CategoryService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CategoryService> logger) : base(unitOfWork, logger)
+        public CategoryService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CategoryService> logger, AutoMapper.IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
-
-        }    
+        }
 
         public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
@@ -109,14 +107,14 @@ namespace DentalLabManagement.API.Services.Implements
             ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
                 predicate: x => x.CategoryId.Equals(category.Id));
 
-            if (category.Status.Equals(CategoryStatus.Activate.GetDescriptionFromEnum()))
+            if (category.Status.Equals(CategoryStatus.Active.GetDescriptionFromEnum()))
             {
                 foreach (var product in products)
                 {
                     product.Status = ProductStatus.Available.GetDescriptionFromEnum();
                 }
             }
-            if (category.Status.Equals(CategoryStatus.Deactivate.GetDescriptionFromEnum()))
+            if (category.Status.Equals(CategoryStatus.Inactive.GetDescriptionFromEnum()))
             {
                 foreach (var product in products)
                 {
@@ -190,7 +188,7 @@ namespace DentalLabManagement.API.Services.Implements
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
-            category.Status = CategoryStatus.Deactivate.GetDescriptionFromEnum();
+            category.Status = CategoryStatus.Inactive.GetDescriptionFromEnum();
 
             ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
                 predicate: x => x.CategoryId.Equals(category.Id));                        
