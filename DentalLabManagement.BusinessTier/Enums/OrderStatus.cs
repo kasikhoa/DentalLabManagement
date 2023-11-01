@@ -8,13 +8,21 @@ namespace DentalLabManagement.BusinessTier.Enums
 {
     public enum OrderStatus
     {
-        New,
-        Producing,
-        Completed, 
-        Warranty,
-        Canceled,
-
         Pending,
-        Confirmed,
+        Producing,
+        Completed,        
+        Warranty,
+        Canceled
+    }
+
+    public enum OrderHistoryStatus
+    {
+        Pending,
+        Producing,
+        Completed,
+        WarrantyRequest,
+        Warranty,
+        CompletedWarranty,
+        Canceled
     }
 }

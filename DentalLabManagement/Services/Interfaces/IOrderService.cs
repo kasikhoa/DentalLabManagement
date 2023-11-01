@@ -20,6 +20,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<bool> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest);
         Task<PaymentResponse> UpdateOrderPayment(int orderId, PaymentRequest paymentRequest);
         Task<IPaginate<PaymentResponse>> GetOrderPayments(int orderId, PaymentType? type, PaymentStatus? status, int page, int size);
-        Task<WarrantyResponse> CreateWarrantyRequest(int orderId, CreateWarrantyRequest request);
+        Task<OrderHistoryResponse> CreateWarrantyRequest(int orderId, CreateWarrantyRequest request);
+        Task<IPaginate<OrderHistoryResponse>> ViewOrderHistory(int orderId, OrderHistoryStatus? status, int page, int size);
     }
 }

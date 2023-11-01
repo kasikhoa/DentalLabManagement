@@ -41,12 +41,20 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.OrderItem.UpdateSuccessMessage);
         }
 
-        [HttpPut(ApiEndPointConstant.OrderItem.OrderItemCardEndPoint)]
+        [HttpPatch(ApiEndPointConstant.OrderItem.OrderItemCardEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
         {
             var response = await _orderItemService.InsertWarrantyCard(id, updateRequest);
             return Ok(response);
+        }
+
+        [HttpPatch(ApiEndPointConstant.OrderItem.OrderItemWarrantyEndPoint)]
+        public async Task<IActionResult> UpdateStatusToWarranty(int id, WarrantyOrderItemRequest request)
+        {
+            var isSuccessful = await _orderItemService.UpdateStatusToWarranty(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.OrderItem.UpdateFailedMessage);
+            return Ok(MessageConstant.OrderItem.UpdateSuccessMessage);
         }
 
     }

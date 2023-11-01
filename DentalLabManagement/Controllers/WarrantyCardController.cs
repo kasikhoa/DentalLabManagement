@@ -34,7 +34,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut(ApiEndPointConstant.WarrantyCard.WarrantyCardEndPoint)]
+        [HttpPatch(ApiEndPointConstant.WarrantyCard.WarrantyCardEndPoint)]
         public async Task<IActionResult> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request)
         {
             var isSuccessful = await _warrantyCardService.UpdateWarrantyCard(id, request);

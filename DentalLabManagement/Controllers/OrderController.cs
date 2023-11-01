@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Payload.Payment;
 using DentalLabManagement.BusinessTier.Payload.OrderHistory;
+using DentalLabManagement.BusinessTier.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -19,9 +21,10 @@ namespace DentalLabManagement.API.Controllers
             _orderService = orderService;
         }
 
+        [CustomAuthorize(RoleEnum.Reception, RoleEnum.Dental)]
         [HttpPost(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(CreateOrderResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateNewOrder (CreateOrderRequest order)
+        public async Task<IActionResult> CreateNewOrder(CreateOrderRequest order)
         {
             var response = await _orderService.CreateNewOrder(order);
             return Ok(response);
@@ -44,7 +47,8 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut(ApiEndPointConstant.Order.OrderEndPoint)]
+        [CustomAuthorize(RoleEnum.Reception, RoleEnum.Dental)]
+        [HttpPatch(ApiEndPointConstant.Order.OrderEndPoint)]
         public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
         {
             var isSuccessful = await _orderService.UpdateOrderStatus(id, updateOrderRequest);
@@ -69,12 +73,23 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [CustomAuthorize(RoleEnum.Dental, RoleEnum.Reception)]
         [HttpPost(ApiEndPointConstant.Order.WarrantyRequestsEndPoint)]
-        [ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OrderHistoryResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateWarrantyRequest(int id, CreateWarrantyRequest request)
         {
             var response = await _orderService.CreateWarrantyRequest(id, request);
             return Ok(response);
         }
+
+        [HttpGet(ApiEndPointConstant.Order.OrderHistoryEndPoint)]
+        [ProducesResponseType(typeof(OrderHistoryResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ViewOrderHistory(int id, OrderHistoryStatus? status, int page, int size)
+        {
+            var response = await _orderService.ViewOrderHistory(id, status, page, size);
+            return Ok(response);
+        }
+
+
     }
 }

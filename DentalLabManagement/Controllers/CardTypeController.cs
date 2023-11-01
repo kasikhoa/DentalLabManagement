@@ -2,6 +2,7 @@
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.CardType;
+using DentalLabManagement.BusinessTier.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,6 +50,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.CardType.UpdateCardSuccessMessage);
         }
 
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.CardType.CardTypeEndPoint)]
         public async Task<IActionResult> DeleteCardType(int id)
         {

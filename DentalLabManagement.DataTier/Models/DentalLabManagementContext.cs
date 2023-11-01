@@ -140,7 +140,7 @@ namespace DentalLabManagement.DataTier.Models
                 entity.HasOne(d => d.Stage)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.StageId)
-                    .HasConstraintName("FK_Staff_ProductStage");
+                    .HasConstraintName("FK_Employee_ProductionStage");
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
@@ -256,7 +256,7 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.TeethPositionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderItems_TeethPosition");
+                    .HasConstraintName("FK_OrderItem_TeethPosition");
 
                 entity.HasOne(d => d.WarrantyCard)
                     .WithMany(p => p.OrderItems)

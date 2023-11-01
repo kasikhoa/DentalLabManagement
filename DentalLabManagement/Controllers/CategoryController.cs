@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
-using DentalLabManagement.BusinessTier.Error;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.API.Services.Implements;
+using DentalLabManagement.BusinessTier.Validators;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -72,6 +71,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<IActionResult> UpdateCategoryStatus(int id)
         {

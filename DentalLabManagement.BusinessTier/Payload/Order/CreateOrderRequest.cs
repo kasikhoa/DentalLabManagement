@@ -22,6 +22,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public double TotalAmount { get; set; }
         public double Discount { get; set; }
         public double FinalAmount { get; set; }
+        public string? Note { get; set; }
        
     }
 

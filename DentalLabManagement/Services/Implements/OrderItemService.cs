@@ -161,5 +161,45 @@ namespace DentalLabManagement.API.Services.Implements
             };
         }
 
+        public async Task<bool> UpdateStatusToWarranty(int orderItemId, WarrantyOrderItemRequest request)
+        {
+            if (orderItemId < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
+
+            OrderItem orderItem = await _unitOfWork.GetRepository<OrderItem>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(orderItemId),
+                include: x => x.Include(x => x.Product)
+                );
+            if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
+
+            orderItem.Status = OrderItemStatus.Warranty.GetDescriptionFromEnum();
+            orderItem.Note = string.IsNullOrEmpty(request.Note) ? orderItem.Note : request.Note;
+
+            List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
+            ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
+                predicate: x => x.CategoryId.Equals(orderItem.Product.CategoryId),
+                include: x => x.Include(x => x.ProductStage)
+                );
+
+            foreach (var itemStage in stageList)
+            {
+                OrderItemStage newStage = new OrderItemStage()
+                {
+                    OrderItemId = orderItemId,
+                    IndexStage = itemStage.ProductStage.IndexStage,
+                    StageName = itemStage.ProductStage.Name,
+                    Description= itemStage.ProductStage.Description,
+                    ExecutionTime = itemStage.ProductStage.ExecutionTime,
+                    Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
+                    StartDate = TimeUtils.GetCurrentSEATime(),
+                    Mode = OrderItemStatus.Warranty.GetDescriptionFromEnum(),
+                };
+                orderItemStageList.Add(newStage);
+            }
+
+            _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
+            await _unitOfWork.GetRepository<OrderItemStage>().InsertRangeAsync(orderItemStageList);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessful;
+        }
     }
 }

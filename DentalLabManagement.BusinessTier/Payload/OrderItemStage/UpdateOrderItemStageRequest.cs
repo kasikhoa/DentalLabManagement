@@ -9,7 +9,6 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
 {
     public class UpdateOrderItemStageRequest
     {
-        public int StaffId { get; set; }
         public OrderItemStageStatus Status { get; set; }
         public string? Note { get; set; }
         public string? Image { get; set; }

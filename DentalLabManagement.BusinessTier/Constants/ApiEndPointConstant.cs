@@ -62,6 +62,7 @@ public static class ApiEndPointConstant
         public const string OrderEndPoint = OrdersEndPoint + "/{id}";
         public const string OrderPaymentsEndPoint = OrderEndPoint + "/payment";
         public const string WarrantyRequestsEndPoint = OrderEndPoint + "/warrantyRequest";
+        public const string OrderHistoryEndPoint = OrderEndPoint + "/orderHistory";
     }
 
     public static class OrderItem
@@ -69,6 +70,7 @@ public static class ApiEndPointConstant
         public const string OrderItemsEndPoint = ApiEndpoint + "/orderItems";
         public const string OrderItemEndPoint = OrderItemsEndPoint + "/{id}";
         public const string OrderItemCardEndPoint = OrderItemEndPoint + "/warrantyCard";
+        public const string OrderItemWarrantyEndPoint = OrderItemEndPoint + "/warrantyStatus";
     }
 
     public static class OrderItemStage

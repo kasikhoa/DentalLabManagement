@@ -98,11 +98,12 @@ namespace DentalLabManagement.API.Services.Implements
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(categoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
+
             request.TrimString();
             category.Name = string.IsNullOrEmpty(request.CategoryName) ? category.Name : request.CategoryName;
             category.Description = string.IsNullOrEmpty(request.Description) ? category.Description : request.Description;
             category.Status = request.Status.GetDescriptionFromEnum();
-            category.Image = string.IsNullOrEmpty(request.Image) ? category.Image : request.Image; ;
+            category.Image = string.IsNullOrEmpty(request.Image) ? category.Image : request.Image;
 
             ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
                 predicate: x => x.CategoryId.Equals(category.Id));

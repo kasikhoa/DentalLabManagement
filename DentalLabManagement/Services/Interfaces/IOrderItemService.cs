@@ -10,5 +10,6 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<bool> UpdateOrderItem(int id, UpdateOrderItemRequest request);
         Task<GetOrderItemResponse> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest);
         Task<GetOrderItemResponse> GetOrderItemById(int id);
+        Task<bool> UpdateStatusToWarranty(int orderItemId, WarrantyOrderItemRequest request);
     }
 }

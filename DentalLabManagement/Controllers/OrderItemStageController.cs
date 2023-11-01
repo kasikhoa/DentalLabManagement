@@ -2,6 +2,7 @@
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.OrderItemStage;
+using DentalLabManagement.BusinessTier.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace DentalLabManagement.API.Controllers
             _orderItemStageService = orderItemStageService;
         }
 
+        [CustomAuthorize(RoleEnum.Staff, RoleEnum.Reception)]
         [HttpPut(ApiEndPointConstant.OrderItemStage.OrderItemStageEndPoint)]
         public async Task<IActionResult> UpdateOrderItemStage(int id, UpdateOrderItemStageRequest request)
         {
@@ -27,9 +29,10 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.OrderItemStage.OrderItemStagesEndPoint)]
         [ProducesResponseType(typeof(OrderItemStageResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, int page, int size)
+        public async Task<IActionResult> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
+            OrderItemStageMode? mode, int page, int size)
         {
-            var response = await _orderItemStageService.GetOrderItemStages(orderItemId, staffId, indexStage, status, page, size);
+            var response = await _orderItemStageService.GetOrderItemStages(orderItemId, staffId, indexStage, status, mode, page, size);
             return Ok(response);
         }
 

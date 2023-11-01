@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Payload.OrderHistory
+namespace DentalLabManagement.BusinessTier.Payload.OrderItem
 {
-    public class UpdateWarrantyRequest
+    public class WarrantyOrderItemRequest
     {
-        public OrderStatus Status { get; set; }
-        
+        public string Note { get; set; }
     }
 }

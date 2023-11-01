@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 namespace DentalLabManagement.BusinessTier.Payload.OrderHistory
 {
-    public class WarrantyResponse
+    public class OrderHistoryResponse
     {
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }        
         public DateTime? CompletedDate { get; set; }
         public string? Note { get; set; }
-        public OrderStatus Status { get; set; }
+        public OrderHistoryStatus Status { get; set; }
 
-        public WarrantyResponse()
+        public OrderHistoryResponse()
         {
         }
-        public WarrantyResponse(int id, DateTime createdDate, string createdBy, DateTime? completedDate, string? note, OrderStatus status)
+        public OrderHistoryResponse(DateTime createdDate, string createdBy, DateTime? completedDate, string? note, OrderHistoryStatus status)
         {
-            Id = id;
             CreatedDate = createdDate;
             CreatedBy = createdBy;
             CompletedDate = completedDate;
