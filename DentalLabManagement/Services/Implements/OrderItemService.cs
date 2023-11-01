@@ -116,18 +116,19 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        public async Task<GetOrderItemResponse> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
+        public async Task<bool> InsertWarrantyCard(int id, InsertWarrantyCardRequest updateRequest)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItem.EmptyIdMessage);
 
             OrderItem orderItem = await _unitOfWork.GetRepository<OrderItem>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Product).Include(x => x.TeethPosition)
+                include: x => x.Include(x => x.Product)
                 );
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderItem.OrderId));
+                predicate: x => x.Id.Equals(orderItem.OrderId)
+                );
             if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                 throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);               
 
@@ -139,26 +140,14 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (!warrantyCard.CardType.CategoryId.Equals(orderItem.Product.CategoryId))
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
-
-            
-
+           
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
             warrantyCard.ExpDate = order.CompletedDate.Value.AddYears(warrantyCard.CardType.WarrantyYear);
+
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.OrderItem.UpdateCardFailedMessage);
-            return new GetOrderItemResponse()
-            {
-                Id = orderItem.Id,
-                OrderId = orderItem.OrderId,
-                ProductName = orderItem.Product.Name,
-                TeethPosition = orderItem.TeethPosition.PositionName,                
-                Note = orderItem.Note,
-                TotalAmount = orderItem.TotalAmount,
-                WarrantyCardCode = warrantyCard.CardCode,
-                Status = EnumUtil.ParseEnum<OrderItemStatus>(orderItem.Status),
-            };
+            return isSuccessful;
         }
 
         public async Task<bool> UpdateStatusToWarranty(int orderItemId, WarrantyOrderItemRequest request)

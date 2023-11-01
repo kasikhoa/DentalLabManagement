@@ -154,7 +154,8 @@ public static class MessageConstant
         public const string CardNotFoundMessage = "Không tìm thấy thẻ bảo hành";
         public const string CardCodeExistedMessage = "Mã thẻ đã tồn tại";
         public const string CreateCardFailedMessage = "Tạo mới thẻ bảo hành thất bại";
-        public const string UpdateCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
+        public const string InsertCardFailedMessage = "Cập nhật thẻ bảo hành thất bại";
+        public const string InsertCardSuccessMessage = "Cập nhật thẻ bảo hành thành công";
         public const string CardNotMatchedCategoryMessage = "Thẻ không đúng với loại sản phẩm";
         public const string UpdatedSuccessMessage = "Cập nhật thành công";
         public const string UpdateFailedMessage = "Cập nhật thất bại";
