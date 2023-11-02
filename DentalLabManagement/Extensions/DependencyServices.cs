@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
 using DentalLabManagement.API.Services.Implements;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
@@ -11,6 +10,7 @@ using DentalLabManagement.DataTier.Repository.Implement;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace DentalLabManagement.API.Extensions
 {
@@ -22,12 +22,6 @@ namespace DentalLabManagement.API.Extensions
             services.AddScoped<IUnitOfWork<DentalLabManagementContext>, UnitOfWork<DentalLabManagementContext>>();
             return services;
         }
-
-        //public static IServiceCollection AddDatabase(this IServiceCollection services)
-        //{
-        //    services.AddDbContext<DentalLabManagementContext>(options => options.UseSqlServer($"Server=Khoa\\SQLEXPRESS;Database=DentalLabManagement;Persist Security Info=True;User ID=sa;Password=12345"));
-        //    return services;
-        //}
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {

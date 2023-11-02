@@ -10,13 +10,13 @@ namespace DentalLabManagement.BusinessTier.Payload.WarrantyCard
 {
     public class WarrantyCardResponse
     {
-        public int Id { get; set; }       
-        public string? CardCode { get; set; }
+        public int Id { get; set; }
+        public int? OrderId { get; set; }
+        public string CardCode { get; set; }
         public string? CategoryName { get; set; }
         public string? CountryOrigin { get; set; }
         public int? TeethQuantity { get; set; }
-        public List<string> TeethPositions { get; set; }
-        public int OrderId { get; set; }
+        public List<string>? TeethPositions { get; set; }       
         public string? PatientName { get; set; }
         public string? DentalName { get; set; }
         public string? DentistName { get; set; }

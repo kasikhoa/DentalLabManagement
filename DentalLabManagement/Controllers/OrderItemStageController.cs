@@ -19,7 +19,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [CustomAuthorize(RoleEnum.Staff, RoleEnum.Reception)]
-        [HttpPut(ApiEndPointConstant.OrderItemStage.OrderItemStageEndPoint)]
+        [HttpPatch(ApiEndPointConstant.OrderItemStage.OrderItemStageEndPoint)]
         public async Task<IActionResult> UpdateOrderItemStage(int id, UpdateOrderItemStageRequest request)
         {
             var isSuccessful = await _orderItemStageService.UpdateOrderItemStage(id, request);
@@ -29,10 +29,10 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.OrderItemStage.OrderItemStagesEndPoint)]
         [ProducesResponseType(typeof(OrderItemStageResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
+        public async Task<IActionResult> GetOrderItemStages(int? orderId, int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
             OrderItemStageMode? mode, int page, int size)
         {
-            var response = await _orderItemStageService.GetOrderItemStages(orderItemId, staffId, indexStage, status, mode, page, size);
+            var response = await _orderItemStageService.GetOrderItemStages(orderId, orderItemId, staffId, indexStage, status, mode, page, size);
             return Ok(response);
         }
 

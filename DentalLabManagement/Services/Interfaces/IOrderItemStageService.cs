@@ -7,7 +7,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     public interface IOrderItemStageService
     {
         Task<bool> UpdateOrderItemStage(int orderItemStageId, UpdateOrderItemStageRequest request);
-        Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
+        Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderId, int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
             OrderItemStageMode? mode, int page, int size);
         Task<OrderItemStageResponse> GetOrderItemStageById(int id);
     }

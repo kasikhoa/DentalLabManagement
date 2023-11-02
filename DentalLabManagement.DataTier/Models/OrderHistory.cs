@@ -11,7 +11,7 @@ namespace DentalLabManagement.DataTier.Models
         public int CreatedBy { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string? Note { get; set; }
-        public string? Status { get; set; }
+        public string Status { get; set; } = null!;
 
         public virtual Account CreatedByNavigation { get; set; } = null!;
         public virtual Order Order { get; set; } = null!;

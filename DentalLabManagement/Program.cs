@@ -21,7 +21,6 @@ namespace DentalLabManagement.API
             builder.Logging.ClearProviders();
 
             builder.Configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
             builder.Services.AddDbContext<DentalLabManagementContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerDatabase"));
@@ -43,7 +42,7 @@ namespace DentalLabManagement.API
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 x.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
             });
-            //builder.Services.AddDatabase();
+
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -53,8 +52,6 @@ namespace DentalLabManagement.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddConfigSwagger();
-
-            //builder.Services.AddDbContext<DentalLabManagementContext>();
 
             var app = builder.Build();
 

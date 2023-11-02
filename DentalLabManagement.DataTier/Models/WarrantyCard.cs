@@ -12,7 +12,7 @@ namespace DentalLabManagement.DataTier.Models
 
         public int Id { get; set; }
         public int CardTypeId { get; set; }
-        public string? CardCode { get; set; }
+        public string CardCode { get; set; } = null!;
         public DateTime? ExpDate { get; set; }
         public string Status { get; set; } = null!;
 

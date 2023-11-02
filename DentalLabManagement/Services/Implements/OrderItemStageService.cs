@@ -20,10 +20,15 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderItemId, int? staffId, int? indexStage, 
+        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderId, int? orderItemId, int? staffId, int? indexStage, 
             OrderItemStageStatus? status, OrderItemStageMode? mode)
         {
             Expression<Func<OrderItemStage, bool>> filterQuery = x => true;
+
+            if (orderId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.OrderItem.OrderId.Equals(orderId));
+            }
 
             if (orderItemId.HasValue)
             {
@@ -52,8 +57,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-
-        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
+        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderId, int? orderItemId, int? staffId, int? indexStage, OrderItemStageStatus? status, 
             OrderItemStageMode? mode, int page, int size)
         {
             page = (page == 0) ? 1 : page;
@@ -74,7 +78,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     Image = x.Image
                 },
-                predicate: BuildGetOrderItemStagesQuery(orderItemId, staffId, indexStage, status, mode),
+                predicate: BuildGetOrderItemStagesQuery(orderId, orderItemId, staffId, indexStage, status, mode),
                 page: page,
                 size: size
                 );

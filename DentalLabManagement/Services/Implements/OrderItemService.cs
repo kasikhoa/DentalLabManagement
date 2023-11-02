@@ -164,6 +164,7 @@ namespace DentalLabManagement.API.Services.Implements
             orderItem.Note = string.IsNullOrEmpty(request.Note) ? orderItem.Note : request.Note;
 
             List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
+
             ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
                 predicate: x => x.CategoryId.Equals(orderItem.Product.CategoryId),
                 include: x => x.Include(x => x.ProductStage)
@@ -184,7 +185,6 @@ namespace DentalLabManagement.API.Services.Implements
                 };
                 orderItemStageList.Add(newStage);
             }
-
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             await _unitOfWork.GetRepository<OrderItemStage>().InsertRangeAsync(orderItemStageList);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

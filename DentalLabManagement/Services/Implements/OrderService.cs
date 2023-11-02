@@ -50,7 +50,7 @@ namespace DentalLabManagement.API.Services.Implements
                 DentistNote = createOrderRequest.DentistNote,
                 PatientName = createOrderRequest.PatientName,
                 PatientGender = createOrderRequest.PatientGender.GetDescriptionFromEnum(),
-                PatientPhoneNumber = createOrderRequest.PatientPhoneNumber,
+                PatientPhoneNumber = string.IsNullOrEmpty(createOrderRequest.PatientPhoneNumber) ? null : createOrderRequest.PatientPhoneNumber,
                 Status = OrderStatus.Pending.GetDescriptionFromEnum(),
                 TotalAmount = createOrderRequest.TotalAmount,
                 Discount = createOrderRequest.Discount,
@@ -482,9 +482,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         private Expression<Func<Payment, bool>> BuildGetPaymentsQuery(int orderId, PaymentType? type, PaymentStatus? status)
         {
-            Expression<Func<Payment, bool>> filterQuery = p => true;
-
-            filterQuery = filterQuery.AndAlso(p => p.OrderId.Equals(orderId));
+            Expression<Func<Payment, bool>> filterQuery = p => p.OrderId.Equals(orderId);
 
             if (type != null)
             {

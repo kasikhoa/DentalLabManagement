@@ -10,7 +10,7 @@ namespace DentalLabManagement.BusinessTier.Payload.WarrantyCard
     public class CreateWarrantyCardRequest
     {
         public int CardTypeId { get; set; }
-        public string? CardCode { get; set; }
+        public string CardCode { get; set; }
      
     }
 }
