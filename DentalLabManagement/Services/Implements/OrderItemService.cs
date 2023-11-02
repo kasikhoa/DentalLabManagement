@@ -73,8 +73,6 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
-            string cardCode = orderItem.WarrantyCard != null ? orderItem.WarrantyCard.CardCode : null;
-
             return new GetOrderItemResponse()
             {
                 Id = orderItem.Id,
@@ -83,7 +81,7 @@ namespace DentalLabManagement.API.Services.Implements
                 TeethPosition = orderItem.TeethPosition.PositionName,             
                 Note = orderItem.Note,
                 TotalAmount = orderItem.TotalAmount,
-                WarrantyCardCode = cardCode,
+                WarrantyCardCode = orderItem.WarrantyCard?.CardCode,
                 Status = EnumUtil.ParseEnum<OrderItemStatus>(orderItem.Status),
             };
         }
@@ -142,7 +140,7 @@ namespace DentalLabManagement.API.Services.Implements
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
            
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
-            warrantyCard.ExpDate = order.CompletedDate.Value.AddYears(warrantyCard.CardType.WarrantyYear);
+            warrantyCard.ExpDate = order.CompletedDate?.AddYears(warrantyCard.CardType.WarrantyYear);
 
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);
@@ -160,6 +158,8 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (orderItem == null) throw new BadHttpRequestException(MessageConstant.OrderItem.NotFoundMessage);
 
+            DateTime currentTime = TimeUtils.GetCurrentSEATime();
+
             orderItem.Status = OrderItemStatus.Warranty.GetDescriptionFromEnum();
             orderItem.Note = string.IsNullOrEmpty(request.Note) ? orderItem.Note : request.Note;
 
@@ -175,12 +175,10 @@ namespace DentalLabManagement.API.Services.Implements
                 OrderItemStage newStage = new OrderItemStage()
                 {
                     OrderItemId = orderItemId,
-                    IndexStage = itemStage.ProductStage.IndexStage,
-                    StageName = itemStage.ProductStage.Name,
-                    Description= itemStage.ProductStage.Description,
-                    ExecutionTime = itemStage.ProductStage.ExecutionTime,
+                    StageId = itemStage.ProductStage.Id,
+                    StartTime = currentTime,
+                    ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
                     Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
-                    StartDate = TimeUtils.GetCurrentSEATime(),
                     Mode = OrderItemStatus.Warranty.GetDescriptionFromEnum(),
                 };
                 orderItemStageList.Add(newStage);

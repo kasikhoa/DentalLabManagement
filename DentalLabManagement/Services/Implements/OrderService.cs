@@ -103,7 +103,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, string? dentalName, 
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, 
             OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
@@ -113,9 +113,9 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(invoiceId));
             }
 
-            if (!string.IsNullOrEmpty(dentalName))
+            if (dentalId.HasValue)
             {
-                filterQuery = filterQuery.AndAlso(p => p.Dental.Name.Contains(dentalName));
+                filterQuery = filterQuery.AndAlso(p => p.DentalId.Equals(dentalId));
             }
 
             if (status != null)
@@ -132,7 +132,7 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, string? dentalName, OrderStatus? status,
+        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, int? dentalId, OrderStatus? status,
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
             invoiceId = invoiceId?.Trim().ToLower();
@@ -160,7 +160,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(invoiceId, dentalName, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(invoiceId, dentalId, status, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size
@@ -270,7 +270,7 @@ namespace DentalLabManagement.API.Services.Implements
                 include: x => x.Include(x => x.Product)
                 );
 
-            OrderHistory? orderHistory;
+            OrderHistory orderHistory;
 
             OrderStatus status = updateOrderRequest.Status;
 
@@ -313,12 +313,10 @@ namespace DentalLabManagement.API.Services.Implements
                             OrderItemStage newStage = new OrderItemStage()
                             {
                                 OrderItemId = item.Id,
-                                IndexStage = itemStage.ProductStage.IndexStage,
-                                StageName = itemStage.ProductStage.Name,
-                                Description = itemStage.ProductStage.Description,
-                                ExecutionTime = itemStage.ProductStage.ExecutionTime,
-                                Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
-                                StartDate = currentTime,
+                                StageId = itemStage.ProductStage.Id,
+                                StartTime = currentTime,
+                                ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
+                                Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),                                                               
                                 Mode = OrderItemStatus.New.GetDescriptionFromEnum(),
                             };
                             orderItemStageList.Add(newStage);
@@ -428,6 +426,9 @@ namespace DentalLabManagement.API.Services.Implements
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(orderId));
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
+
+            if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
+                throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
 
             ICollection<Payment> prevPayments = await _unitOfWork.GetRepository<Payment>().GetListAsync(
                predicate: x => x.OrderId.Equals(orderId));

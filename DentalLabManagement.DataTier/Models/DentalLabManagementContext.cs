@@ -61,6 +61,11 @@ namespace DentalLabManagement.DataTier.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserName).HasMaxLength(50);
+
+                entity.HasOne(d => d.CurrentStageNavigation)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.CurrentStage)
+                    .HasConstraintName("FK_Account_ProductionStage");
             });
 
             modelBuilder.Entity<CardType>(entity =>
@@ -136,11 +141,6 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Stage)
-                    .WithMany(p => p.Employees)
-                    .HasForeignKey(d => d.StageId)
-                    .HasConstraintName("FK_Employee_ProductionStage");
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
@@ -250,7 +250,7 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderItem_Product");
+                    .HasConstraintName("FK_OrderItem_Product1");
 
                 entity.HasOne(d => d.TeethPosition)
                     .WithMany(p => p.OrderItems)
@@ -268,9 +268,9 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("OrderItemStage");
 
-                entity.Property(e => e.Description).HasMaxLength(50);
+                entity.Property(e => e.CompletedTime).HasColumnType("datetime");
 
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
+                entity.Property(e => e.ExpectedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Image).IsUnicode(false);
 
@@ -280,9 +280,7 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Note).HasMaxLength(50);
 
-                entity.Property(e => e.StageName).HasMaxLength(50);
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
+                entity.Property(e => e.StartTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
@@ -296,6 +294,12 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.OrderItemStages)
                     .HasForeignKey(d => d.StaffId)
                     .HasConstraintName("FK_OrderItemStage_Account");
+
+                entity.HasOne(d => d.Stage)
+                    .WithMany(p => p.OrderItemStages)
+                    .HasForeignKey(d => d.StageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItemStage_ProductionStage");
             });
 
             modelBuilder.Entity<Payment>(entity =>

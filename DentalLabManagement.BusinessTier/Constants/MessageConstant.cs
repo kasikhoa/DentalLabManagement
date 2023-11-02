@@ -29,6 +29,7 @@ public static class MessageConstant
         public const string EmptyAccountIdMessage = "Account Id không hợp lệ";
 
         public const string StaffNotFoundMessage = "Không tìm thấy nhân viên";
+        public const string StaffNotMatchStageMessage = "Bạn không phải nhân viên khâu này";
     }
 
     public static class Dental

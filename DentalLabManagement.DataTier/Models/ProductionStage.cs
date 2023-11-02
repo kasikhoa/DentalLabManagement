@@ -7,8 +7,9 @@ namespace DentalLabManagement.DataTier.Models
     {
         public ProductionStage()
         {
-            Employees = new HashSet<Employee>();
+            Accounts = new HashSet<Account>();
             GroupStages = new HashSet<GroupStage>();
+            OrderItemStages = new HashSet<OrderItemStage>();
         }
 
         public int Id { get; set; }
@@ -17,7 +18,8 @@ namespace DentalLabManagement.DataTier.Models
         public string Description { get; set; } = null!;
         public double ExecutionTime { get; set; }
 
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
         public virtual ICollection<GroupStage> GroupStages { get; set; }
+        public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
     }
 }

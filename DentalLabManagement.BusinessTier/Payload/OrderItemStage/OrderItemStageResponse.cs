@@ -15,10 +15,11 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
         public int IndexStage { get; set; }
         public string StageName { get; set; }
         public string Description { get; set; }
-        public double Execution { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime ExpectedTime { get; set; }               
+        public DateTime? CompletedTime { get; set; }
         public OrderItemStageStatus Status { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public OrderItemStageMode Mode { get; set; }
         public string? Note { get; set; }
         public string? Image { get; set; }
 

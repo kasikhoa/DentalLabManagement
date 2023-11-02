@@ -11,7 +11,5 @@ namespace DentalLabManagement.DataTier.Models
         public string? PhoneNumber { get; set; }
         public string? Status { get; set; }
         public int? AccountId { get; set; }
-
-        public virtual ProductionStage? Stage { get; set; }
     }
 }

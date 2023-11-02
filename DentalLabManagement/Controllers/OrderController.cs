@@ -40,10 +40,10 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(GetOrdersResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrders(string? invoiceId, string? dentalName, OrderStatus? status, 
+        public async Task<IActionResult> GetOrders(string? invoiceId, int? dentalId, OrderStatus? status, 
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
-            var response = await _orderService.GetOrders(invoiceId, dentalName, status, paymentStatus, page, size);
+            var response = await _orderService.GetOrders(invoiceId, dentalId, status, paymentStatus, page, size);
             return Ok(response);
         }
 
@@ -89,7 +89,6 @@ namespace DentalLabManagement.API.Controllers
             var response = await _orderService.ViewOrderHistory(id, status, page, size);
             return Ok(response);
         }
-
 
     }
 }
