@@ -29,7 +29,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
             ProductionStage productionStage = await _unitOfWork.GetRepository<ProductionStage>().SingleOrDefaultAsync
                 (predicate: x => x.Name.Equals(request.Name));
-            if (productionStage != null) throw new BadHttpRequestException(MessageConstant.ProductStage.ProductStageExisted);
+            if (productionStage != null) throw new BadHttpRequestException(MessageConstant.ProductionStage.ProductStageExisted);
 
             productionStage = new ProductionStage()
             {
@@ -40,7 +40,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             await _unitOfWork.GetRepository<ProductionStage>().InsertAsync(productionStage);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.ProductStage.CreateNewProductStageFailed);
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.ProductionStage.CreateNewProductStageFailed);
 
             return new ProductionStageResponse(productionStage.Id, productionStage.IndexStage, productionStage.Name,
                 productionStage.Description, productionStage.ExecutionTime);
@@ -48,11 +48,11 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<ProductionStageResponse> GetProductionStageById(int id)
         {
-            if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductionStage.EmptyProductStageIdMessage);
 
             ProductionStage productionStage = await _unitOfWork.GetRepository<ProductionStage>()
                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (productionStage == null) throw new BadHttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
+            if (productionStage == null) throw new BadHttpRequestException(MessageConstant.ProductionStage.NotFoundMessage);
 
             return new ProductionStageResponse(productionStage.Id, productionStage.IndexStage, 
                 productionStage.Name, productionStage.Description, productionStage.ExecutionTime);
@@ -93,10 +93,10 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<bool> UpdateProductionStage(int id, UpdateProductionStageRequest request)
         {
-            if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductStage.EmptyProductStageIdMessage);
+            if (id < 1) throw new BadHttpRequestException(MessageConstant.ProductionStage.EmptyProductStageIdMessage);
             ProductionStage productionStage = await _unitOfWork.GetRepository<ProductionStage>()
                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
-            if (productionStage == null) throw new BadHttpRequestException(MessageConstant.ProductStage.IdNotFoundMessage);
+            if (productionStage == null) throw new BadHttpRequestException(MessageConstant.ProductionStage.NotFoundMessage);
             request.TrimString();
 
             productionStage.IndexStage = (request.IndexStage < 1) ? productionStage.IndexStage : request.IndexStage;

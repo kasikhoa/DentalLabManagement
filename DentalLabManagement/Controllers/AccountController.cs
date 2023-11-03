@@ -37,7 +37,7 @@ namespace DentalLabManagement.API.Controllers
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndPoint)]
-        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAccountsResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
         {
@@ -49,10 +49,10 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Account.AccountsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role,
+        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role, int? stageId,
             AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
         {
-            var response = await _accountService.GetAccounts(username, role, status , page, size);
+            var response = await _accountService.GetAccounts(username, role, stageId, status , page, size);
             return Ok(response);
         }
 
@@ -95,5 +95,16 @@ namespace DentalLabManagement.API.Controllers
             if (!isSuccessful) return Ok(MessageConstant.Account.UpdateAccountStatusFailedMessage);
             return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
         }
+
+        [CustomAuthorize(RoleEnum.Admin, RoleEnum.Manager)]
+        [HttpPatch(ApiEndPointConstant.Account.StaffEndPoint)]
+        [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
+        public async Task<IActionResult> UpdateStageStaff(int id, UpdateStageStaffRequest request)
+        {
+            var isSuccessful = await _accountService.UpdateStageStaff(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.Account.UpdateStageFailedMessage);
+            return Ok(MessageConstant.Account.UpdateStageSuccessMessage);
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using DentalLabManagement.DataTier.Paginate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Enums;
+using DentalLabManagement.BusinessTier.Validators;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -63,6 +64,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
+        [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Product.ProductEndPoint)]
         public async Task<IActionResult> UpdateProductStatus(int id)
         {

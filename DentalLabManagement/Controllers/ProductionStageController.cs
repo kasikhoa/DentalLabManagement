@@ -49,8 +49,8 @@ namespace DentalLabManagement.API.Controllers
         public async Task<IActionResult> UpdateProductionStage(int id, [FromBody] UpdateProductionStageRequest request)
         {
             var isSuccessful = await _productStageService.UpdateProductionStage(id, request);
-            if (!isSuccessful) return Ok(MessageConstant.ProductStage.UpdateProductStageFailedMessage);
-            return Ok(MessageConstant.ProductStage.UpdateProductStageSuccessMessage);
+            if (!isSuccessful) return Ok(MessageConstant.ProductionStage.UpdateProductStageFailedMessage);
+            return Ok(MessageConstant.ProductionStage.UpdateProductStageSuccessMessage);
         }
         
     }

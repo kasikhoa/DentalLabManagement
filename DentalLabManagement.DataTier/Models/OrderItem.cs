@@ -17,7 +17,7 @@ namespace DentalLabManagement.DataTier.Models
         public string? Note { get; set; }
         public double TotalAmount { get; set; }
         public int? WarrantyCardId { get; set; }
-        public string Status { get; set; } = null!;
+        public string Mode { get; set; } = null!;
 
         public virtual Order Order { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;

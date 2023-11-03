@@ -16,7 +16,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItem
         public string? Note { get; set; } 
         public double TotalAmount { get; set; }
         public string? WarrantyCardCode { get; set; }
-        public OrderItemStatus Status { get; set; }
+        public OrderItemMode Mode { get; set; }
 
         public GetOrderItemResponse()
         {

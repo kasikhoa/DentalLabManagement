@@ -14,14 +14,15 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
         public string Username { get; set; }
         public string Name { get; set; }
         public RoleEnum Role { get; set; }
+        public string? CurrentStage { get; set; }
         public AccountStatus Status { get; set; }
-
-        public GetAccountsResponse(int id, string username, string name, RoleEnum role, AccountStatus status)
+        public GetAccountsResponse(int id, string username, string name, RoleEnum role, string? currentStage, AccountStatus status)
         {
             Id = id;
             Username = username;
             Name = name;
             Role = role;
+            CurrentStage = currentStage;
             Status = status;
         }
     }

@@ -12,7 +12,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
     {
         public string FullName { get; set; }
         public string Password { get; set; }
-        [EnumDataType(typeof(AccountStatus))]
         public AccountStatus Status { get; set; }
     }
 }

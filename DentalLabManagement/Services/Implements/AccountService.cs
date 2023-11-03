@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using DentalLabManagement.API.Extensions;
 using DentalLabManagement.BusinessTier.Payload.Dental;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -53,8 +54,10 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<GetAccountsResponse> CreateNewAccount(AccountRequest request)
         {
-            Account account = await _unitOfWork.GetRepository<Account>()
-                .SingleOrDefaultAsync(predicate: x => x.UserName.Equals(request.Username));
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.UserName.Equals(request.Username),
+                include: x => x.Include(x => x.CurrentStageNavigation)
+                );
             if (account != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
 
             account = new Account()
@@ -70,10 +73,10 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Account.CreateAccountFailed);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName,
-                request.Role, EnumUtil.ParseEnum<AccountStatus>(account.Status));
+                request.Role, account.CurrentStageNavigation?.Name, EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
-        private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, AccountStatus? status)
+        private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, int? stageId, AccountStatus? status)
         {
             Expression<Func<Account, bool>> filterQuery = x => true; 
 
@@ -87,6 +90,11 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.Role.Equals(role.GetDescriptionFromEnum()));
             }
 
+            if(stageId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CurrentStage.Equals(stageId));
+            }
+
             if (status != null)
             {
                 filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
@@ -96,16 +104,17 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, AccountStatus? status, int page, int size)
+        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, int? stageId, 
+            AccountStatus? status, int page, int size)
         {
             searchUsername = searchUsername?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
-                selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), 
+                selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), x.CurrentStageNavigation.Name, 
                     EnumUtil.ParseEnum<AccountStatus>(x.Status)),
-                predicate: BuildGetAccountsQuery(searchUsername, role, status),
+                predicate: BuildGetAccountsQuery(searchUsername, role, stageId, status),
                 orderBy: x => x.OrderBy(x => x.UserName),
                 page: page,
                 size: size
@@ -134,11 +143,13 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
-            Account account = await _unitOfWork.GetRepository<Account>()
-                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id),
+                include: x => x.Include(x => x.CurrentStageNavigation)
+                );
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName, 
-                EnumUtil.ParseEnum<RoleEnum>(account.Role), EnumUtil.ParseEnum<AccountStatus>(account.Status));
+                EnumUtil.ParseEnum<RoleEnum>(account.Role), account.CurrentStageNavigation?.Name, EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
         public async Task<DentalAccountResponse> GetDentalByAccountId(int accountId)
@@ -173,5 +184,28 @@ namespace DentalLabManagement.API.Services.Implements
             
         }
 
+        public async Task<bool> UpdateStageStaff(int accountId, UpdateStageStaffRequest request)
+        {
+            if (accountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
+
+            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(accountId));
+            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            if (!account.Role.Equals(RoleEnum.Staff.GetDescriptionFromEnum()))
+            {
+                throw new BadHttpRequestException(MessageConstant.Account.NotStaffMessage);
+            }
+
+            ProductionStage stage = await _unitOfWork.GetRepository<ProductionStage>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(request.currentStage));
+            if (stage == null) throw new BadHttpRequestException(MessageConstant.ProductionStage.NotFoundMessage);
+
+            account.CurrentStage = request.currentStage;
+            _unitOfWork.GetRepository<Account>().UpdateAsync(account);
+            bool isSuccessfull = await _unitOfWork.CommitAsync() > 0;
+            return isSuccessfull;
+
+        }
     }
 }

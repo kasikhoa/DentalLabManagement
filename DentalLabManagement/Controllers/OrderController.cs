@@ -47,7 +47,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
-        [CustomAuthorize(RoleEnum.Reception, RoleEnum.Dental)]
+        [CustomAuthorize(RoleEnum.Reception)]
         [HttpPatch(ApiEndPointConstant.Order.OrderEndPoint)]
         public async Task<IActionResult> UpdateOrderStatus(int id, UpdateOrderRequest updateOrderRequest)
         {

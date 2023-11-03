@@ -23,8 +23,6 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<CreateWarrantyCardResponse> CreateNewWarrantyCard(CreateWarrantyCardRequest request)
         {
-
-
             CardType cardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(request.CardTypeId));
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
@@ -63,7 +61,7 @@ namespace DentalLabManagement.API.Services.Implements
             };
         }
 
-        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(string? cardCode, string? cardTypeCode, 
+        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(string? cardCode, int? cardTypeId, 
             WarrantyCardStatus? status)
         {
             Expression<Func<WarrantyCard, bool>> filterQuery = x => true;
@@ -73,9 +71,9 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.CardCode.Contains(cardCode));
             }
 
-            if (!string.IsNullOrEmpty(cardTypeCode))
+            if (cardTypeId.HasValue)
             {
-                filterQuery = filterQuery.AndAlso(x => x.CardType.Code.Contains(cardTypeCode));
+                filterQuery = filterQuery.AndAlso(x => x.CardTypeId.Equals(cardTypeId));
             }
 
             if (status != null)
@@ -86,11 +84,10 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, string? cardTypeCode, 
+        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? cardTypeId, 
             WarrantyCardStatus? status, int page, int size)
         {
             cardCode = cardCode?.Trim().ToLower();
-            cardTypeCode = cardTypeCode?.Trim().ToLower();
 
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -115,7 +112,7 @@ namespace DentalLabManagement.API.Services.Implements
                     BrandUrl = x.CardType.BrandUrl,
                     Status = EnumUtil.ParseEnum<WarrantyCardStatus>(x.Status)
                 },
-                predicate: BuildWarrantyCardsQuery(cardCode, cardTypeCode, status),
+                predicate: BuildWarrantyCardsQuery(cardCode, cardTypeId, status),
                 page: page,
                 size: size
                 );

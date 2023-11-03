@@ -26,6 +26,7 @@ public static class ApiEndPointConstant
     {
         public const string AccountsEndPoint = ApiEndpoint + "/accounts";
         public const string AccountEndPoint = AccountsEndPoint + "/{id}";
+        public const string StaffEndPoint = AccountEndPoint + "/staff";
         public const string DentalAcccountEndPoint = AccountEndPoint + "/dental";
     }
 
@@ -40,7 +41,7 @@ public static class ApiEndPointConstant
     {
         public const string ProductsEndPoint = ApiEndpoint + "/products";
         public const string ProductEndPoint = ProductsEndPoint + "/{id}";
-        public const string ProductsInCategory = ProductsEndPoint + "/category/{categoryId}";
+        public const string ProductsInCategory = ProductsEndPoint + "/category/{id}";
     }
 
     public static class ProductStage

@@ -57,13 +57,18 @@ namespace DentalLabManagement.API.Services.Implements
                 cardType.Description, cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
         }
 
-        private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(int? categoryId, CardTypeStatus? status)
+        private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(int? categoryId, string? code, CardTypeStatus? status)
         {
             Expression<Func<CardType, bool>> filterQuery = x => true;
 
             if (categoryId.HasValue)
             {
                 filterQuery = filterQuery.AndAlso(x => x.CategoryId.Equals(categoryId));
+            }
+
+            if (!string.IsNullOrEmpty(code))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Code.Equals(code));
             }
 
             if (status != null)
@@ -74,7 +79,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<CardTypeResponse>> GetCardTypes(int? categoryId, CardTypeStatus? status, int page, int size)
+        public async Task<IPaginate<CardTypeResponse>> GetCardTypes(int? categoryId, string? code, CardTypeStatus? status, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -82,7 +87,7 @@ namespace DentalLabManagement.API.Services.Implements
             IPaginate<CardTypeResponse> result = await _unitOfWork.GetRepository<CardType>().GetPagingListAsync(
                 selector: x => new CardTypeResponse(x.Id, x.Category.Name, x.Code, x.CountryOrigin, x.WarrantyYear, x.Description,
                 x.Image, x.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(x.Status)),
-                predicate: BuildGetCardTypesQuery(categoryId, status),
+                predicate: BuildGetCardTypesQuery(categoryId, code, status),
                 page: page,
                 size: size
                 );

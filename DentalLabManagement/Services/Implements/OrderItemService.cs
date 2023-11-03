@@ -20,7 +20,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, string? warrantyCardCode, OrderItemStatus? status)
+        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, string? warrantyCardCode, OrderItemMode? mode)
         {
             Expression<Func<OrderItem, bool>> filterQuery = x => true; 
 
@@ -34,15 +34,15 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.WarrantyCard.CardCode.Contains(warrantyCardCode));
             }
 
-            if (status != null)
+            if (mode != null)
             {
-                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
+                filterQuery = filterQuery.AndAlso(x => x.Mode.Equals(mode.GetDescriptionFromEnum()));
             }
 
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, OrderItemStatus? status, int page, int size)
+        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, OrderItemMode? mode, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -51,14 +51,14 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Id = x.Id,
                     OrderId = x.OrderId,
-                    ProductName= x.Product.Name,
+                    ProductName = x.Product.Name,
                     TeethPosition = x.TeethPosition.PositionName,                   
                     Note = x.Note,
                     TotalAmount = x.TotalAmount,
                     WarrantyCardCode = x.WarrantyCard.CardCode,
-                    Status = EnumUtil.ParseEnum<OrderItemStatus>(x.Status), 
+                    Mode = EnumUtil.ParseEnum<OrderItemMode>(x.Mode), 
                 },
-                predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode, status),
+                predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode, mode),
                 page: page,
                 size: size);
             return result;
@@ -82,7 +82,7 @@ namespace DentalLabManagement.API.Services.Implements
                 Note = orderItem.Note,
                 TotalAmount = orderItem.TotalAmount,
                 WarrantyCardCode = orderItem.WarrantyCard?.CardCode,
-                Status = EnumUtil.ParseEnum<OrderItemStatus>(orderItem.Status),
+                Mode = EnumUtil.ParseEnum<OrderItemMode>(orderItem.Mode),
             };
         }
 
@@ -160,7 +160,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             DateTime currentTime = TimeUtils.GetCurrentSEATime();
 
-            orderItem.Status = OrderItemStatus.Warranty.GetDescriptionFromEnum();
+            orderItem.Mode = OrderItemMode.Warranty.GetDescriptionFromEnum();
             orderItem.Note = string.IsNullOrEmpty(request.Note) ? orderItem.Note : request.Note;
 
             List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
@@ -179,7 +179,7 @@ namespace DentalLabManagement.API.Services.Implements
                     StartTime = currentTime,
                     ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
                     Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
-                    Mode = OrderItemStatus.Warranty.GetDescriptionFromEnum(),
+                    Mode = OrderItemMode.Warranty.GetDescriptionFromEnum(),
                 };
                 orderItemStageList.Add(newStage);
             }

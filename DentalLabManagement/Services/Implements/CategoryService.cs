@@ -30,7 +30,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
             Category newCategory = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
-                (predicate: x => x.Name.Equals(categoryRequest.CategoryName));
+                (predicate: x => x.Name.Equals(categoryRequest.CategoryName)
+                );
             if (newCategory != null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNameExisted);
 
             newCategory = new Category()
@@ -63,7 +64,6 @@ namespace DentalLabManagement.API.Services.Implements
 
             return filterQuery;
         }
-
 
         public async Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size)
         {

@@ -16,10 +16,10 @@ public static class MessageConstant
         public const string AccountExisted = "Tài khoản đã tồn tại";
         public const string CreateAccountFailed = "Tạo tài khoản thất bại";
         public const string CreateAccountWithWrongRoleMessage = "Please create with acceptent role";
+        public const string NotStaffMessage = "Bạn không phải Staff";
         public const string CreateStaffAccountFailMessage = "Tạo tài khoản nhân viên thất bại";
         public const string UserUnauthorizedMessage = "Bạn không được phép cập nhật status cho tài khoản này";
 
-        public const string UpdateAccountStatusRequestWrongFormatMessage = "Cập nhật status tài khoản request sai format";
 
         public const string AccountNotFoundMessage = "Không tìm thấy tài khoản";
         public const string UpdateAccountSuccessfulMessage = "Cập nhật status tài khoản thành công";
@@ -30,6 +30,8 @@ public static class MessageConstant
 
         public const string StaffNotFoundMessage = "Không tìm thấy nhân viên";
         public const string StaffNotMatchStageMessage = "Bạn không phải nhân viên khâu này";
+        public const string UpdateStageFailedMessage = "Cập nhật stage cho staff thất bại";
+        public const string UpdateStageSuccessMessage = "Cập nhật stage cho staff thành công";
     }
 
     public static class Dental
@@ -70,14 +72,14 @@ public static class MessageConstant
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
 
-    public static class ProductStage
+    public static class ProductionStage
     {
         public const string EmptyProductStageIdMessage = "Id không hợp lệ";
         public const string EmptyProductStageMessage = "Index Stage không hợp lệ";
         public const string ProductStageExisted = "Product Stage đã tồn tại";
         public const string CreateNewProductStageFailed = "Tạo mới product stage thất bại";
         public const string IndexStageNotFoundMessage = "Index Stage không tồn tại trong hệ thống";
-        public const string IdNotFoundMessage = "Id không tồn tại trong hệ thống";
+        public const string NotFoundMessage = "Stage không tồn tại trong hệ thống";
         public const string UpdateProductStageFailedMessage = "Cập nhật thông tin thất bại";
         public const string UpdateProductStageSuccessMessage = "Cập nhật thông tin thành công";
     }
@@ -113,6 +115,8 @@ public static class MessageConstant
         public const string UpdateFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
         public const string OrderNotCompletedMessage = "Order chưa hoàn thành";
         public const string PaymentFailedMessage = "Thanh toán Order thất bại";
+        public const string OverPaymentMessage = "Số tiền thanh toán bị chênh lệch";
+        public const string AmountErrorMessage = "Số tiền không hợp lệ";
         public const string OrderPaidFullMessage = "Order đã thanh toán đầy đủ";
         public const string OrderNotPaidMessage = "Order chưa thanh toán xong";
         public const string EmptyOrderMessage = "Đối tác chưa có Order nào";

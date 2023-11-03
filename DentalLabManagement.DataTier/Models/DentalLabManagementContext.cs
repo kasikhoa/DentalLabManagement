@@ -234,11 +234,11 @@ namespace DentalLabManagement.DataTier.Models
             {
                 entity.ToTable("OrderItem");
 
-                entity.Property(e => e.Note).HasMaxLength(50);
-
-                entity.Property(e => e.Status)
+                entity.Property(e => e.Mode)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Note).HasMaxLength(50);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderItems)

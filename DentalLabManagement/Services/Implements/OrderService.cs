@@ -87,7 +87,7 @@ namespace DentalLabManagement.API.Services.Implements
                     TeethPositionId = product.TeethPositionId,
                     Note = product.Note,
                     TotalAmount = product.TotalAmount,
-                    Status = OrderItemStatus.New.GetDescriptionFromEnum(),
+                    Mode = OrderItemMode.New.GetDescriptionFromEnum(),
                 });
                 count++;
             });
@@ -103,8 +103,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, 
-            OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, OrderStatus? status, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -276,7 +275,6 @@ namespace DentalLabManagement.API.Services.Implements
 
             switch (status)
             {
-
                 case OrderStatus.Warranty:
                     updateOrder.Status = updateOrderRequest.Status.GetDescriptionFromEnum();
 
@@ -317,7 +315,7 @@ namespace DentalLabManagement.API.Services.Implements
                                 StartTime = currentTime,
                                 ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
                                 Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),                                                               
-                                Mode = OrderItemStatus.New.GetDescriptionFromEnum(),
+                                Mode = OrderItemMode.New.GetDescriptionFromEnum(),
                             };
                             orderItemStageList.Add(newStage);
                         }
@@ -349,7 +347,7 @@ namespace DentalLabManagement.API.Services.Implements
                         selector: x => x.Id, predicate: x => x.OrderId.Equals(orderId));
 
                     ICollection<OrderItemStage> itemStageList = await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync(
-                        predicate: x => orderItemIds.Contains(x.OrderItemId) && x.Mode.Equals(orderItems.FirstOrDefault().Status));
+                        predicate: x => orderItemIds.Contains(x.OrderItemId) && x.Mode.Equals(orderItems.FirstOrDefault().Mode));
 
                     bool allCompleted = itemStageList.All(itemStage => itemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()));
 
@@ -438,36 +436,38 @@ namespace DentalLabManagement.API.Services.Implements
             if (totalPreviousPayments >= order.FinalAmount)
                 throw new BadHttpRequestException(MessageConstant.Order.OrderPaidFullMessage);
 
-            Payment payment = new Payment()
+            if (paymentRequest.Amount < 1) throw new BadHttpRequestException(MessageConstant.Order.AmountErrorMessage);
+            
+            var restAmount = order.FinalAmount - totalPreviousPayments - paymentRequest.Amount;
+            if (restAmount < 0)
             {
+                throw new BadHttpRequestException(MessageConstant.Order.OverPaymentMessage);
+            }
+
+            Payment payment = new Payment()
+            {               
                 OrderId = orderId,
                 Note = paymentRequest.Note,
                 PaymentType = paymentRequest.Type.GetDescriptionFromEnum(),
                 Amount = paymentRequest.Amount,
+                RestAmount = restAmount,
                 PaymentTime = TimeUtils.GetCurrentSEATime(),
-                Status = PaymentStatus.Success.GetDescriptionFromEnum(),
+                Status = PaymentStatus.Success.GetDescriptionFromEnum()
             };
-
-            await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.PaymentFailedMessage);
-
-            var restAmount = order.FinalAmount - totalPreviousPayments - paymentRequest.Amount;
-            payment.RestAmount = restAmount;
-            _unitOfWork.GetRepository<Payment>().UpdateAsync(payment);
-            await _unitOfWork.CommitAsync();
+                     
             if (restAmount <= 0)
             {
                 order.PaymentStatus = OrderPaymentStatus.Paid.GetDescriptionFromEnum();
-                _unitOfWork.GetRepository<Order>().UpdateAsync(order);
-                await _unitOfWork.CommitAsync();
             }
             else
             {
                 order.PaymentStatus = OrderPaymentStatus.Partial.GetDescriptionFromEnum();
-                _unitOfWork.GetRepository<Order>().UpdateAsync(order);
-                await _unitOfWork.CommitAsync();
             }
+            _unitOfWork.GetRepository<Order>().UpdateAsync(order);
+            await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.PaymentFailedMessage);
+
             return new PaymentResponse()
             {
                 Id = payment.Id,
