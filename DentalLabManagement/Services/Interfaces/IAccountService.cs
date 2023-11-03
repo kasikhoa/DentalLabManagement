@@ -8,7 +8,7 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<LoginResponse> Login(LoginRequest loginRequest);
+        Task<LoginResponse?> Login(LoginRequest loginRequest);
         Task<GetAccountsResponse> CreateNewAccount(AccountRequest request);
         Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, int? stageId, AccountStatus? status , int page, int size);
         Task<GetAccountsResponse> GetAccountDetail(int id);
