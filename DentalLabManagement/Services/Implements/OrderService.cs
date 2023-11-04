@@ -174,13 +174,9 @@ namespace DentalLabManagement.API.Services.Implements
 
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Dental));
+                include: x => x.Include(x => x.Dental)
+                );
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
-
-            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(order.DentalId));
-            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
-
 
             GetOrderDetailResponse orderItemResponse = new GetOrderDetailResponse()
             {
@@ -211,10 +207,10 @@ namespace DentalLabManagement.API.Services.Implements
                         Product = new ProductResponse()
                         {
                             Id = x.ProductId,
+                            CategoryName = x.Product.Category.Name,
                             Name = x.Product.Name,
                             Description = x.Product.Description,
-                            CostPrice = x.Product.CostPrice,
-                            CategoryName = x.Product.Category.Name
+                            CostPrice = x.Product.CostPrice                           
                         },
                         TeethPosition = new TeethPositionResponse()
                         {

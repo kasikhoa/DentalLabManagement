@@ -13,15 +13,15 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
         public string Name { get; set; }
         public string Address { get; set; }
         public DentalStatus Status { get; set; }
-        public int? AccountId { get; set; }
+        public string? Username { get; set; }
 
-        public DentalResponse(int id, string name, string address, DentalStatus status, int? accountId)
+        public DentalResponse(int id, string name, string address, DentalStatus status, string? username)
         {
             Id = id;
             Name = name;
             Address = address;
             Status = status;
-            AccountId = accountId;
+            Username = username;
         }
     }
 }

@@ -38,11 +38,13 @@ namespace DentalLabManagement.API.Services.Implements
             if (dentalRequest.AccountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
             Dental newDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync
-                (predicate: x => x.AccountId.Equals(dentalRequest.AccountId)); 
+                (predicate: x => x.AccountId.Equals(dentalRequest.AccountId)
+                ); 
             if (newDental != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync
-                (predicate: x => x.Id.Equals(dentalRequest.AccountId));
+                (predicate: x => x.Id.Equals(dentalRequest.AccountId)
+                );
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
 
             if (account.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()))
@@ -52,7 +54,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Name = dentalRequest.DentalName,
                     Address = dentalRequest.Address,
                     Status = DentalStatus.Active.GetDescriptionFromEnum(),
-                    AccountId = dentalRequest.AccountId,                  
+                    AccountId = dentalRequest?.AccountId,                  
                 };
             } 
             else throw new BadHttpRequestException(MessageConstant.Account.CreateAccountWithWrongRoleMessage);
@@ -62,23 +64,21 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (!isSuccefful) throw new BadHttpRequestException(MessageConstant.Dental.CreateDentalFailed);
             return new DentalResponse(newDental.Id, newDental.Name, newDental.Address,
-                EnumUtil.ParseEnum<DentalStatus>(newDental.Status), newDental.AccountId);
+                EnumUtil.ParseEnum<DentalStatus>(newDental.Status), account.UserName);
         }
 
-        public async Task<DentalAccountResponse> GetAccountDentalById(int dentalId)
+        public async Task<DentalResponse> GetDentalById(int dentalId)
         {
             if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
             
-            Dental dental = await _unitOfWork.GetRepository<Dental>()
-                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(dentalId));
+            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(dentalId),
+                include: x => x.Include(x => x.Account)
+                );
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
-            Account dentalAccount = await _unitOfWork.GetRepository<Account>().
-                SingleOrDefaultAsync(predicate: x => x.Id.Equals(dental.AccountId));
-            if (dentalAccount == null) throw new BadHttpRequestException(MessageConstant.Dental.AccountDentalNotFoundMessage);
-
-            return new DentalAccountResponse(dental.Id, dental.Name, dental.Address, dentalAccount.UserName, 
-                EnumUtil.ParseEnum<AccountStatus>(dentalAccount.Status));
+            return new DentalResponse(dental.Id, dental.Name, dental.Address, 
+                EnumUtil.ParseEnum<DentalStatus>(dental.Status), dental.Account?.UserName);
 
         }
    
@@ -106,7 +106,7 @@ namespace DentalLabManagement.API.Services.Implements
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             IPaginate<DentalResponse> response = await _unitOfWork.GetRepository<Dental>().GetPagingListAsync(
-                selector: x => new DentalResponse(x.Id, x.Name, x.Address, EnumUtil.ParseEnum<DentalStatus>(x.Status), x.AccountId),
+                selector: x => new DentalResponse(x.Id, x.Name, x.Address, EnumUtil.ParseEnum<DentalStatus>(x.Status), x.Account.UserName),
                 predicate: BuildGetDentalsQuery(searchDentalName, status),
                 page: page,
                 size: size

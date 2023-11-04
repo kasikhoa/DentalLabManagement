@@ -28,9 +28,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.ProductStage.ProductStagesEndPoint)]
         [ProducesResponseType(typeof(ProductionStageResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetProductionStages([FromQuery] string? name, [FromQuery] int? indexStage, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetProductionStages([FromQuery] int? indexStage, [FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
         {
-            var productStage = await _productStageService.GetProductionStages(name, indexStage , page, size);
+            var productStage = await _productStageService.GetProductionStages(indexStage, name, page, size);
             return Ok(productStage);
         }
 

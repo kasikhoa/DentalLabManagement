@@ -20,7 +20,6 @@ public static class MessageConstant
         public const string CreateStaffAccountFailMessage = "Tạo tài khoản nhân viên thất bại";
         public const string UserUnauthorizedMessage = "Bạn không được phép cập nhật status cho tài khoản này";
 
-
         public const string AccountNotFoundMessage = "Không tìm thấy tài khoản";
         public const string UpdateAccountSuccessfulMessage = "Cập nhật status tài khoản thành công";
         public const string UpdateAccountFailedMessage = "Cập nhật thông tin tài khoản thất bại";

@@ -11,10 +11,10 @@ namespace DentalLabManagement.DataTier.Models
         }
 
         public int Id { get; set; }
+        public int CategoryId { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public double CostPrice { get; set; }
-        public int CategoryId { get; set; }
         public string Status { get; set; } = null!;
         public string? Image { get; set; }
 

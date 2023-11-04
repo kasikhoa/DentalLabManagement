@@ -76,7 +76,7 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Code)
+                entity.Property(e => e.CodeName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

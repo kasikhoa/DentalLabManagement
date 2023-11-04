@@ -10,7 +10,7 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
     public class CardTypeRequest
     {
         public int CategoryId { get; set; }
-        public string Code { get; set; }
+        public string CodeName { get; set; }
         public string CountryOrigin { get; set; }
         public int WarrantyYear { get; set; }
         public string Description { get; set; }

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace DentalLabManagement.API.Extensions
 {
-    
+
     public static class DependencyServices
     {
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
@@ -46,19 +46,20 @@ namespace DentalLabManagement.API.Extensions
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters()
+            })
+                .AddJwtBearer(options =>
                 {
-                    ValidIssuer = "DentalLab",
-                    ValidateIssuer = true,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey =
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = "DentalLab",
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey =
                         new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes("DentalLabNumberOne"))
-                };
-            });
+                    };
+                });
             return services;
         }
 

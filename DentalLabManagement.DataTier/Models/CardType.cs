@@ -12,7 +12,7 @@ namespace DentalLabManagement.DataTier.Models
 
         public int Id { get; set; }
         public int CategoryId { get; set; }
-        public string Code { get; set; } = null!;
+        public string CodeName { get; set; } = null!;
         public string CountryOrigin { get; set; } = null!;
         public int WarrantyYear { get; set; }
         public string? Description { get; set; }

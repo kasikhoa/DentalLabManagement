@@ -179,7 +179,7 @@ namespace DentalLabManagement.API.Services.Implements
             cardTypeCode = cardTypeCode.Trim().ToLower();
 
             Expression<Func<WarrantyCard, bool>> searchFilter = p => p.CardCode.Equals(cardCode) 
-                && p.CardType.Code.Equals(cardTypeCode);
+                && p.CardType.CodeName.Equals(cardTypeCode);
 
             WarrantyCard warrantyCard = await _unitOfWork.GetRepository<WarrantyCard>().SingleOrDefaultAsync(
                 predicate: searchFilter,

@@ -11,7 +11,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     public interface IProductionStageService
     {
         Task<ProductionStageResponse> CreateProductionStage(ProductionStageRequest request);
-        Task<IPaginate<ProductionStageResponse>> GetProductionStages(string? name, int? index, int page, int size);
+        Task<IPaginate<ProductionStageResponse>> GetProductionStages(int? index, string? name, int page, int size);
         Task<ProductionStageResponse> GetProductionStageById(int id);
         Task<bool> UpdateProductionStage(int id, UpdateProductionStageRequest request);
         

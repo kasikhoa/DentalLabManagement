@@ -1,18 +1,15 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DentalLabManagement.BusinessTier.Enums;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
 using AutoMapper;
@@ -58,32 +55,31 @@ namespace DentalLabManagement.API.Services.Implements
                 productionStage.Name, productionStage.Description, productionStage.ExecutionTime);
         }
 
-
-        private Expression<Func<ProductionStage, bool>> BuildGetStageQuery(string? name, int? index)
+        private Expression<Func<ProductionStage, bool>> BuildGetStageQuery(int? index, string? name)
         {
             Expression<Func<ProductionStage, bool>> filterQuery = p => true;
+           
+            if (index.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.IndexStage.Equals(index));
+            }
 
             if (!string.IsNullOrEmpty(name))
             {
                 filterQuery = filterQuery.AndAlso(p => p.Name.Contains(name));
             }
 
-            if (index.HasValue)
-            {
-                filterQuery = filterQuery.AndAlso(p => p.IndexStage.Equals(index));
-            }
-            
             return filterQuery;
         }
 
-        public async Task<IPaginate<ProductionStageResponse>> GetProductionStages(string? name, int? index, int page, int size)
+        public async Task<IPaginate<ProductionStageResponse>> GetProductionStages(int? index, string? name, int page, int size)
         {
             name = name?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             IPaginate<ProductionStageResponse> response = await _unitOfWork.GetRepository<ProductionStage>().GetPagingListAsync
                 (selector: x => new ProductionStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: BuildGetStageQuery(name, index),
+                predicate: BuildGetStageQuery(index, name),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
                 size: size

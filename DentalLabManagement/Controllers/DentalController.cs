@@ -31,11 +31,11 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Dental.DentalEndPoint)]
-        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetAccountDentalById(int id)
+        public async Task<IActionResult> GetDentalById(int id)
         {
-            var response = await _dentalService.GetAccountDentalById(id);          
+            var response = await _dentalService.GetDentalById(id);          
             return Ok(response);
 
         }    

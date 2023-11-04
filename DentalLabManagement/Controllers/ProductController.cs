@@ -56,14 +56,6 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Product.UpdateProductSuccessMessage);
         }
 
-        [HttpGet(ApiEndPointConstant.Product.ProductsInCategory)]
-        [ProducesResponseType(typeof(IPaginate<ProductResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProductsByCategory(int categoryId, [FromQuery] int page, [FromQuery] int size)
-        {
-            var response = await _productService.GetProductsByCategory(categoryId, page, size);
-            return Ok(response);
-        }
-
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Product.ProductEndPoint)]
         public async Task<IActionResult> UpdateProductStatus(int id)

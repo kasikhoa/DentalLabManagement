@@ -149,7 +149,8 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
             return new GetAccountsResponse(account.Id, account.UserName, account.FullName, 
-                EnumUtil.ParseEnum<RoleEnum>(account.Role), account.CurrentStageNavigation?.Name, EnumUtil.ParseEnum<AccountStatus>(account.Status));
+                EnumUtil.ParseEnum<RoleEnum>(account.Role), account.CurrentStageNavigation?.Name, 
+                EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
         public async Task<DentalAccountResponse> GetDentalByAccountId(int accountId)
@@ -157,11 +158,13 @@ namespace DentalLabManagement.API.Services.Implements
             if (accountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(accountId) && x.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()));
+                predicate: x => x.Id.Equals(accountId) && x.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum())
+                );
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
 
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
-                predicate: x => x.AccountId.Equals(account.Id));
+                predicate: x => x.AccountId.Equals(account.Id)
+                );
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.AccountDentalNotFoundMessage);
 
             return new DentalAccountResponse(dental.Id, dental.Name, dental.Address, 

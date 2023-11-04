@@ -10,25 +10,24 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
 {
     public class ProductResponse
     {
-        public int Id { get; set; }    
+        public int Id { get; set; }
+        public string? CategoryName { get; set; }        
         public string Name { get; set; }     
         public string Description { get; set; }      
-        public double CostPrice { get; set; }
-        public string? CategoryName { get; set; }
+        public double CostPrice { get; set; }      
         public ProductStatus Status { get; set; }
         public string? Image { get; set; }
 
         public ProductResponse()
         {
         }
-
-        public ProductResponse(int id, string name, string description, double costPrice, string? categoryName, ProductStatus status, string? image)
+        public ProductResponse(int id, string? categoryName, string name, string description, double costPrice, ProductStatus status, string? image)
         {
             Id = id;
+            CategoryName = categoryName;
             Name = name;
             Description = description;
             CostPrice = costPrice;
-            CategoryName = categoryName;
             Status = status;
             Image = image;
         }

@@ -28,9 +28,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.CardType.CardTypesEndPoint)]
         [ProducesResponseType(typeof(CardTypeResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCardTypes(int? categoryId, string? code, CardTypeStatus? status, int page, int size)
+        public async Task<IActionResult> GetCardTypes(int? categoryId, string? codeName, CardTypeStatus? status, int page, int size)
         {
-            var response = await _cardTypeService.GetCardTypes(categoryId, code, status, page, size);
+            var response = await _cardTypeService.GetCardTypes(categoryId, codeName, status, page, size);
             return Ok(response);
         }
 

@@ -9,7 +9,7 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
 {
     public class UpdateCardRequest
     {
-        public string? Code { get; set; }
+        public string? CodeName { get; set; }
         public string? CountryOrigin { get; set; }
         public int WarrantyYear { get; set; }
         public string? Description { get; set; }
@@ -19,6 +19,7 @@ namespace DentalLabManagement.BusinessTier.Payload.CardType
 
         public void TrimString()
         {
+            CodeName = CodeName?.Trim();
             Description = Description?.Trim();
             Image = Image?.Trim();
             BrandUrl = BrandUrl?.Trim();

@@ -13,7 +13,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     public interface IDentalService
     {
         Task<DentalResponse> CreateDentalAccount(DentalRequest dentalRequest);
-        Task<DentalAccountResponse> GetAccountDentalById(int dentalId);
+        Task<DentalResponse> GetDentalById(int dentalId);
         Task<IPaginate<DentalResponse>> GetDentals(string? name, DentalStatus? status, int page, int size);
         Task<bool> UpdateDentalInfo(int id, UpdateDentalRequest request);       
         Task<bool> UpdateDentalStatus(int id);

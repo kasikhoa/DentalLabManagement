@@ -40,19 +40,19 @@ namespace DentalLabManagement.API.Services.Implements
 
             newProduct = new Product()
             {
+                CategoryId = productRequest.CategoryId,
                 Name = productRequest.Name,
                 Description = productRequest.Description,
-                CostPrice = productRequest.CostPrice,
-                CategoryId = productRequest.CategoryId,
-                Status = productRequest.Status.GetDescriptionFromEnum(),
+                CostPrice = productRequest.CostPrice,               
+                Status = ProductStatus.Available.GetDescriptionFromEnum(),
                 Image = productRequest.Image
             };
 
             await _unitOfWork.GetRepository<Product>().InsertAsync(newProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Product.CreateNewProductFailedMessage);
-            return new ProductResponse(newProduct.Id, newProduct.Name, newProduct.Description, newProduct.CostPrice, 
-                category.Name, EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
+            return new ProductResponse(newProduct.Id, category.Name, newProduct.Name, newProduct.Description, newProduct.CostPrice, 
+                EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
         }
 
         private Expression<Func<Product, bool>> BuildGetProductsQuery(string? searchProductName, int? categoryId, ProductStatus? status)
@@ -64,14 +64,15 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchProductName));
             }
 
+            if (categoryId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CategoryId.Equals(categoryId));
+            }
+
             if (status != null)
             {
-                filterQuery = filterQuery.AndAlso(x => x.Status == status.GetDescriptionFromEnum());
-            }
-            if (categoryId != null)
-            {
-                filterQuery = filterQuery.AndAlso(x => x.CategoryId == categoryId);
-            }
+                filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
+            }            
 
             return filterQuery;
         }
@@ -83,8 +84,8 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.Category.Name, 
-                EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
+                selector: x => new ProductResponse(x.Id, x.Category.Name, x.Name, x.Description, x.CostPrice, 
+                    EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: BuildGetProductsQuery(searchProductName, categoryId, status),
                 page: page,
                 size: size,
@@ -102,7 +103,7 @@ namespace DentalLabManagement.API.Services.Implements
                 );
             if (product == null) throw new BadHttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
 
-            return new ProductResponse(product.Id, product.Name, product.Description, product.CostPrice, product.Category.Name, 
+            return new ProductResponse(product.Id, product.Category.Name, product.Name, product.Description, product.CostPrice, 
                 EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
         }
 
@@ -120,38 +121,16 @@ namespace DentalLabManagement.API.Services.Implements
 
             updateProductRequest.TrimString();
 
+            updateProduct.CategoryId = updateProductRequest.CategoryId;
             updateProduct.Name = string.IsNullOrEmpty(updateProductRequest.Name) ? updateProduct.Name : updateProductRequest.Name;
             updateProduct.Description = string.IsNullOrEmpty(updateProductRequest.Description) ? updateProduct.Description : updateProductRequest.Description;
-            updateProduct.CostPrice = (updateProductRequest.CostPrice < 1) ? updateProduct.CostPrice : updateProductRequest.CostPrice;
-            updateProduct.CategoryId = updateProductRequest.CategoryId;
+            updateProduct.CostPrice = (updateProductRequest.CostPrice < 1) ? updateProduct.CostPrice : updateProductRequest.CostPrice;           
             updateProduct.Status = updateProductRequest.Status.GetDescriptionFromEnum();
             updateProduct.Image = string.IsNullOrEmpty(updateProductRequest.Image) ? updateProduct.Image : updateProductRequest.Image;
 
             _unitOfWork.GetRepository<Product>().UpdateAsync(updateProduct);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
-        }
-
-        public async Task<IPaginate<ProductResponse>> GetProductsByCategory(int categoryId, int page, int size)
-        {
-            if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
-
-            page = (page == 0) ? 1 : page;
-            size = (size == 0) ? 10 : size;  
-
-            Category category = await _unitOfWork.GetRepository<Category>()
-                 .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
-            if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
-
-            IPaginate<ProductResponse> result = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new ProductResponse(x.Id, x.Name, x.Description, x.CostPrice, x.Category.Name, 
-                    EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
-                predicate: x => x.CategoryId.Equals(categoryId),
-                page: page,
-                size: size,
-                orderBy: x => x.OrderBy(x => x.CostPrice)
-               );
-            return result;
         }
 
         public async Task<bool> UpdateProductStatus(int id)
