@@ -150,7 +150,6 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Development.json
-D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Development.json
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.json
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.exe
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\DentalLabManagement.API.deps.json
@@ -229,3 +228,4 @@ D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\refint\Den
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.genruntimeconfig.cache
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\ref\DentalLabManagement.API.dll
+D:\FU\SWD392\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\appsettings.Production.json

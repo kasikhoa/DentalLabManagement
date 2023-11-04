@@ -9,6 +9,7 @@ using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq.Expressions;
 
@@ -131,21 +132,33 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (orderItemStageId < 1) throw new BadHttpRequestException(MessageConstant.OrderItemStage.EmptyOrderItemStageIdMessage);
             OrderItemStage orderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderItemStageId)
+                predicate: x => x.Id.Equals(orderItemStageId),
+                include: x => x.Include(x => x.Stage)
                 );
             if (orderItemStage == null) throw new BadHttpRequestException(MessageConstant.OrderItemStage.OrderItemStageNotFoundMessage);
 
             string currentUser = GetUsernameFromJwt();
+            DateTime currentTime = TimeUtils.GetCurrentSEATime();
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.UserName.Equals(currentUser));
+                predicate: x => x.UserName.Equals(currentUser)
+                );
 
             //if (!account.CurrentStage.Equals(orderItemStage.StageId))
             //{
             //    throw new BadHttpRequestException(MessageConstant.Account.StaffNotMatchStageMessage);
             //}
 
-            string Note = string.IsNullOrEmpty(request.Note) ? null : request.Note;
+            List<int> listStageIds = (List<int>) await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync(
+                predicate: x => x.OrderItemId.Equals(orderItemStage.OrderItemId) && x.Mode.Equals(orderItemStage.Mode),
+                selector: x => x.StageId
+                );
+
+            List<int> indexStages = (List<int>) await _unitOfWork.GetRepository<ProductionStage>().GetListAsync(
+                predicate: x => listStageIds.Contains(x.Id),
+                orderBy: x => x.OrderBy(x => x.IndexStage),
+                selector: x => x.IndexStage
+                );           
 
             OrderItemStageStatus status = request.Status;
 
@@ -153,19 +166,57 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 case OrderItemStageStatus.Pending:
 
-                    orderItemStage.StaffId = account.Id;
-                    orderItemStage.Status = request.Status.GetDescriptionFromEnum();
-                    orderItemStage.Note = Note;
-
+                    if (indexStages[0] == orderItemStage.Stage.IndexStage)
+                    {
+                        orderItemStage.StaffId = account.Id;
+                        orderItemStage.Status = request.Status.GetDescriptionFromEnum();
+                        orderItemStage.Note = request.Note;
+                    }                  
+                    else
+                    {
+                        OrderItemStage prevOrderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
+                            predicate: x => x.OrderItemId.Equals(orderItemStage.OrderItemId) && x.Stage.IndexStage.Equals(orderItemStage.Stage.IndexStage - 1)
+                                && x.Mode.Equals(orderItemStage.Mode),
+                            include: x => x.Include(x => x.Stage)
+                            );
+                        if (prevOrderItemStage != null && prevOrderItemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()))
+                        {
+                            orderItemStage.StaffId = account.Id;
+                            orderItemStage.Status = request.Status.GetDescriptionFromEnum();
+                            orderItemStage.Note = request.Note;
+                        }
+                        else throw new BadHttpRequestException(MessageConstant.OrderItemStage.PreviousStageNotCompletedMessage);
+                    }
+                    
                     _unitOfWork.GetRepository<OrderItemStage>().UpdateAsync(orderItemStage);
                     break;
 
                 case OrderItemStageStatus.Completed:
 
-                    orderItemStage.StaffId = account.Id;
-                    orderItemStage.Status = request.Status.GetDescriptionFromEnum();
-                    orderItemStage.Note = Note;
-                    orderItemStage.CompletedTime = TimeUtils.GetCurrentSEATime();
+                    if (indexStages[0] == orderItemStage.Stage.IndexStage)
+                    {
+                        orderItemStage.StaffId = account.Id;
+                        orderItemStage.Status = request.Status.GetDescriptionFromEnum();
+                        orderItemStage.Note = request.Note;
+                        orderItemStage.CompletedTime = currentTime;
+                    }
+                    else
+                    {
+                        OrderItemStage prevOrderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
+                            predicate: x => x.OrderItemId.Equals(orderItemStage.OrderItemId) && x.Stage.IndexStage.Equals(orderItemStage.Stage.IndexStage - 1)
+                                && x.Mode.Equals(orderItemStage.Mode),
+                            include: x => x.Include(x => x.Stage)
+                            );
+                        if (prevOrderItemStage != null && prevOrderItemStage.Status.Equals(OrderItemStageStatus.Completed.GetDescriptionFromEnum()))
+                        {
+                            orderItemStage.StaffId = account.Id;
+                            orderItemStage.Status = request.Status.GetDescriptionFromEnum();
+                            orderItemStage.Note = request.Note;
+                            orderItemStage.CompletedTime = currentTime;
+                        }
+                        else throw new BadHttpRequestException(MessageConstant.OrderItemStage.PreviousStageNotCompletedMessage);
+                    }
+
                     _unitOfWork.GetRepository<OrderItemStage>().UpdateAsync(orderItemStage);
                     break;
 
@@ -173,13 +224,13 @@ namespace DentalLabManagement.API.Services.Implements
 
                     orderItemStage.StaffId = account.Id;
                     orderItemStage.Status = request.Status.GetDescriptionFromEnum();
-                    orderItemStage.Note = Note;
+                    orderItemStage.Note = request.Note;
 
                     _unitOfWork.GetRepository<OrderItemStage>().UpdateAsync(orderItemStage);
                     break;
 
                 default:
-                    throw new BadHttpRequestException(MessageConstant.OrderItemStage.UpdateStatusStageFailedMessage);
+                    return false;
             }
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
