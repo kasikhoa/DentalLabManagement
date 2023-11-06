@@ -22,10 +22,9 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
         private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId,
-            OrderItemStageStatus? status, OrderItemStageMode? mode)
+            DateTime? startTime, DateTime? completedTime, OrderItemStageStatus? status, OrderItemStageMode? mode)
         {
-            Expression<Func<OrderItemStage, bool>> filterQuery = x => true;
-                  
+            Expression<Func<OrderItemStage, bool>> filterQuery = x => true;                 
 
             if (orderId.HasValue)
             {
@@ -52,6 +51,16 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.StageId.Equals(stageId));
             }
 
+            if (startTime.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.StartTime >= startTime);
+            }
+
+            if (completedTime.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CompletedTime <= completedTime);
+            }
+
             if (status != null)
             {
                 filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
@@ -65,8 +74,8 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId, OrderItemStageStatus? status,
-            OrderItemStageMode? mode, int page, int size)
+        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId, 
+            DateTime? startTime, DateTime? completedTime, OrderItemStageStatus? status, OrderItemStageMode? mode, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -93,7 +102,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     Image = x.Image
                 },
-                predicate: BuildGetOrderItemStagesQuery(orderId, orderItemId, currentStage, staffId, stageId, status, mode),
+                predicate: BuildGetOrderItemStagesQuery(orderId, orderItemId, currentStage, staffId, stageId, startTime, completedTime, status, mode),
                 page: page,
                 size: size
                 );

@@ -5,7 +5,6 @@ namespace DentalLabManagement.DataTier.Repository.Interfaces
 	public interface IUnitOfWork : IGenericRepositoryFactory, IDisposable
 	{
 		int Commit();
-
 		Task<int> CommitAsync();
 	}
 

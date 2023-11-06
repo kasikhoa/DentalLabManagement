@@ -132,12 +132,12 @@ namespace DentalLabManagement.API.Services.Implements
             return new WarrantyCardResponse()
             {
                 Id = warrantyCard.Id,
+                OrderId = warrantyCard.OrderItems.FirstOrDefault()?.OrderId,
                 CardCode = warrantyCard.CardCode,
                 CategoryName = warrantyCard.CardType.Category.Name,
                 CountryOrigin = warrantyCard.CardType.CountryOrigin,
                 TeethQuantity = warrantyCard.OrderItems.Count,
-                TeethPositions = warrantyCard.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),
-                OrderId = warrantyCard.OrderItems.FirstOrDefault()?.OrderId,
+                TeethPositions = warrantyCard.OrderItems.Select(x => x.TeethPosition.PositionName).ToList(),               
                 PatientName = warrantyCard.OrderItems.FirstOrDefault()?.Order.PatientName,
                 DentalName = warrantyCard.OrderItems.FirstOrDefault()?.Order.Dental.Name,
                 DentistName = warrantyCard.OrderItems.FirstOrDefault()?.Order.DentistName,

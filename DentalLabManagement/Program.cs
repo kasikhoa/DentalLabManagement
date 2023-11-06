@@ -18,6 +18,8 @@ namespace DentalLabManagement.API
         {
 
             var builder = WebApplication.CreateBuilder(args);
+
+            
             builder.Logging.ClearProviders();
 
             builder.Configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
@@ -59,13 +61,12 @@ namespace DentalLabManagement.API
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-
             //app.UseHttpsRedirection();
             app.UseCors(CorsConstant.PolicyName);
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-
+            
             app.Run();
 
 

@@ -20,13 +20,23 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, string? warrantyCardCode, OrderItemMode? mode)
+        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, int? productId, int? teethPositionId, string? warrantyCardCode, OrderItemMode? mode)
         {
             Expression<Func<OrderItem, bool>> filterQuery = x => true; 
 
             if (orderId.HasValue)
             {
                 filterQuery = filterQuery.AndAlso(x => x.OrderId.Equals(orderId));
+            }
+
+            if(productId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.ProductId.Equals(productId));
+            }
+
+            if (teethPositionId.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.TeethPositionId.Equals(teethPositionId));
             }
 
             if (!string.IsNullOrEmpty(warrantyCardCode))
@@ -42,7 +52,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, string? warrantyCardCode, OrderItemMode? mode, int page, int size)
+        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, int? productId, int? teethPosition, string? warrantyCardCode, OrderItemMode? mode, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -58,7 +68,7 @@ namespace DentalLabManagement.API.Services.Implements
                     WarrantyCardCode = x.WarrantyCard.CardCode,
                     Mode = EnumUtil.ParseEnum<OrderItemMode>(x.Mode), 
                 },
-                predicate: BuildGetOrderItemsQuery(orderId, warrantyCardCode, mode),
+                predicate: BuildGetOrderItemsQuery(orderId, productId, teethPosition, warrantyCardCode, mode),
                 page: page,
                 size: size);
             return result;

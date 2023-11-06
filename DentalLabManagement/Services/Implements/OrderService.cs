@@ -103,7 +103,8 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, OrderStatus? status, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, OrderStatus? status, DateTime? createdDate, 
+            DateTime? completedDate, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -122,6 +123,16 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
             }
 
+            if (createdDate.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.CreatedDate >= createdDate);
+            }
+
+            if (completedDate.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(p => p.CompletedDate <= completedDate);
+            }
+
             if (paymentStatus != null)
             {
                 filterQuery = filterQuery.AndAlso(p => p.PaymentStatus.Equals(paymentStatus.GetDescriptionFromEnum()));
@@ -131,7 +142,7 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, int? dentalId, OrderStatus? status,
+        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, int? dentalId, OrderStatus? status, DateTime? createdDate, DateTime? completedDate,
             OrderPaymentStatus? paymentStatus, int page, int size)
         {
             invoiceId = invoiceId?.Trim().ToLower();
@@ -159,7 +170,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(invoiceId, dentalId, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(invoiceId, dentalId, status, createdDate, completedDate, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size
@@ -171,7 +182,6 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<GetOrderDetailResponse> GetOrderTeethDetail(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
-
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
                 include: x => x.Include(x => x.Dental)
@@ -406,7 +416,7 @@ namespace DentalLabManagement.API.Services.Implements
                     break;
 
                 default:
-                    throw new BadHttpRequestException(MessageConstant.Order.UpdateStatusFailedMessage);
+                    return false;
 
             }
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -501,7 +511,8 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(orderId));
+                predicate: x => x.Id.Equals(orderId)
+                );
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
             IPaginate<PaymentResponse> result = await _unitOfWork.GetRepository<Payment>().GetPagingListAsync(
