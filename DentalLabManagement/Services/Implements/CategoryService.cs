@@ -110,17 +110,19 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (category.Status.Equals(CategoryStatus.Active.GetDescriptionFromEnum()))
             {
-                foreach (var product in products)
+                products = products.Select(product =>
                 {
                     product.Status = ProductStatus.Available.GetDescriptionFromEnum();
-                }
+                    return product;
+                }).ToList();
             }
             if (category.Status.Equals(CategoryStatus.Inactive.GetDescriptionFromEnum()))
             {
-                foreach (var product in products)
+                products = products.Select(product =>
                 {
                     product.Status = ProductStatus.Unavailable.GetDescriptionFromEnum();
-                }
+                    return product;
+                }).ToList();
             }
 
             _unitOfWork.GetRepository<Product>().UpdateRange(products);
@@ -192,12 +194,14 @@ namespace DentalLabManagement.API.Services.Implements
             category.Status = CategoryStatus.Inactive.GetDescriptionFromEnum();
 
             ICollection<Product> products = await _unitOfWork.GetRepository<Product>().GetListAsync(
-                predicate: x => x.CategoryId.Equals(category.Id));                        
+                predicate: x => x.CategoryId.Equals(category.Id));
 
-            foreach(var product in products)
+            products = products.Select(product =>
             {
                 product.Status = ProductStatus.Unavailable.GetDescriptionFromEnum();
-            }
+                return product;
+            }).ToList();
+
             _unitOfWork.GetRepository<Product>().UpdateRange(products);
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

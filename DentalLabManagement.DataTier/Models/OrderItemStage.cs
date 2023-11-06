@@ -13,8 +13,8 @@ namespace DentalLabManagement.DataTier.Models
         public DateTime ExpectedTime { get; set; }
         public DateTime? CompletedTime { get; set; }
         public string Status { get; set; } = null!;
-        public string Mode { get; set; } = null!;
         public string? Note { get; set; }
+        public string Mode { get; set; } = null!;
         public string? Image { get; set; }
 
         public virtual OrderItem OrderItem { get; set; } = null!;

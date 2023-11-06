@@ -20,7 +20,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Dental> Dentals { get; set; } = null!;
-        public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<GroupStage> GroupStages { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderHistory> OrderHistories { get; set; } = null!;
@@ -124,23 +123,6 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.Dentals)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK_Dental_Account");
-            });
-
-            modelBuilder.Entity<Employee>(entity =>
-            {
-                entity.ToTable("Employee");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.FullName).HasMaxLength(50);
-
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
-                entity.Property(e => e.Status)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<GroupStage>(entity =>
