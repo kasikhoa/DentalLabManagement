@@ -431,25 +431,23 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<PaymentResponse> UpdateOrderPayment(int orderId, PaymentRequest paymentRequest)
         {
             if (orderId < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
-
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(orderId));
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
+            Payment payment = await _unitOfWork.GetRepository<Payment>().SingleOrDefaultAsync(
+                predicate: x => x.OrderId.Equals(orderId));
+            if (payment != null) throw new BadHttpRequestException(MessageConstant.Order.OrderPaidFullMessage);        
+
             if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                 throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
 
-            if (paymentRequest.Amount < 1) throw new BadHttpRequestException(MessageConstant.Order.AmountErrorMessage);
-            else if (paymentRequest.Amount > order.FinalAmount)
-            {
-                throw new BadHttpRequestException(MessageConstant.Order.AmountErrorMessage);
-            }
-            else if (paymentRequest.Amount < order.FinalAmount)
+            if (paymentRequest.Amount != order.FinalAmount)
             {
                 throw new BadHttpRequestException(MessageConstant.Order.AmountErrorMessage);
             }
 
-            Payment payment = new Payment()
+            payment = new Payment()
             {               
                 OrderId = orderId,
                 Note = paymentRequest.Note,

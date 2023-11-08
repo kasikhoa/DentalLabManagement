@@ -15,7 +15,7 @@
           }
         }
       },
-      "LAK.Sdk.Core/5.0.1": {
+      "LAK.Sdk.Core/5.0.0": {
         "type": "package",
         "compile": {
           "lib/net5.0/LAK.Sdk.Core.dll": {}
@@ -811,14 +811,14 @@
         "logo.png"
       ]
     },
-    "LAK.Sdk.Core/5.0.1": {
-      "sha512": "yKFtiwP8Meqo0CfLQgndUiY3mrLAmTC69XMyD/X6AxsXcXC9af37XuQKAMF1Mc1Hyt6QzngcQ+XAgqWkD7MLDA==",
+    "LAK.Sdk.Core/5.0.0": {
+      "sha512": "HIoR35M9trd/wthjjgIbpDypxmYKpLq/5rbDWqhLqoRMlqQ3McN2Zn0VpL3OlzT/EqmIwUH9PTfKf6yDMAi3Dg==",
       "type": "package",
-      "path": "lak.sdk.core/5.0.1",
+      "path": "lak.sdk.core/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lak.sdk.core.5.0.1.nupkg.sha512",
+        "lak.sdk.core.5.0.0.nupkg.sha512",
         "lak.sdk.core.nuspec",
         "lib/net5.0/LAK.Sdk.Core.dll"
       ]
@@ -2028,7 +2028,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "LAK.Sdk.Core >= 5.0.1",
+      "LAK.Sdk.Core >= 5.0.0",
       "Microsoft.EntityFrameworkCore >= 6.0.22",
       "Microsoft.EntityFrameworkCore.Design >= 6.0.22",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.22",
@@ -2076,7 +2076,7 @@
         "dependencies": {
           "LAK.Sdk.Core": {
             "target": "Package",
-            "version": "[5.0.1, )"
+            "version": "[5.0.0, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
