@@ -2718,11 +2718,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+      "projectUniqueName": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
       "projectName": "DentalLabManagement.API",
-      "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+      "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\obj\\",
+      "outputPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2739,11 +2739,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj": {
-              "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj"
+            "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj": {
+              "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj"
             },
-            "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
-              "projectPath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj"
+            "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj": {
+              "projectPath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.DataTier\\DentalLabManagement.DataTier.csproj"
             }
           }
         }

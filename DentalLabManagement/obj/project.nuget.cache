@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QMPg/ittDt0geG/dk5Wn51XzKZoiHInctLnYCUxLJ93/DkWavHKNE72ZKfQXp1jNgqAIBwcJhu1FGGtb3eBNHw==",
+  "dgSpecHash": "xMFg5BvOzqqwcX6zfp5LuZf3dT8EfKQQ+AUsgNHlIFIjKHws/aV4q+Y5HENCIYIIlv6qKi0114LzCRdajYORyA==",
   "success": true,
-  "projectFilePath": "D:\\FU\\SWD392\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
+  "projectFilePath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement\\DentalLabManagement.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

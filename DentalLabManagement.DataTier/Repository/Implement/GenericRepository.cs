@@ -24,7 +24,7 @@ namespace DentalLabManagement.DataTier.Repository.Implement
             _dbContext?.Dispose();
         }
 
-        #region Ge2tt Async
+        #region Get Async
 
         public virtual async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
         {

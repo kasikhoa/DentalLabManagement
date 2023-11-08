@@ -103,8 +103,8 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, OrderStatus? status, DateTime? createdDate, 
-            DateTime? completedDate, OrderPaymentStatus? paymentStatus)
+        private Expression<Func<Order, bool>> BuildGetOrdersQuery(string? invoiceId, int? dentalId, string? dentistName, string? patientName, 
+            string? patientPhoneNumber, OrderStatus? status, DateTime? createdDate, DateTime? completedDate, OrderPaymentStatus? paymentStatus)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -116,6 +116,21 @@ namespace DentalLabManagement.API.Services.Implements
             if (dentalId.HasValue)
             {
                 filterQuery = filterQuery.AndAlso(p => p.DentalId.Equals(dentalId));
+            }
+
+            if (!string.IsNullOrEmpty(dentistName))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.DentistName.Contains(dentistName));
+            }
+
+            if (!string.IsNullOrEmpty(patientName))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.PatientName.Contains(patientName));
+            }
+
+            if (!string.IsNullOrEmpty(patientPhoneNumber))
+            {
+                filterQuery = filterQuery.AndAlso(p => p.PatientPhoneNumber.Contains(patientPhoneNumber));
             }
 
             if (status != null)
@@ -142,8 +157,8 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, int? dentalId, OrderStatus? status, DateTime? createdDate, DateTime? completedDate,
-            OrderPaymentStatus? paymentStatus, int page, int size)
+        public async Task<IPaginate<GetOrdersResponse>> GetOrders(string? invoiceId, int? dentalId, string? dentistName, string? patientName, 
+            string? patientPhoneNumber, OrderStatus? status, DateTime? createdDate, DateTime? completedDate, OrderPaymentStatus? paymentStatus, int page, int size)
         {
             invoiceId = invoiceId?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
@@ -170,7 +185,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(invoiceId, dentalId, status, createdDate, completedDate, paymentStatus),
+                predicate: BuildGetOrdersQuery(invoiceId, dentalId, dentistName, patientName, patientPhoneNumber, status, createdDate, completedDate, paymentStatus),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

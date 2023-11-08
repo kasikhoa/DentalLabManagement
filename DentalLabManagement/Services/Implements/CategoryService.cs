@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using DentalLabManagement.BusinessTier.Enums;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
-using DentalLabManagement.DataTier.Repository.Implement;
 
 namespace DentalLabManagement.API.Services.Implements
 {
