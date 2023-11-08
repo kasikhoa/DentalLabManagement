@@ -4,7 +4,6 @@ using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using LAK.Sdk.Core.Utilities;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DentalLabManagement.DataTier.Repository.Implement
 {

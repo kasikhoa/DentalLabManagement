@@ -114,7 +114,6 @@ public static class MessageConstant
         public const string UpdateFailedByStageMessage = "Các khâu sản xuất chưa hoàn thành";
         public const string OrderNotCompletedMessage = "Order chưa hoàn thành";
         public const string PaymentFailedMessage = "Thanh toán Order thất bại";
-        public const string OverPaymentMessage = "Số tiền thanh toán bị chênh lệch";
         public const string AmountErrorMessage = "Số tiền không hợp lệ";
         public const string OrderPaidFullMessage = "Order đã thanh toán đầy đủ";
         public const string OrderNotPaidMessage = "Order chưa thanh toán xong";

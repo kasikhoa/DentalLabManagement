@@ -25,7 +25,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string? Note { get; set; }
-        public OrderPaymentStatus? PaymentStatus { get; set; }
 
         public GetOrdersResponse()
         {

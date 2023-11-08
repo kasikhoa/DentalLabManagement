@@ -172,7 +172,7 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
         private Expression<Func<Order, bool>> BuildGetOrdersQuery(int dentalId, string? InvoiceId, 
-            OrderStatus? status, OrderPaymentStatus? paymentStatus)
+            OrderStatus? status)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -188,16 +188,10 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
             }
 
-            if (paymentStatus != null)
-            {
-                filterQuery = filterQuery.AndAlso(p => p.PaymentStatus.Equals(paymentStatus.GetDescriptionFromEnum()));
-            }
-
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderStatus? status, 
-            OrderPaymentStatus? paymentStatus, int page, int size)
+        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderStatus? status, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -227,9 +221,8 @@ namespace DentalLabManagement.API.Services.Implements
                     CreatedDate = x.CreatedDate,
                     CompletedDate = x.CompletedDate,
                     Note = x.Note,
-                    PaymentStatus = EnumUtil.ParseEnum<OrderPaymentStatus>(x.PaymentStatus),
                 },
-                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, status, paymentStatus),
+                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, status),
                 orderBy: x => x.OrderBy(x => x.InvoiceId),
                 page: page,
                 size: size

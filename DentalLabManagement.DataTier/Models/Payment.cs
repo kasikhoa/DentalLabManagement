@@ -15,7 +15,6 @@ namespace DentalLabManagement.DataTier.Models
         public string? Note { get; set; }
         public string PaymentType { get; set; } = null!;
         public double Amount { get; set; }
-        public double? RestAmount { get; set; }
         public DateTime PaymentTime { get; set; }
         public string Status { get; set; } = null!;
 

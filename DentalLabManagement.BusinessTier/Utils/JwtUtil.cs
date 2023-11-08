@@ -24,7 +24,7 @@ public class JwtUtil
             new Claim(JwtRegisteredClaimNames.Sub, account.UserName),
             new Claim(ClaimTypes.Role, account.Role),
         };
-        var expires = DateTime.Now.AddDays(1);
+        var expires = DateTime.Now.AddDays(10);
         var token = new JwtSecurityToken("DentalLab", null, claims, notBefore: DateTime.Now, expires, credentials);
         return jwtHandler.WriteToken(token);
     }
