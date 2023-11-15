@@ -29,10 +29,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.OrderItemStage.OrderItemStagesEndPoint)]
         [ProducesResponseType(typeof(OrderItemStageResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderItemStages(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId, 
-            DateTime? startTime, DateTime? completedTime, OrderItemStageStatus? status, OrderItemStageMode? mode, int page, int size)
+        public async Task<IActionResult> GetOrderItemStages([FromQuery] OrderItemStageFilter filter, int page, int size)
         {
-            var response = await _orderItemStageService.GetOrderItemStages(orderId, orderItemId, accountId, staffId, stageId, startTime, completedTime, status, mode, page, size);
+            var response = await _orderItemStageService.GetOrderItemStages(filter, page, size);
             return Ok(response);
         }
 

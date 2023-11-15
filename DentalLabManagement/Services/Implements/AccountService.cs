@@ -76,9 +76,14 @@ namespace DentalLabManagement.API.Services.Implements
                 request.Role, account.CurrentStageNavigation?.Name, EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
-        private Expression<Func<Account, bool>> BuildGetAccountsQuery(string? searchUsername, RoleEnum? role, int? stageId, AccountStatus? status)
+        private Expression<Func<Account, bool>> BuildGetAccountsQuery(AccountFilter filter)
         {
-            Expression<Func<Account, bool>> filterQuery = x => true; 
+            Expression<Func<Account, bool>> filterQuery = x => true;
+
+            var searchUsername = filter.username;
+            var role = filter.role;
+            var stageId = filter.stageId;
+            var status = filter.status;
 
             if (!string.IsNullOrEmpty(searchUsername))
             {
@@ -104,17 +109,15 @@ namespace DentalLabManagement.API.Services.Implements
         }
 
 
-        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, int? stageId, 
-            AccountStatus? status, int page, int size)
+        public async Task<IPaginate<GetAccountsResponse>> GetAccounts(AccountFilter filter, int page, int size)
         {
-            searchUsername = searchUsername?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
             IPaginate<GetAccountsResponse> accounts = await _unitOfWork.GetRepository<Account>().GetPagingListAsync(
                 selector: x => new GetAccountsResponse(x.Id, x.UserName, x.FullName, EnumUtil.ParseEnum<RoleEnum>(x.Role), x.CurrentStageNavigation.Name, 
                     EnumUtil.ParseEnum<AccountStatus>(x.Status)),
-                predicate: BuildGetAccountsQuery(searchUsername, role, stageId, status),
+                predicate: BuildGetAccountsQuery(filter),
                 orderBy: x => x.OrderBy(x => x.UserName),
                 page: page,
                 size: size

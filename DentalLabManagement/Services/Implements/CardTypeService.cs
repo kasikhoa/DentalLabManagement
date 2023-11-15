@@ -57,9 +57,14 @@ namespace DentalLabManagement.API.Services.Implements
                 cardType.Description, cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
         }
 
-        private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(int? categoryId, string? codeName, CardTypeStatus? status)
+        private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(CardTypeFilter filter)
         {
             Expression<Func<CardType, bool>> filterQuery = x => true;
+
+            var categoryId = filter.categoryId;
+            var codeName = filter.codeName;
+            var countryOrigin = filter.countryOrigin;
+            var status = filter.status;
 
             if (categoryId.HasValue)
             {
@@ -68,7 +73,12 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (!string.IsNullOrEmpty(codeName))
             {
-                filterQuery = filterQuery.AndAlso(x => x.CodeName.Equals(codeName));
+                filterQuery = filterQuery.AndAlso(x => x.CodeName.Contains(codeName));
+            }
+
+            if (!string.IsNullOrEmpty(countryOrigin))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CountryOrigin.Contains(countryOrigin));
             }
 
             if (status != null)
@@ -79,7 +89,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<CardTypeResponse>> GetCardTypes(int? categoryId, string? codeName, CardTypeStatus? status, int page, int size)
+        public async Task<IPaginate<CardTypeResponse>> GetCardTypes(CardTypeFilter filter, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -87,7 +97,7 @@ namespace DentalLabManagement.API.Services.Implements
             IPaginate<CardTypeResponse> result = await _unitOfWork.GetRepository<CardType>().GetPagingListAsync(
                 selector: x => new CardTypeResponse(x.Id, x.Category.Name, x.CodeName, x.CountryOrigin, x.WarrantyYear, x.Description,
                 x.Image, x.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(x.Status)),
-                predicate: BuildGetCardTypesQuery(categoryId, codeName, status),
+                predicate: BuildGetCardTypesQuery(filter),
                 page: page,
                 size: size
                 );

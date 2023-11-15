@@ -90,11 +90,11 @@ namespace DentalLabManagement.DataTier.Repository.Implement
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1, int size = 10, object filter = null)
         {
             IQueryable<T> query = _dbSet;
-            if(filter != null)
-            {
-                query.DynamicFilter(filter);
-            }
             if (include != null) query = include(query);
+            if (filter != null)
+            {
+                query = query.DynamicFilter(filter);
+            }           
             if (predicate != null) query = query.Where(predicate);
             if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
             return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);

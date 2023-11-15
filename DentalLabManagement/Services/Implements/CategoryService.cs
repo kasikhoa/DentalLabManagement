@@ -47,13 +47,16 @@ namespace DentalLabManagement.API.Services.Implements
                 categoryRequest.Status, newCategory.Image);
         }
 
-        private Expression<Func<Category, bool>> BuildGetCategoriesQuery(string? searchCategoryName, CategoryStatus? status)
+        private Expression<Func<Category, bool>> BuildGetCategoriesQuery(CategoryFilter filter)
         {
-            Expression<Func<Category, bool>> filterQuery = x => true; 
+            Expression<Func<Category, bool>> filterQuery = x => true;
 
-            if (!string.IsNullOrEmpty(searchCategoryName))
+            var searchName = filter.name;
+            var status = filter.status;
+
+            if (!string.IsNullOrEmpty(searchName))
             {
-                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchCategoryName));
+                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchName));
             }
 
             if (status != null)
@@ -64,16 +67,15 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size)
+        public async Task<IPaginate<CategoryResponse>> GetCategories(CategoryFilter filter, int page, int size)
         {
-            searchCategoryName = searchCategoryName?.Trim().ToLower();
-
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
             IPaginate<CategoryResponse> categories = await _unitOfWork.GetRepository<Category>().GetPagingListAsync(
                 selector: x => new CategoryResponse(x.Id, x.Name, x.Description, EnumUtil.ParseEnum<CategoryStatus>(x.Status), x.Image),
-                predicate: BuildGetCategoriesQuery(searchCategoryName, status),
+                filter: filter,
+                //predicate: BuildGetCategoriesQuery(filter),
                 page: page,
                 size: size
                 );

@@ -42,7 +42,7 @@ namespace DentalLabManagement.API.Services.Implements
                 throw new BadHttpRequestException(MessageConstant.TeethPosition.NameFormatMessage);
             teethPosition = new TeethPosition()
             {
-                ToothArch = Convert.ToInt32(teethPositionRequest.ToothArch),
+                ToothArch = (int)(teethPositionRequest.ToothArch),
                 PositionName = teethPositionRequest.PositionName,
                 Description = teethPositionRequest.Description,
                 Image = teethPositionRequest.Image
@@ -58,9 +58,12 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<TeethPosition, bool>> BuildGetPositionsQuery(string? positionName, ToothArch? toothArch)
+        private Expression<Func<TeethPosition, bool>> BuildGetPositionsQuery(TeethPositionFilter filter)
         {
-            Expression<Func<TeethPosition, bool>> filterQuery = x => true; 
+            Expression<Func<TeethPosition, bool>> filterQuery = x => true;
+
+            var positionName = filter.positionName;
+            var toothArch = filter.toothArch;
 
             if (!string.IsNullOrEmpty(positionName))
             {
@@ -69,22 +72,21 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (toothArch != null)
             {
-                filterQuery = filterQuery.AndAlso(x => x.ToothArch.Equals(Convert.ToInt32(toothArch)));
+                filterQuery = filterQuery.AndAlso(x => x.ToothArch.Equals((int)(toothArch)));
             }
 
             return filterQuery;
         }
 
-
-        public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(string? positionName, ToothArch? toothArch, int page, int size)
+        public async Task<IPaginate<TeethPositionResponse>> GetTeethPositions(TeethPositionFilter filter, int page, int size)
         {
-            positionName = positionName?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             IPaginate<TeethPositionResponse> response = await _unitOfWork.GetRepository<TeethPosition>().GetPagingListAsync(
                 selector: x => new TeethPositionResponse(x.Id, EnumUtil.ParseEnum<ToothArch>(x.ToothArch.ToString()),
                     x.PositionName, x.Description, x.Image),
-                predicate: BuildGetPositionsQuery(positionName, toothArch),
+                filter: filter,
+                //predicate: BuildGetPositionsQuery(filter),
                 page: page,
                 size: size
                 );
@@ -95,7 +97,8 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.TeethPosition.EmptyTeethPositionIdMessage);
             TeethPosition teethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id));
+                predicate: x => x.Id.Equals(id)
+                );
             if (teethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
             return new TeethPositionResponse(teethPosition.Id, EnumUtil.ParseEnum<ToothArch>(teethPosition.ToothArch.ToString()),
                 teethPosition.PositionName, teethPosition.Description, teethPosition.Image);
@@ -105,15 +108,16 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.TeethPosition.EmptyTeethPositionIdMessage);
             TeethPosition teethPosition = await _unitOfWork.GetRepository<TeethPosition>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id));
+                predicate: x => x.Id.Equals(id)
+                );
             if (teethPosition == null) throw new BadHttpRequestException(MessageConstant.TeethPosition.IdNotFoundMessage);
             request.TrimString();
 
-            if (!IsValidPositionName(request.PositionName))
+            if (!IsValidPositionName(request.PositionName) && !string.IsNullOrEmpty(request.PositionName))
                 throw new BadHttpRequestException(MessageConstant.TeethPosition.NameFormatMessage);
 
-            teethPosition.ToothArch = Convert.ToInt32(request.ToothArch);
-            teethPosition.PositionName = request.PositionName;
+            teethPosition.ToothArch = (int)(request.ToothArch);
+            teethPosition.PositionName = string.IsNullOrEmpty(request.PositionName) ? teethPosition.PositionName : request.PositionName;
             teethPosition.Description = string.IsNullOrEmpty(request.Description) ? teethPosition.Description : request.Description;
             teethPosition.Image = string.IsNullOrEmpty(request.Image) ? teethPosition.Image : request.Image;
 

@@ -13,7 +13,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     public interface IProductService
     {
         Task<ProductResponse> CreateProduct(ProductRequest productRequest);
-        Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size);
+        Task<IPaginate<ProductResponse>> GetProducts(ProductFilter filter, int page, int size);
         Task<ProductResponse> GetProductById(int productId);
         Task<bool> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
         Task<bool> UpdateProductStatus(int id);    

@@ -28,10 +28,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.WarrantyCard.WarrantyCardsEndPoint)]
         [ProducesResponseType(typeof(WarrantyCardResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetWarrantyCards(string? cardCode, int? cardTypeId, 
-            WarrantyCardStatus? status, int page, int size)
+        public async Task<IActionResult> GetWarrantyCards([FromQuery] WarrantyCardFilter filter, int page, int size)
         {
-            var response = await _warrantyCardService.GetWarrantyCards(cardCode, cardTypeId, status, page, size);
+            var response = await _warrantyCardService.GetWarrantyCards(filter, page, size);
             return Ok(response);
         }
 

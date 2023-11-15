@@ -20,9 +20,15 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(int? orderId, int? productId, int? teethPositionId, string? warrantyCardCode, OrderItemMode? mode)
+        private Expression<Func<OrderItem, bool>> BuildGetOrderItemsQuery(OrderItemFilter filter)
         {
-            Expression<Func<OrderItem, bool>> filterQuery = x => true; 
+            Expression<Func<OrderItem, bool>> filterQuery = x => true;
+
+            var orderId = filter.orderId;
+            var productId = filter.productId;
+            var teethPositionId = filter.teethPositionId;
+            var warrantyCardId = filter.warrantyCardId;
+            var mode = filter.mode;
 
             if (orderId.HasValue)
             {
@@ -39,9 +45,9 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.TeethPositionId.Equals(teethPositionId));
             }
 
-            if (!string.IsNullOrEmpty(warrantyCardCode))
+            if (warrantyCardId.HasValue)
             {
-                filterQuery = filterQuery.AndAlso(x => x.WarrantyCard.CardCode.Contains(warrantyCardCode));
+                filterQuery = filterQuery.AndAlso(x => x.WarrantyCardId.Equals(warrantyCardId));
             }
 
             if (mode != null)
@@ -52,7 +58,7 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(int? orderId, int? productId, int? teethPosition, string? warrantyCardCode, OrderItemMode? mode, int page, int size)
+        public async Task<IPaginate<GetOrderItemResponse>> GetOrderItems(OrderItemFilter filter, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -68,7 +74,7 @@ namespace DentalLabManagement.API.Services.Implements
                     WarrantyCardCode = x.WarrantyCard.CardCode,
                     Mode = EnumUtil.ParseEnum<OrderItemMode>(x.Mode), 
                 },
-                predicate: BuildGetOrderItemsQuery(orderId, productId, teethPosition, warrantyCardCode, mode),
+                predicate: BuildGetOrderItemsQuery(filter),
                 page: page,
                 size: size);
             return result;

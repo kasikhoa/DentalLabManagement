@@ -2,12 +2,10 @@
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Payload.Login;
-using Microsoft.AspNetCore.Authorization;
 using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Validators;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.BusinessTier.Error;
 using DentalLabManagement.BusinessTier.Payload.Dental;
 
 namespace DentalLabManagement.API.Controllers
@@ -49,10 +47,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Account.AccountsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<GetAccountsResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllAccount([FromQuery] string? username, [FromQuery] RoleEnum? role, int? stageId,
-            AccountStatus? status , [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllAccount([FromQuery] AccountFilter filter, [FromQuery] int page, [FromQuery] int size)
         {
-            var response = await _accountService.GetAccounts(username, role, stageId, status , page, size);
+            var response = await _accountService.GetAccounts(filter, page, size);
             return Ok(response);
         }
 

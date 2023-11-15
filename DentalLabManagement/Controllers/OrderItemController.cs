@@ -19,9 +19,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.OrderItem.OrderItemsEndPoint)]
         [ProducesResponseType(typeof(GetOrderItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderItems(int? orderId, int? productId, int? teethPositionId, string? warrantyCardCode, OrderItemMode? mode, int page, int size)
+        public async Task<IActionResult> GetOrderItems([FromQuery] OrderItemFilter filter, int page, int size)
         {
-            var response = await _orderItemService.GetOrderItems(orderId, productId, teethPositionId, warrantyCardCode, mode, page, size);
+            var response = await _orderItemService.GetOrderItems(filter, page, size);
             return Ok(response);
         }
 

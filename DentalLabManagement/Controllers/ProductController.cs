@@ -32,9 +32,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Product.ProductsEndPoint)]
         [ProducesResponseType(typeof(IPaginate<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllProducts(string? name, int? categoryId, ProductStatus? status, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllProducts([FromQuery] ProductFilter filter, [FromQuery] int page, [FromQuery] int size)
         {
-            var products = await _productService.GetProducts(name, categoryId, status, page, size);
+            var products = await _productService.GetProducts(filter, page, size);
             return Ok(products);
         }
 

@@ -43,9 +43,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Dental.DentalsEndPoint)]
         [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllDentals([FromQuery] string? name, DentalStatus? status, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllDentals([FromQuery] DentalFilter filter, [FromQuery] int page, [FromQuery] int size)
         {
-            var dentals = await _dentalService.GetDentals(name, status, page, size);
+            var dentals = await _dentalService.GetDentals(filter, page, size);
             return Ok(dentals);
         }
 
@@ -66,14 +66,6 @@ namespace DentalLabManagement.API.Controllers
             var isSuccessful = await _dentalService.UpdateDentalStatus(id);
             if (!isSuccessful) return Ok(MessageConstant.Dental.UpdateStatusFailedMessage);
             return Ok(MessageConstant.Dental.UpdateStatusSuccessMessage);
-        }
-
-        [HttpGet(ApiEndPointConstant.Dental.OrdersEndPoint)]
-        [ProducesResponseType(typeof(GetOrderDetailResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderDetail(int id, string? invoiceId, OrderStatus? status, int page, int size)
-        {
-            var response = await _dentalService.GetOrderDetails(id, invoiceId, status, page, size);
-            return Ok(response);
         }
     }
 }

@@ -31,9 +31,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.Category.CategoriesEndpoint)]
         [ProducesResponseType(typeof(IPaginate<CategoryResponse>), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> ViewAllCategories([FromQuery] string? name, CategoryStatus? status, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> ViewAllCategories([FromQuery] CategoryFilter filter, [FromQuery] int page, [FromQuery] int size)
         {
-            var categories = await _categoryService.GetCategories(name, status, page, size);
+            var categories = await _categoryService.GetCategories(filter, page, size);
             return Ok(categories);
         }
 

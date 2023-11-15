@@ -40,11 +40,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(GetOrdersResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrders(string? invoiceId, int? dentalId, string? dentistName, string? patientName, string? patientPhoneNumber, 
-            OrderStatus? status, DateTime? createdDate, DateTime? completedDate, int page, int size)
+        public async Task<IActionResult> GetOrders([FromQuery] OrderFilter filter, int page, int size)
         {
-            var response = await _orderService.GetOrders(invoiceId, dentalId, dentistName, patientName, patientPhoneNumber, 
-                status, createdDate, completedDate, page, size);
+            var response = await _orderService.GetOrders(filter, page, size);
             return Ok(response);
         }
 
@@ -67,10 +65,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrderPaymentsEndPoint)]
         [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetOrderPayments(int id, PaymentType? type, PaymentStatus? status, 
-            int page, int size)
+        public async Task<IActionResult> GetOrderPayments(int id, [FromQuery] PaymentFilter filter, int page, int size)
         {
-            var response = await _orderService.GetOrderPayments(id, type, status, page, size);
+            var response = await _orderService.GetOrderPayments(id, filter, page, size);
             return Ok(response);
         }
 
@@ -85,9 +82,9 @@ namespace DentalLabManagement.API.Controllers
 
         [HttpGet(ApiEndPointConstant.Order.OrderHistoryEndPoint)]
         [ProducesResponseType(typeof(OrderHistoryResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ViewOrderHistory(int id, OrderHistoryStatus? status, int page, int size)
+        public async Task<IActionResult> ViewOrderHistory(int id, [FromQuery] OrderHistoryFilter filter, int page, int size)
         {
-            var response = await _orderService.ViewOrderHistory(id, status, page, size);
+            var response = await _orderService.ViewOrderHistory(id, filter, page, size);
             return Ok(response);
         }
 

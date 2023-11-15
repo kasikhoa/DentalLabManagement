@@ -10,7 +10,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     {
         Task<LoginResponse?> Login(LoginRequest loginRequest);
         Task<GetAccountsResponse> CreateNewAccount(AccountRequest request);
-        Task<IPaginate<GetAccountsResponse>> GetAccounts(string? searchUsername, RoleEnum? role, int? stageId, AccountStatus? status , int page, int size);
+        Task<IPaginate<GetAccountsResponse>> GetAccounts(AccountFilter filter, int page, int size);
         Task<GetAccountsResponse> GetAccountDetail(int id);
         Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);        
         Task<bool> UpdateAccountStatus(int id);

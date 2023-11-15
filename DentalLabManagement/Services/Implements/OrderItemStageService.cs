@@ -21,10 +21,19 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId,
-            DateTime? startTime, DateTime? completedTime, OrderItemStageStatus? status, OrderItemStageMode? mode)
+        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(OrderItemStageFilter filter)
         {
-            Expression<Func<OrderItemStage, bool>> filterQuery = x => true;                 
+            Expression<Func<OrderItemStage, bool>> filterQuery = x => true;
+
+            var orderId = filter.orderId;
+            var orderItemId = filter.orderItemId;
+            var accountId = filter.accountId;
+            var staffId = filter.staffId;
+            var stageId = filter.stageId;
+            var startTime = filter.startTime;
+            var completedTime = filter.completedTime;
+            var status = filter.status;
+            var mode = filter.mode;
 
             if (orderId.HasValue)
             {
@@ -74,14 +83,13 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(int? orderId, int? orderItemId, int? accountId, int? staffId, int? stageId, 
-            DateTime? startTime, DateTime? completedTime, OrderItemStageStatus? status, OrderItemStageMode? mode, int page, int size)
+        public async Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(OrderItemStageFilter filter, int page, int size)
         {
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
-            int? currentStage = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(accountId),
+            filter.accountId = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(filter.accountId),
                 selector: x => x.CurrentStage
                 );
 
@@ -102,7 +110,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Note = x.Note,
                     Image = x.Image
                 },
-                predicate: BuildGetOrderItemStagesQuery(orderId, orderItemId, currentStage, staffId, stageId, startTime, completedTime, status, mode),
+                predicate: BuildGetOrderItemStagesQuery(filter),
                 page: page,
                 size: size
                 );

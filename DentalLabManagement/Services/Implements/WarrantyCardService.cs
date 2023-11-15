@@ -61,10 +61,13 @@ namespace DentalLabManagement.API.Services.Implements
             };
         }
 
-        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(string? cardCode, int? cardTypeId, 
-            WarrantyCardStatus? status)
+        private Expression<Func<WarrantyCard, bool>> BuildWarrantyCardsQuery(WarrantyCardFilter filter)
         {
             Expression<Func<WarrantyCard, bool>> filterQuery = x => true;
+
+            var cardCode = filter.cardCode;
+            var cardTypeId = filter.cardTypeId;
+            var status = filter.status;
 
             if (!string.IsNullOrEmpty(cardCode))
             {
@@ -84,10 +87,9 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(string? cardCode, int? cardTypeId, 
-            WarrantyCardStatus? status, int page, int size)
+        public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(WarrantyCardFilter filter, int page, int size)
         {
-            cardCode = cardCode?.Trim().ToLower();
+            //cardCode = cardCode?.Trim().ToLower();
 
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
@@ -112,7 +114,7 @@ namespace DentalLabManagement.API.Services.Implements
                     BrandUrl = x.CardType.BrandUrl,
                     Status = EnumUtil.ParseEnum<WarrantyCardStatus>(x.Status)
                 },
-                predicate: BuildWarrantyCardsQuery(cardCode, cardTypeId, status),
+                predicate: BuildWarrantyCardsQuery(filter),
                 page: page,
                 size: size
                 );

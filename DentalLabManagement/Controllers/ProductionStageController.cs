@@ -3,6 +3,7 @@ using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DentalLabManagement.BusinessTier.Payload.ProductionStage;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -28,9 +29,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpGet(ApiEndPointConstant.ProductStage.ProductStagesEndPoint)]
         [ProducesResponseType(typeof(ProductionStageResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> GetProductionStages([FromQuery] int? indexStage, [FromQuery] string? name, [FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetProductionStages([FromQuery] ProductionStageFilter filter, [FromQuery] int page, [FromQuery] int size)
         {
-            var productStage = await _productStageService.GetProductionStages(indexStage, name, page, size);
+            var productStage = await _productStageService.GetProductionStages(filter, page, size);
             return Ok(productStage);
         }
 

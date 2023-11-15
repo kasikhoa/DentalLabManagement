@@ -82,13 +82,22 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
    
-        private Expression<Func<Dental, bool>> BuildGetDentalsQuery(string? searchDentalName, DentalStatus? status)
+        private Expression<Func<Dental, bool>> BuildGetDentalsQuery(DentalFilter filter)
         {
-            Expression<Func<Dental, bool>> filterQuery = x => true; 
+            Expression<Func<Dental, bool>> filterQuery = x => true;
 
-            if (!string.IsNullOrEmpty(searchDentalName))
+            var searchName = filter.name;
+            var searchAddress = filter.address;
+            var status = filter.status;
+
+            if (!string.IsNullOrEmpty(searchName))
             {
-                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchDentalName));
+                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchName));
+            }
+
+            if (!string.IsNullOrEmpty(searchAddress))
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Address.Contains(searchAddress));
             }
 
             if (status != null)
@@ -99,14 +108,13 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<DentalResponse>> GetDentals(string? searchDentalName, DentalStatus? status, int page, int size)
+        public async Task<IPaginate<DentalResponse>> GetDentals(DentalFilter filter, int page, int size)
         {
-            searchDentalName = searchDentalName?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             IPaginate<DentalResponse> response = await _unitOfWork.GetRepository<Dental>().GetPagingListAsync(
                 selector: x => new DentalResponse(x.Id, x.Name, x.Address, EnumUtil.ParseEnum<DentalStatus>(x.Status), x.Account.UserName),
-                predicate: BuildGetDentalsQuery(searchDentalName, status),
+                predicate: BuildGetDentalsQuery(filter),
                 page: page,
                 size: size
                 );
@@ -171,63 +179,5 @@ namespace DentalLabManagement.API.Services.Implements
             return isSuccessful;
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(int dentalId, string? InvoiceId, 
-            OrderStatus? status)
-        {
-            Expression<Func<Order, bool>> filterQuery = p => true;
-
-            filterQuery = filterQuery.AndAlso(p => p.DentalId.Equals(dentalId));
-
-            if (!string.IsNullOrEmpty(InvoiceId))
-            {
-                filterQuery = filterQuery.AndAlso(p => p.InvoiceId.Contains(InvoiceId));
-            }
-
-            if (status != null)
-            {
-                filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
-            }
-
-            return filterQuery;
-        }
-
-        public async Task<IPaginate<GetOrdersResponse>> GetOrderDetails(int dentalId, string? InvoiceId, OrderStatus? status, int page, int size)
-        {
-            page = (page == 0) ? 1 : page;
-            size = (size == 0) ? 10 : size;
-            if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
-
-            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(dentalId)
-                );
-            if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
-
-            IPaginate<GetOrdersResponse> orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
-                selector: x => new GetOrdersResponse()
-                {
-                    Id = x.Id,
-                    InvoiceId = x.InvoiceId,
-                    DentalName = x.Dental.Name,
-                    DentistName = x.DentistName,
-                    DentistNote = x.DentistNote,
-                    PatientName = x.PatientName,
-                    PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
-                    PatientPhoneNumber = x.PatientPhoneNumber,
-                    Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
-                    TeethQuantity = x.TeethQuantity,
-                    TotalAmount = x.TotalAmount,
-                    Discount = x.Discount,
-                    FinalAmount = x.FinalAmount,
-                    CreatedDate = x.CreatedDate,
-                    CompletedDate = x.CompletedDate,
-                    Note = x.Note,
-                },
-                predicate: BuildGetOrdersQuery(dentalId, InvoiceId, status),
-                orderBy: x => x.OrderBy(x => x.InvoiceId),
-                page: page,
-                size: size
-            );
-            return orderList;
-        }
     }
 }

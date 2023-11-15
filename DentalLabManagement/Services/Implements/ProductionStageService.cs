@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
 using AutoMapper;
+using DentalLabManagement.BusinessTier.Payload.ProductionStage;
 
 namespace DentalLabManagement.API.Services.Implements
 {
@@ -55,9 +56,12 @@ namespace DentalLabManagement.API.Services.Implements
                 productionStage.Name, productionStage.Description, productionStage.ExecutionTime);
         }
 
-        private Expression<Func<ProductionStage, bool>> BuildGetStageQuery(int? index, string? name)
+        private Expression<Func<ProductionStage, bool>> BuildGetStageQuery(ProductionStageFilter filter)
         {
             Expression<Func<ProductionStage, bool>> filterQuery = p => true;
+
+            var index = filter.indexStage;
+            var name = filter.name;
            
             if (index.HasValue)
             {
@@ -72,14 +76,13 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-        public async Task<IPaginate<ProductionStageResponse>> GetProductionStages(int? index, string? name, int page, int size)
+        public async Task<IPaginate<ProductionStageResponse>> GetProductionStages(ProductionStageFilter filter, int page, int size)
         {
-            name = name?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
             IPaginate<ProductionStageResponse> response = await _unitOfWork.GetRepository<ProductionStage>().GetPagingListAsync
                 (selector: x => new ProductionStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: BuildGetStageQuery(index, name),
+                predicate: BuildGetStageQuery(filter),
                 orderBy: x => x.OrderBy(x => x.IndexStage),
                 page: page,
                 size: size

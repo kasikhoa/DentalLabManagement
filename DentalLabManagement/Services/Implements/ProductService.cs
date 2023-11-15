@@ -55,38 +55,53 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<ProductStatus>(newProduct.Status), newProduct.Image);
         }
 
-        private Expression<Func<Product, bool>> BuildGetProductsQuery(string? searchProductName, int? categoryId, ProductStatus? status)
+        private Expression<Func<Product, bool>> BuildGetProductsQuery(ProductFilter filter)
         {
-            Expression<Func<Product, bool>> filterQuery = x => true; 
+            Expression<Func<Product, bool>> filterQuery = x => true;
 
-            if (!string.IsNullOrEmpty(searchProductName))
+            var searchName = filter.name;
+            var categoryId = filter.categoryId;
+            var status = filter.status;
+            var minPrice = filter.minPrice;
+            var maxPrice = filter.maxPrice;
+
+            if (!string.IsNullOrEmpty(searchName))
             {
-                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchProductName));
+                filterQuery = filterQuery.AndAlso(x => x.Name.Contains(searchName));
             }
 
             if (categoryId.HasValue)
             {
                 filterQuery = filterQuery.AndAlso(x => x.CategoryId.Equals(categoryId));
+            }            
+            
+            if (minPrice.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CostPrice >= minPrice);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.CostPrice <= maxPrice);
             }
 
             if (status != null)
             {
                 filterQuery = filterQuery.AndAlso(x => x.Status.Equals(status.GetDescriptionFromEnum()));
-            }            
+            }
 
             return filterQuery;
         }
 
-        public async Task<IPaginate<ProductResponse>> GetProducts(string? searchProductName, int? categoryId, ProductStatus? status, int page, int size)
+        public async Task<IPaginate<ProductResponse>> GetProducts(ProductFilter filter, int page, int size)
         {
-            searchProductName = searchProductName?.Trim().ToLower();
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
                 selector: x => new ProductResponse(x.Id, x.Category.Name, x.Name, x.Description, x.CostPrice, 
                     EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
-                predicate: BuildGetProductsQuery(searchProductName, categoryId, status),
+                predicate: BuildGetProductsQuery(filter),
                 page: page,
                 size: size,
                 orderBy :x => x.OrderBy(x => x.CostPrice)

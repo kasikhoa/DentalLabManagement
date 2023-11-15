@@ -15,7 +15,7 @@ namespace DentalLabManagement.API.Services.Interfaces
     public interface ICategoryService
     {
         Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
-        Task<IPaginate<CategoryResponse>> GetCategories(string? searchCategoryName, CategoryStatus? status, int page, int size);
+        Task<IPaginate<CategoryResponse>> GetCategories(CategoryFilter filter, int page, int size);
         Task<CategoryResponse> GetCategoryById(int id);
         Task<bool> UpdateCategoryInformation(int categoryId, UpdateCategoryRequest request);
         Task<bool> CategoryMappingProductStage(int categoryId, List<int> request);
