@@ -9,7 +9,7 @@ namespace DentalLabManagement.BusinessTier.Payload.WarrantyCard
 {
     public class WarrantyCardFilter
     {
-        public string? cardCode { get; set; }
+        public string? cardCode { get; set; }       
         public int? cardTypeId { get; set; }
         public WarrantyCardStatus? status { get; set; }
     }

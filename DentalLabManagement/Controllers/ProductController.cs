@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Validators;
+using DentalLabManagement.API.Services.Implements;
+using DentalLabManagement.BusinessTier.Payload.ProductStage;
+using DentalLabManagement.BusinessTier.Payload.ProductionStage;
 
 namespace DentalLabManagement.API.Controllers
 {
@@ -56,11 +59,27 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Product.UpdateProductSuccessMessage);
         }
 
+        [HttpPost(ApiEndPointConstant.Product.ProductStageMapping)]
+        public async Task<IActionResult> CategoryMappingProductStage(int id, [FromBody] List<ProductStageMappingRequest> request)
+        {
+            bool isSuccessful = await _productService.ProductStageMapping(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.Product.StageForProductFailedMessage);
+            return Ok(MessageConstant.Product.StageForProductSuccessfulMessage);
+        }
+
+        [HttpGet(ApiEndPointConstant.Product.ProductStageMapping)]
+        [ProducesResponseType(typeof(IPaginate<StageMappingResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetStageByProduct(int id, string? name, int? indexStage, int page, int size)
+        {
+            var response = await _productService.GetStageByProduct(id, name, indexStage, page, size);
+            return Ok(response);
+        }
+
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Product.ProductEndPoint)]
-        public async Task<IActionResult> UpdateProductStatus(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var isSuccessful = await _productService.UpdateProductStatus(id);
+            var isSuccessful = await _productService.DeleteProduct(id);
             if (!isSuccessful) return Ok(MessageConstant.Product.UpdateStatusFailedMessage);
             return Ok(MessageConstant.Product.UpdateStatusSuccessMessage);
         }

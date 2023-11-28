@@ -42,7 +42,7 @@
           "dependencies": {
             "LAK.Sdk.Core": {
               "target": "Package",
-              "version": "[5.0.5, )"
+              "version": "[5.0.6, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

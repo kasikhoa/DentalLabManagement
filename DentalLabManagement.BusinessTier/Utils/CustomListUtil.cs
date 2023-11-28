@@ -2,7 +2,7 @@
 {
     public static class CustomListUtil
     {
-        public static (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) splitIdsToAddAndRemove(List<int> oldIds, List<int> newIds)
+        public static (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) SplitIdsToAddAndRemove(List<int> oldIds, List<int> newIds)
         {
             List<int> idsToAdd = new List<int>(newIds);
             List<int> idsToRemove = new List<int>(oldIds);
@@ -12,10 +12,12 @@
             List<int> listWithOutIdsToAdd = new List<int>();
 
             //This logic help to split new ids, keep old ids and deleted ids
-            newIds.ForEach(x => {
+            newIds.ForEach(x =>
+            {
                 oldIds.ForEach(y =>
                 {
-                    if (x.Equals(y)) {
+                    if (x.Equals(y))
+                    {
                         listWithOutIdsToAdd.Add(x);
                         idsToAdd.Remove(x);
                     }
@@ -26,14 +28,34 @@
             idsToKeep = listWithOutIdsToAdd;
 
             //This logic help to remove old ids, keep only ids to remove
-            oldIds.ForEach(x => {
+            oldIds.ForEach(x =>
+            {
                 listWithOutIdsToAdd.ForEach(y =>
                 {
                     if (x.Equals(y)) idsToRemove.Remove(x);
                 });
             });
-            
-            return(idsToRemove, idsToAdd, idsToKeep);
+
+            //foreach (var x in newIds)
+            //{
+            //    if (oldIds.Contains(x))
+            //    {
+            //        idsToRemove.Remove(x);
+            //        idsToAdd.Remove(x);
+            //        idsToKeep.Add(x);
+            //    }
+            //}
+
+            return (idsToRemove, idsToAdd, idsToKeep);
         }
+
+        //public static (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) SplitIdsToAddAndRemove(List<int> oldIds, List<int> newIds)
+        //{
+        //    List<int> idsToAdd = newIds.Except(oldIds).ToList();
+        //    List<int> idsToRemove = oldIds.Except(newIds).ToList();
+        //    List<int> idsToKeep = oldIds.Intersect(newIds).ToList();
+
+        //    return (idsToRemove, idsToAdd, idsToKeep);
+        //}
     }
 }

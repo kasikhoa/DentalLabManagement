@@ -12,6 +12,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
         public string? Name { get; set; }
         public string? Address { get; set; }
         public DentalStatus? Status { get; set; }
+        public int AccountId { get; set; }
 
         public void TrimString()
         {

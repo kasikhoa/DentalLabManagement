@@ -16,8 +16,10 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public string? patientName { get; set; }        
         public string? patientPhoneNumber { get; set; }
         public OrderStatus? status { get; set; }
-        public DateTime? createdDate { get; set; }
-        public DateTime? completedDate { get; set; }
+        public DateTime? createdDateFrom { get; set; }
+        public DateTime? createdDateTo { get; set; }
+        //public string? DateOperators { get; set; }
+
         //public string? DateType { get; set; }
         //public string? DateParam { get; set; }
         //public DateTime? From { get; set; }

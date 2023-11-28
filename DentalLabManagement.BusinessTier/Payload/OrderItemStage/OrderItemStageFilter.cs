@@ -14,8 +14,8 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
         public int? accountId { get; set; }
         public int? staffId { get; set; }
         public int? stageId { get; set; }
-        public DateTime? startTime { get; set; }
-        public DateTime? completedTime { get; set; }
+        public DateTime? timeFrom { get; set; }
+        public DateTime? timeTo { get; set; }
         public OrderItemStageStatus? status { get; set; }
         public OrderItemStageMode? mode { get; set; }
     }

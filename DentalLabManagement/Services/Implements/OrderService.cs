@@ -32,7 +32,6 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest)
         {
-
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(createOrderRequest.DentalId)
                 );
@@ -51,7 +50,7 @@ namespace DentalLabManagement.API.Services.Implements
                 DentistNote = createOrderRequest.DentistNote,
                 PatientName = createOrderRequest.PatientName,
                 PatientGender = createOrderRequest.PatientGender.GetDescriptionFromEnum(),
-                PatientPhoneNumber = string.IsNullOrEmpty(createOrderRequest.PatientPhoneNumber) ? null : createOrderRequest.PatientPhoneNumber,
+                PatientPhoneNumber = createOrderRequest.PatientPhoneNumber,
                 Status = OrderStatus.Pending.GetDescriptionFromEnum(),
                 TotalAmount = createOrderRequest.TotalAmount,
                 Discount = createOrderRequest.Discount,
@@ -91,7 +90,6 @@ namespace DentalLabManagement.API.Services.Implements
                 });
                 count++;
             });
-
             newOrder.TeethQuantity = count;
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
@@ -100,7 +98,6 @@ namespace DentalLabManagement.API.Services.Implements
                 EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), newOrder.PatientPhoneNumber,
                 EnumUtil.ParseEnum<OrderStatus>(newOrder.Status), newOrder.TeethQuantity,
                 newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.Note, newOrder.CreatedDate);
-
         }
 
         private Expression<Func<Order, bool>> BuildGetOrdersQuery(OrderFilter filter)
@@ -113,8 +110,8 @@ namespace DentalLabManagement.API.Services.Implements
             var patientName = filter.patientName;
             var patientPhoneNumber = filter.patientPhoneNumber;
             var status = filter.status;
-            var createdDate = filter.createdDate;
-            var completedDate = filter.completedDate;
+            var startDate = filter.createdDateFrom;
+            var endDate = filter.createdDateTo;
 
             if (!string.IsNullOrEmpty(invoiceId))
             {
@@ -146,14 +143,14 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(p => p.Status.Equals(status.GetDescriptionFromEnum()));
             }
 
-            if (createdDate != null)
+            if (startDate != null)
             {
-                filterQuery = filterQuery.AndAlso(p => p.CreatedDate >= createdDate);
+                filterQuery = filterQuery.AndAlso(p => p.CreatedDate >= startDate);
             }
 
-            if (completedDate != null)
+            if (endDate != null)
             {
-                filterQuery = filterQuery.AndAlso(p => p.CompletedDate <= completedDate);
+                filterQuery = filterQuery.AndAlso(p => p.CreatedDate <= endDate);
             }
 
             return filterQuery;
@@ -164,6 +161,7 @@ namespace DentalLabManagement.API.Services.Implements
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 
+            //RoleEnum userRole = EnumUtil.ParseEnum<RoleEnum>(GetRoleFromJwt());
             IPaginate<GetOrdersResponse> orderList = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: x => new GetOrdersResponse()
                 {
@@ -186,13 +184,12 @@ namespace DentalLabManagement.API.Services.Implements
                 },
                 //filter: filter,
                 predicate: BuildGetOrdersQuery(filter),
-                orderBy: x => x.OrderBy(x => x.InvoiceId),
+                //orderBy: x => (userRole == RoleEnum.Reception) ? x.OrderByDescending(x => x.CreatedDate) : x.OrderByDescending(x => x.InvoiceId),
                 page: page,
                 size: size
             );
             return orderList;
         }
-
 
         public async Task<GetOrderDetailResponse> GetOrderTeethDetail(int id)
         {
@@ -223,26 +220,13 @@ namespace DentalLabManagement.API.Services.Implements
                 Note = order.Note,
             };            
 
-            orderItemResponse.ToothList = (List<OrderItemResponse>)await _unitOfWork.GetRepository<OrderItem>()
+            orderItemResponse.ToothList = (List<OrderTeethResponse>) await _unitOfWork.GetRepository<OrderItem>()
                 .GetListAsync(
-                    selector: x => new OrderItemResponse()
+                    selector: x => new OrderTeethResponse()
                     {
-                        Id = x.Id,
-                        Product = new ProductResponse()
-                        {
-                            Id = x.ProductId,
-                            CategoryName = x.Product.Category.Name,
-                            Name = x.Product.Name,
-                            Description = x.Product.Description,
-                            CostPrice = x.Product.CostPrice                           
-                        },
-                        TeethPosition = new TeethPositionResponse()
-                        {
-                            Id = x.TeethPositionId,
-                            ToothArch = EnumUtil.ParseEnum<ToothArch>(x.TeethPosition.ToothArch.ToString()),
-                            PositionName = x.TeethPosition.PositionName,
-                            Description = x.TeethPosition.Description
-                        },
+                        OrderTeethId = x.Id,
+                        ProductName = x.Product.Name,
+                        TeethPosition = x.TeethPosition.PositionName,
                         Note = x.Note,
                         TotalAmount = x.TotalAmount
                     },
@@ -263,9 +247,7 @@ namespace DentalLabManagement.API.Services.Implements
                     },
                     predicate: x => x.OrderId.Equals(id)
                 );
-
             return orderItemResponse;
-
         }
 
         public async Task<bool> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest)
@@ -320,9 +302,9 @@ namespace DentalLabManagement.API.Services.Implements
 
                     foreach (var item in orderItems)
                     {
-                        ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
-                            predicate: p => p.CategoryId.Equals(item.Product.CategoryId),
-                            include: x => x.Include(x => x.ProductStage)
+                        ICollection<ProductStageMapping> stageList = await _unitOfWork.GetRepository<ProductStageMapping>().GetListAsync(
+                            predicate: p => p.ProductId.Equals(item.Product.Id),
+                            include: x => x.Include(x => x.Stage)
                             );
 
                         foreach (var itemStage in stageList)
@@ -330,10 +312,10 @@ namespace DentalLabManagement.API.Services.Implements
                             OrderItemStage newStage = new OrderItemStage()
                             {
                                 OrderItemId = item.Id,
-                                StageId = itemStage.ProductStage.Id,
+                                StageId = itemStage.Stage.Id,
                                 StartTime = currentTime,
-                                ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
-                                Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),                                                               
+                                ExpectedTime = currentTime.AddHours(itemStage.Stage.ExecutionTime),
+                                Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
                                 Mode = OrderItemMode.New.GetDescriptionFromEnum(),
                             };
                             orderItemStageList.Add(newStage);

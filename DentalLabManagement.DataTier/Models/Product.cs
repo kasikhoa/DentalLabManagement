@@ -8,6 +8,7 @@ namespace DentalLabManagement.DataTier.Models
         public Product()
         {
             OrderItems = new HashSet<OrderItem>();
+            ProductStageMappings = new HashSet<ProductStageMapping>();
         }
 
         public int Id { get; set; }
@@ -20,5 +21,6 @@ namespace DentalLabManagement.DataTier.Models
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<ProductStageMapping> ProductStageMappings { get; set; }
     }
 }

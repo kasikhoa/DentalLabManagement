@@ -14,7 +14,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     {
         public int Id { get; set; }
         public string? InvoiceId { get; set; }
-        public string DentalName { get; set; }
+        public string? DentalName { get; set; }
         public string? DentistName { get; set; }
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; }
@@ -28,15 +28,15 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
         public DateTime CreatedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string? Note { get; set; }
-        public List<OrderItemResponse> ToothList { get; set; } = new List<OrderItemResponse>();
+        public List<OrderTeethResponse> ToothList { get; set; } = new List<OrderTeethResponse>();
         public List<PaymentResponse> PaymentList { get; set; } = new List<PaymentResponse>();
     }
 
-    public class OrderItemResponse
+    public class OrderTeethResponse
     {
-        public int Id { get; set; }
-        public ProductResponse? Product { get; set; }
-        public TeethPositionResponse? TeethPosition { get; set; }
+        public int OrderTeethId { get; set; }
+        public string? ProductName { get; set; }
+        public string? TeethPosition { get; set; }
         public string? Note { get; set; }
         public double TotalAmount { get; set; }
 

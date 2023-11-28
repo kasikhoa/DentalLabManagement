@@ -8,7 +8,6 @@ namespace DentalLabManagement.BusinessTier.Payload.ProductionStage
 {
     public class ProductionStageFilter
     {
-        public int? indexStage { get; set; }
         public string? name { get; set; }
 
     }

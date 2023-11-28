@@ -25,7 +25,11 @@ namespace DentalLabManagement.API.Services.Implements
                 predicate: x => x.Id.Equals(request.CategoryId));
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage);
 
-            CardType newCardType = new CardType()
+            CardType newCardType = await _unitOfWork.GetRepository<CardType>().SingleOrDefaultAsync(
+                predicate: x => x.CodeName.Equals(request.CodeName));
+            if (newCardType != null) throw new BadHttpRequestException(MessageConstant.CardType.CardExistedMessage);
+          
+            newCardType = new CardType()
             {
                 CategoryId = category.Id,
                 CodeName = request.CodeName,

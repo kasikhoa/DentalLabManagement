@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "FRu+qRHZddWcL1YLAHVRYULOIyfBAN+PrI96U2Upr3rInnEqA9LFgBUsJjV5yl0mayf/mD3sIuxMgePXncUxbA==",
+  "dgSpecHash": "PXRXRnwskSiVYUBNKBTbUwA4Ysay37573uvUg2L4jjbc573XUiN9ATR93Zve7ev66pcsDzIp/CCCg4e+qDB4vQ==",
   "success": true,
   "projectFilePath": "D:\\FU\\SWD392_Dental Lab\\DentalLabManagement\\DentalLabManagement.BusinessTier\\DentalLabManagement.BusinessTier.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Admin\\.nuget\\packages\\lak.sdk.core\\5.0.5\\lak.sdk.core.5.0.5.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\lak.sdk.core\\5.0.6\\lak.sdk.core.5.0.6.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.22\\microsoft.aspnetcore.authorization.6.0.22.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http\\2.2.2\\microsoft.aspnetcore.http.2.2.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",

@@ -15,7 +15,7 @@ public static class MessageConstant
     {
         public const string AccountExisted = "Tài khoản đã tồn tại";
         public const string CreateAccountFailed = "Tạo tài khoản thất bại";
-        public const string CreateAccountWithWrongRoleMessage = "Please create with acceptent role";
+        public const string CreateAccountWithWrongRoleMessage = "Please create with acceptable role";
         public const string NotStaffMessage = "Bạn không phải Staff";
         public const string CreateStaffAccountFailMessage = "Tạo tài khoản nhân viên thất bại";
         public const string UserUnauthorizedMessage = "Bạn không được phép cập nhật status cho tài khoản này";
@@ -35,6 +35,7 @@ public static class MessageConstant
 
     public static class Dental
     {
+        public const string DentalNameExisted = "Dental Name đã tồn tại";
         public const string CreateDentalFailed = "Dental tạo mới thất bại";
         public const string EmptyDentalId = "Id không hợp lệ";
         public const string DentalNotFoundMessage = "Dental không có trong hệ thống";
@@ -52,9 +53,7 @@ public static class MessageConstant
         public const string EmptyCategoryIdMessage = "Category Id không hợp lệ";
         public const string CategoryNotFoundMessage = "Category không có trong hệ thống";
         public const string UpdateCategorySuccessMessage = "Category được cập nhật thành công";
-        public const string UpdateCategoryFailedMessage = "Category cập nhật thất bại";
-        public const string StageForCategorySuccessfulMessage = "Stage cho Category được cập nhật thành công";
-        public const string StageForCategoryFailedMessage = "Stage cho Category cập nhật thất bại";
+        public const string UpdateCategoryFailedMessage = "Category cập nhật thất bại";        
         public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
     }
@@ -69,6 +68,8 @@ public static class MessageConstant
         public const string ProductNotFoundMessage = "Product không tồn tại trong hệ thống";
         public const string UpdateStatusSuccessMessage = "Cập nhật trạng thái thành công";
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
+        public const string StageForProductSuccessfulMessage = "Stage cho Product được cập nhật thành công";
+        public const string StageForProductFailedMessage = "Stage cho Product cập nhật thất bại";
     }
 
     public static class ProductionStage
@@ -142,6 +143,7 @@ public static class MessageConstant
 
     public static class CardType
     {
+        public const string CardExistedMessage = "Thẻ đã tồn tại";
         public const string EmptyCardIdMessage = "Id của card không hợp lệ";
         public const string CreateCardFailedMessage = "Tạo mới thẻ thất bại";
         public const string CardNotFoundMessage = "Thẻ chưa có trong hệ thống";

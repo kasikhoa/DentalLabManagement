@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DentalLabManagement.API.Services;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
 using System.Text.RegularExpressions;

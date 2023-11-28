@@ -9,8 +9,6 @@ using DentalLabManagement.DataTier.Models;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.DataTier.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace DentalLabManagement.API.Services.Implements
@@ -89,8 +87,6 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(WarrantyCardFilter filter, int page, int size)
         {
-            //cardCode = cardCode?.Trim().ToLower();
-
             page = (page == 0) ? 1 : page;
             size = (size == 0) ? 10 : size;
 

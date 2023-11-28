@@ -17,12 +17,14 @@ using System.Threading.Tasks;
 using DentalLabManagement.BusinessTier.Enums;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
+using AutoMapper;
+using DentalLabManagement.BusinessTier.Payload.Product;
 
 namespace DentalLabManagement.API.Services.Implements
 {
     public class CategoryService : BaseService<CategoryService>, ICategoryService
     {
-        public CategoryService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CategoryService> logger, AutoMapper.IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
+        public CategoryService(IUnitOfWork<DentalLabManagementContext> unitOfWork, ILogger<CategoryService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(unitOfWork, logger, mapper, httpContextAccessor)
         {
         }
 
@@ -130,62 +132,9 @@ namespace DentalLabManagement.API.Services.Implements
             _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
-        }
+        }      
 
-        public async Task<bool> CategoryMappingProductStage(int categoryId, List<int> request)
-        {
-            List<int> currentExtraCategoriesId = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
-            selector: x => x.ProductStageId,
-            predicate: x => x.CategoryId.Equals(categoryId)
-            );
-
-            (List<int> idsToRemove, List<int> idsToAdd, List<int> idsToKeep) splittedExtraCategoriesIds 
-                = CustomListUtil.splitIdsToAddAndRemove(currentExtraCategoriesId, request);
-            //Handle add and remove to database
-            if (splittedExtraCategoriesIds.idsToAdd.Count > 0)
-            {
-                List<GroupStage> extraCategoriesToInsert = new List<GroupStage>();
-                splittedExtraCategoriesIds.idsToAdd.ForEach(id => extraCategoriesToInsert.Add(new GroupStage
-                {
-                    CategoryId = categoryId,
-                    ProductStageId = id
-                }));
-                await _unitOfWork.GetRepository<GroupStage>().InsertRangeAsync(extraCategoriesToInsert);
-            }
-
-            if (splittedExtraCategoriesIds.idsToRemove.Count > 0)
-            {
-                List<GroupStage> extraCategoriesToDelete = new List<GroupStage>();
-                extraCategoriesToDelete = (List<GroupStage>) await _unitOfWork.GetRepository<GroupStage>()
-                    .GetListAsync(predicate: x => x.CategoryId.Equals(categoryId) && splittedExtraCategoriesIds.idsToRemove.Contains(x.ProductStageId));
-
-                _unitOfWork.GetRepository<GroupStage>().DeleteRangeAsync(extraCategoriesToDelete);
-            }
-            bool isSuccesful = await _unitOfWork.CommitAsync() > 0;
-            return isSuccesful;
-        }
-
-        public async Task<IPaginate<ProductionStageResponse>> GetProductStageByCategory(int categoryId, int page, int size)
-        {
-            page = (page == 0) ? 1 : page;
-            size = (size == 0) ? 10 : size;
-
-            List<int> categoryIds = (List<int>) await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
-             selector: x => x.ProductStageId,
-             predicate: x => x.CategoryId.Equals(categoryId)
-             );
-
-            IPaginate<ProductionStageResponse> productStageResponse = await _unitOfWork.GetRepository<ProductionStage>().GetPagingListAsync(
-                selector: x => new ProductionStageResponse(x.Id, x.IndexStage, x.Name, x.Description, x.ExecutionTime),
-                predicate: x => categoryIds.Contains(x.Id),
-                orderBy: x => x.OrderBy(x => x.IndexStage),
-                page: page,
-                size: size
-                );
-            return productStageResponse;
-        }
-
-        public async Task<bool> UpdateCategoryStatus(int id)
+        public async Task<bool> DeleteCategory(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
 

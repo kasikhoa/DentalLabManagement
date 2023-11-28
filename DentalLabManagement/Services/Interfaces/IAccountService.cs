@@ -13,7 +13,7 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<IPaginate<GetAccountsResponse>> GetAccounts(AccountFilter filter, int page, int size);
         Task<GetAccountsResponse> GetAccountDetail(int id);
         Task<bool> UpdateAccountInformation(int id, UpdateAccountRequest updateAccountRequest);        
-        Task<bool> UpdateAccountStatus(int id);
+        Task<bool> DeleteAccount(int id);
         Task<DentalAccountResponse> GetDentalByAccountId(int accountId);
         Task<bool> UpdateStageStaff(int accountId, UpdateStageStaffRequest request);
     }

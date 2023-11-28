@@ -3,7 +3,6 @@ using DentalLabManagement.API.Extensions;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.BusinessTier.Payload.Order;
 using DentalLabManagement.BusinessTier.Payload.OrderItem;
 using DentalLabManagement.BusinessTier.Utils;
 using DentalLabManagement.DataTier.Models;
@@ -156,7 +155,7 @@ namespace DentalLabManagement.API.Services.Implements
                 throw new BadHttpRequestException(MessageConstant.WarrantyCard.CardNotMatchedCategoryMessage);
            
             orderItem.WarrantyCardId = updateRequest.WarrantyCardId;
-            warrantyCard.ExpDate = order.CompletedDate?.AddYears(warrantyCard.CardType.WarrantyYear);
+            if (warrantyCard.ExpDate == null) warrantyCard.ExpDate = order.CompletedDate?.AddYears(warrantyCard.CardType.WarrantyYear);
 
             _unitOfWork.GetRepository<OrderItem>().UpdateAsync(orderItem);
             _unitOfWork.GetRepository<WarrantyCard>().UpdateAsync(warrantyCard);
@@ -181,9 +180,9 @@ namespace DentalLabManagement.API.Services.Implements
 
             List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
 
-            ICollection<GroupStage> stageList = await _unitOfWork.GetRepository<GroupStage>().GetListAsync(
-                predicate: x => x.CategoryId.Equals(orderItem.Product.CategoryId),
-                include: x => x.Include(x => x.ProductStage)
+            ICollection<ProductStageMapping> stageList = await _unitOfWork.GetRepository<ProductStageMapping>().GetListAsync(
+                predicate: x => x.ProductId.Equals(orderItem.Product.CategoryId),
+                include: x => x.Include(x => x.Stage)
                 );
 
             foreach (var itemStage in stageList)
@@ -191,9 +190,9 @@ namespace DentalLabManagement.API.Services.Implements
                 OrderItemStage newStage = new OrderItemStage()
                 {
                     OrderItemId = orderItemId,
-                    StageId = itemStage.ProductStage.Id,
+                    StageId = itemStage.Stage.Id,
                     StartTime = currentTime,
-                    ExpectedTime = currentTime.AddHours(itemStage.ProductStage.ExecutionTime),
+                    ExpectedTime = currentTime.AddHours(itemStage.Stage.ExecutionTime),
                     Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
                     Mode = OrderItemMode.Warranty.GetDescriptionFromEnum(),
                 };

@@ -10,9 +10,8 @@ namespace DentalLabManagement.BusinessTier.Payload.Dental
 {
     public class DentalRequest
     {
-        public string DentalName { get; set; }
+        public string Name { get; set; }
         public string Address { get; set; }
-        public int AccountId { get; set; }
         
     }
 }

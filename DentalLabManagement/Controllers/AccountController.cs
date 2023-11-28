@@ -28,7 +28,7 @@ namespace DentalLabManagement.API.Controllers
             var loginResponse = await _accountService.Login(loginRequest);
             if (loginResponse == null) 
                 throw new BadHttpRequestException(MessageConstant.LoginMessage.InvalidUsernameOrPassword);
-            if (loginResponse.Status.Equals(AccountStatus.Deactivate)) 
+            if (loginResponse.Status == AccountStatus.Deactivate) 
                 throw new BadHttpRequestException(MessageConstant.LoginMessage.DeactivatedAccount);
             return Ok(loginResponse);
         }
@@ -86,9 +86,9 @@ namespace DentalLabManagement.API.Controllers
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Account.AccountEndPoint)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> UpdateAccountStatus(int id)
+        public async Task<IActionResult> DeleteAccount(int id)
         {
-            var isSuccessful = await _accountService.UpdateAccountStatus(id);
+            var isSuccessful = await _accountService.DeleteAccount(id);
             if (!isSuccessful) return Ok(MessageConstant.Account.UpdateAccountStatusFailedMessage);
             return Ok(MessageConstant.Account.UpdateAccountStatusSuccessfulMessage);
         }

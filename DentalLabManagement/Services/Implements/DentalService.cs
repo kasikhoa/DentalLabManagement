@@ -14,15 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
-using DentalLabManagement.BusinessTier.Payload.Order;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using DentalLabManagement.BusinessTier.Payload.Payment;
-using DentalLabManagement.BusinessTier.Payload.Product;
-using DentalLabManagement.BusinessTier.Payload.TeethPosition;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Drawing;
 using AutoMapper;
 
 namespace DentalLabManagement.API.Services.Implements
@@ -33,55 +25,43 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        public async Task<DentalResponse> CreateDentalAccount(DentalRequest dentalRequest)
+        public async Task<DentalResponse> CreateDentalAccount(DentalRequest request)
         {
-            if (dentalRequest.AccountId < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
-
-            Dental newDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync
-                (predicate: x => x.AccountId.Equals(dentalRequest.AccountId)
-                ); 
-            if (newDental != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
-
-            Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(dentalRequest.AccountId)
+            Dental newDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.Name.Equals(request.Name)
                 );
-            if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+            if (newDental != null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNameExisted);
 
-            if (account.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()))
+            newDental = new Dental()
             {
-                newDental = new Dental()
-                {
-                    Name = dentalRequest.DentalName,
-                    Address = dentalRequest.Address,
-                    Status = DentalStatus.Active.GetDescriptionFromEnum(),
-                    AccountId = dentalRequest?.AccountId,                  
-                };
-            } 
-            else throw new BadHttpRequestException(MessageConstant.Account.CreateAccountWithWrongRoleMessage);
+                Name = request.Name,
+                Address = request.Address,
+                Status = DentalStatus.Active.GetDescriptionFromEnum(),
+            };
 
             await _unitOfWork.GetRepository<Dental>().InsertAsync(newDental);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
 
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Dental.CreateDentalFailed);
             return new DentalResponse(newDental.Id, newDental.Name, newDental.Address,
-                EnumUtil.ParseEnum<DentalStatus>(newDental.Status), account.UserName);
+                EnumUtil.ParseEnum<DentalStatus>(newDental.Status), null);
         }
 
         public async Task<DentalResponse> GetDentalById(int dentalId)
         {
             if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
-            
+
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(dentalId),
                 include: x => x.Include(x => x.Account)
                 );
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
 
-            return new DentalResponse(dental.Id, dental.Name, dental.Address, 
+            return new DentalResponse(dental.Id, dental.Name, dental.Address,
                 EnumUtil.ParseEnum<DentalStatus>(dental.Status), dental.Account?.UserName);
 
         }
-   
+
         private Expression<Func<Dental, bool>> BuildGetDentalsQuery(DentalFilter filter)
         {
             Expression<Func<Dental, bool>> filterQuery = x => true;
@@ -126,23 +106,36 @@ namespace DentalLabManagement.API.Services.Implements
             if (dentalId < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
 
             Dental updateDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(dentalId));
+                predicate: x => x.Id.Equals(dentalId)
+                );
             if (updateDental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
+
+            Dental otherDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+                predicate: x => x.AccountId.Equals(request.AccountId) && x.Id != dentalId
+                );
+            if (otherDental != null) throw new BadHttpRequestException(MessageConstant.Account.AccountExisted);
 
             request.TrimString();
 
-            updateDental.Name = string.IsNullOrEmpty(request.Name) ? updateDental.Name : request.Name;
-            updateDental.Address = string.IsNullOrEmpty(request.Address) ? updateDental.Address : request.Address;
-            updateDental.Status = request.Status.GetDescriptionFromEnum();
-
             Account dentalAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(updateDental.AccountId));
+                predicate: x => x.Id.Equals(request.AccountId)
+                );
+            if (dentalAccount == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
 
-            if (dentalAccount != null && updateDental.Status.Equals(DentalStatus.Active.GetDescriptionFromEnum()))
+            else if (dentalAccount.Role.Equals(RoleEnum.Dental.GetDescriptionFromEnum()))
+            {
+                updateDental.Name = string.IsNullOrEmpty(request.Name) ? updateDental.Name : request.Name;
+                updateDental.Address = string.IsNullOrEmpty(request.Address) ? updateDental.Address : request.Address;
+                updateDental.Status = request.Status.GetDescriptionFromEnum();
+                updateDental.AccountId = request.AccountId;
+            }
+            else throw new BadHttpRequestException(MessageConstant.Account.CreateAccountWithWrongRoleMessage);
+
+            if (updateDental.Status.Equals(DentalStatus.Active.GetDescriptionFromEnum()))
             {
                 dentalAccount.Status = AccountStatus.Activate.GetDescriptionFromEnum();
             }
-            if (dentalAccount != null && updateDental.Status.Equals(DentalStatus.Inactive.GetDescriptionFromEnum()))
+            else
             {
                 dentalAccount.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
             }
@@ -151,10 +144,9 @@ namespace DentalLabManagement.API.Services.Implements
             _unitOfWork.GetRepository<Account>().UpdateAsync(dentalAccount);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
-
         }
 
-        public async Task<bool> UpdateDentalStatus(int id)
+        public async Task<bool> DeleteDental(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Dental.EmptyDentalId);
 
@@ -172,9 +164,9 @@ namespace DentalLabManagement.API.Services.Implements
             if (accountDental != null && dental.Status.Equals(DentalStatus.Inactive.GetDescriptionFromEnum()))
             {
                 accountDental.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
+                _unitOfWork.GetRepository<Account>().UpdateAsync(accountDental);
             }
-            _unitOfWork.GetRepository<Dental>().UpdateAsync(dental);
-            _unitOfWork.GetRepository<Account>().UpdateAsync(accountDental);
+            _unitOfWork.GetRepository<Dental>().UpdateAsync(dental);           
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             return isSuccessful;
         }

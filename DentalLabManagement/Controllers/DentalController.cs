@@ -61,9 +61,9 @@ namespace DentalLabManagement.API.Controllers
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Dental.DentalEndPoint)]
-        public async Task<IActionResult> UpdateProductStatus(int id)
+        public async Task<IActionResult> DeleteDental(int id)
         {
-            var isSuccessful = await _dentalService.UpdateDentalStatus(id);
+            var isSuccessful = await _dentalService.DeleteDental(id);
             if (!isSuccessful) return Ok(MessageConstant.Dental.UpdateStatusFailedMessage);
             return Ok(MessageConstant.Dental.UpdateStatusSuccessMessage);
         }

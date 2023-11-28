@@ -16,13 +16,14 @@ namespace DentalLabManagement.API
     {
         public static void Main(string[] args)
         {
-
             var builder = WebApplication.CreateBuilder(args);
-
-            
+           
             builder.Logging.ClearProviders();
 
-            builder.Configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .Build();
+
             builder.Services.AddDbContext<DentalLabManagementContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerDatabase"));

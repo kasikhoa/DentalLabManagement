@@ -1,6 +1,8 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.Product;
+using DentalLabManagement.BusinessTier.Payload.ProductionStage;
+using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.DataTier.Paginate;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<IPaginate<ProductResponse>> GetProducts(ProductFilter filter, int page, int size);
         Task<ProductResponse> GetProductById(int productId);
         Task<bool> UpdateProduct(int id, UpdateProductRequest updateProductRequest);
-        Task<bool> UpdateProductStatus(int id);    
+        Task<bool> ProductStageMapping(int productId, List<ProductStageMappingRequest> request);
+        Task<IPaginate<StageMappingResponse>> GetStageByProduct(int productId, string? name, int? indexStage, int page, int size);
+        Task<bool> DeleteProduct(int id);    
     }
 }

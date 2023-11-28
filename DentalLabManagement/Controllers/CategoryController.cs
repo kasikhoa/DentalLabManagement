@@ -53,29 +53,13 @@ namespace DentalLabManagement.API.Controllers
             var isSuccessful = await _categoryService.UpdateCategoryInformation(id, request);
             if (!isSuccessful) return Ok(MessageConstant.Category.UpdateCategoryFailedMessage);
             return Ok(MessageConstant.Category.UpdateCategorySuccessMessage);
-        }
-
-        [HttpPost(ApiEndPointConstant.Category.CategoryMappingProductStage)]
-        public async Task<IActionResult> CategoryMappingProductStage(int id, List<int> request)
-        {
-            bool isSuccessful = await _categoryService.CategoryMappingProductStage(id, request);
-            if (!isSuccessful) return Ok(MessageConstant.Category.StageForCategoryFailedMessage);
-            return Ok(MessageConstant.Category.StageForCategorySuccessfulMessage); 
-        }
-
-        [HttpGet(ApiEndPointConstant.Category.CategoryMappingProductStage)]
-        [ProducesResponseType(typeof(IPaginate<ProductionStageResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProductStageByCategory(int id, int page, int size)
-        {
-            var response = await _categoryService.GetProductStageByCategory(id, page, size);
-            return Ok(response);
-        }
+        }             
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpDelete(ApiEndPointConstant.Category.CategoryEndpoint)]
-        public async Task<IActionResult> UpdateCategoryStatus(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            var isSuccessful = await _categoryService.UpdateCategoryStatus(id);
+            var isSuccessful = await _categoryService.DeleteCategory(id);
             if (!isSuccessful) return Ok(MessageConstant.Category.UpdateStatusFailedMessage);
             return Ok(MessageConstant.Category.UpdateStatusSuccessMessage);
         }

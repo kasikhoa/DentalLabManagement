@@ -16,11 +16,11 @@
           "DentalLabManagement.BusinessTier.dll": {}
         }
       },
-      "LAK.Sdk.Core/5.0.5": {
+      "LAK.Sdk.Core/5.0.6": {
         "runtime": {
           "lib/net5.0/LAK.Sdk.Core.dll": {
-            "assemblyVersion": "5.0.5.0",
-            "fileVersion": "5.0.5.0"
+            "assemblyVersion": "5.0.6.0",
+            "fileVersion": "5.0.6.0"
           }
         }
       },
@@ -567,7 +567,7 @@
       },
       "DentalLabManagement.DataTier/1.0.0": {
         "dependencies": {
-          "LAK.Sdk.Core": "5.0.5",
+          "LAK.Sdk.Core": "5.0.6",
           "Microsoft.EntityFrameworkCore": "6.0.22",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.22"
         },
@@ -583,12 +583,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "LAK.Sdk.Core/5.0.5": {
+    "LAK.Sdk.Core/5.0.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-X6NdLkRqPQztQJxxGEieovMbrxRUF0TNM/HRz0cnooZP04gmEJtn7vuospd/raYyeNJqHfQMCvqtQgBCYQczpA==",
-      "path": "lak.sdk.core/5.0.5",
-      "hashPath": "lak.sdk.core.5.0.5.nupkg.sha512"
+      "sha512": "sha512-iyurYtETo+GcdOuS5g6OnvAKwR/K1759VJQSPeQAhpXfH+mrPIeAEGlQftz/7iLIboM6o8GM2xdHA1us7NgYNQ==",
+      "path": "lak.sdk.core/5.0.6",
+      "hashPath": "lak.sdk.core.5.0.6.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authorization/6.0.22": {
       "type": "package",

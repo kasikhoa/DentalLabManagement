@@ -67,8 +67,7 @@ namespace DentalLabManagement.API.Services.Implements
                 FullName = request.Name,
                 Role = EnumUtil.GetDescriptionFromEnum(request.Role),
                 Status = AccountStatus.Activate.GetDescriptionFromEnum(),
-            };
-            
+            };           
             await _unitOfWork.GetRepository<Account>().InsertAsync(account);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Account.CreateAccountFailed);
@@ -108,7 +107,6 @@ namespace DentalLabManagement.API.Services.Implements
             return filterQuery;
         }
 
-
         public async Task<IPaginate<GetAccountsResponse>> GetAccounts(AccountFilter filter, int page, int size)
         {
             page = (page == 0) ? 1 : page;
@@ -129,13 +127,19 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
-            Account updateAccount = await _unitOfWork.GetRepository<Account>()
-                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(id));
+            Account updateAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(id)
+                );
             if (updateAccount == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
-
+          
             updateAccount.FullName = string.IsNullOrEmpty(updateAccountRequest.FullName) ? updateAccount.FullName : updateAccountRequest.FullName.Trim();
             updateAccount.Password = string.IsNullOrEmpty(updateAccountRequest.Password) ? updateAccount.Password : PasswordUtil.HashPassword(updateAccountRequest.Password.Trim());
             updateAccount.Status = EnumUtil.GetDescriptionFromEnum(updateAccountRequest.Status);
+
+            if (updateAccount.Role == RoleEnum.Admin.GetDescriptionFromEnum() && updateAccountRequest.Status == AccountStatus.Deactivate)
+            {
+                throw new BadHttpRequestException(MessageConstant.Account.UserUnauthorizedMessage);
+            }
 
             _unitOfWork.GetRepository<Account>().UpdateAsync(updateAccount);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -174,13 +178,18 @@ namespace DentalLabManagement.API.Services.Implements
                 account.UserName, EnumUtil.ParseEnum<AccountStatus>(account.Status));
         }
 
-        public async Task<bool> UpdateAccountStatus(int id)
+        public async Task<bool> DeleteAccount(int id)
         {
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Account.EmptyAccountIdMessage);
 
             Account account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id));
             if (account == null) throw new BadHttpRequestException(MessageConstant.Account.AccountNotFoundMessage);
+
+            if (account.Role == RoleEnum.Admin.GetDescriptionFromEnum())
+            {
+                throw new BadHttpRequestException(MessageConstant.Account.UserUnauthorizedMessage);
+            }
 
             account.Status = AccountStatus.Deactivate.GetDescriptionFromEnum();
 
@@ -204,7 +213,8 @@ namespace DentalLabManagement.API.Services.Implements
             }
 
             ProductionStage stage = await _unitOfWork.GetRepository<ProductionStage>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(request.currentStage));
+                predicate: x => x.Id.Equals(request.currentStage)
+                );
             if (stage == null) throw new BadHttpRequestException(MessageConstant.ProductionStage.NotFoundMessage);
 
             account.CurrentStage = request.currentStage;
