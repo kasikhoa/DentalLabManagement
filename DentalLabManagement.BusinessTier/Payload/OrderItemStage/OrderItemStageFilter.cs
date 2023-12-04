@@ -18,5 +18,6 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItemStage
         public DateTime? timeTo { get; set; }
         public OrderItemStageStatus? status { get; set; }
         public OrderItemStageMode? mode { get; set; }
+        public ProductType? productType { get; set; }
     }
 }

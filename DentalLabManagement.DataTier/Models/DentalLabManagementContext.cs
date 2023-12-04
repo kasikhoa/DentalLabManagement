@@ -20,9 +20,11 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Dental> Dentals { get; set; } = null!;
+        public virtual DbSet<ExtraProductMapping> ExtraProductMappings { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderHistory> OrderHistories { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
+        public virtual DbSet<OrderItemHistory> OrderItemHistories { get; set; } = null!;
         public virtual DbSet<OrderItemStage> OrderItemStages { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
@@ -125,6 +127,23 @@ namespace DentalLabManagement.DataTier.Models
                     .HasConstraintName("FK_Dental_Account");
             });
 
+            modelBuilder.Entity<ExtraProductMapping>(entity =>
+            {
+                entity.ToTable("ExtraProductMapping");
+
+                entity.HasOne(d => d.ExtraProduct)
+                    .WithMany(p => p.ExtraProductMappingExtraProducts)
+                    .HasForeignKey(d => d.ExtraProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductExtraMapping_Product1");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ExtraProductMappingProducts)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductExtraMapping_Product");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order");
@@ -225,6 +244,27 @@ namespace DentalLabManagement.DataTier.Models
                     .HasConstraintName("FK_OrderItems_WarrantyCard");
             });
 
+            modelBuilder.Entity<OrderItemHistory>(entity =>
+            {
+                entity.ToTable("OrderItemHistory");
+
+                entity.Property(e => e.CompletedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Note).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.OrderItem)
+                    .WithMany(p => p.OrderItemHistories)
+                    .HasForeignKey(d => d.OrderItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItemHistory_OrderItem");
+            });
+
             modelBuilder.Entity<OrderItemStage>(entity =>
             {
                 entity.ToTable("OrderItemStage");
@@ -298,6 +338,10 @@ namespace DentalLabManagement.DataTier.Models
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
@@ -313,7 +357,7 @@ namespace DentalLabManagement.DataTier.Models
                     .WithMany(p => p.ProductStageMappings)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductStageMapping_Product");
+                    .HasConstraintName("FK_ProductStageMapping_Product1");
 
                 entity.HasOne(d => d.Stage)
                     .WithMany(p => p.ProductStageMappings)

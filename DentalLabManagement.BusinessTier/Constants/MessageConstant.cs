@@ -70,6 +70,9 @@ public static class MessageConstant
         public const string UpdateStatusFailedMessage = "Cập nhật trạng thái thất bại";
         public const string StageForProductSuccessfulMessage = "Stage cho Product được cập nhật thành công";
         public const string StageForProductFailedMessage = "Stage cho Product cập nhật thất bại";
+        public const string UpdateExtraProductSuccessfulMessage = "Extra Product được cập nhật thành công";
+        public const string UpdateExtraProductFailedMessage = "Extra Product được cập nhật thất bại";
+
     }
 
     public static class ProductionStage
@@ -137,6 +140,8 @@ public static class MessageConstant
         public const string OrderItemStageNotFoundMessage = "Không tìm thấy khâu sản xuất";
         public const string UpdateStatusStageSuccessMessage = "Cập nhật trạng thái khâu sản xuất thành công";
         public const string UpdateStatusStageFailedMessage = "Cập nhật trạng thái khâu sản xuất thất bại";
+        public const string TransferStageSuccessMessage = "Chuyển khâu sản xuất thành công";
+        public const string TransferStageFailedMessage = "Chuyển khâu sản xuất thất bại";
         public const string PreviousStageNotCompletedMessage = "Khâu sản xuất trước chưa hoàn thành";
 
     }

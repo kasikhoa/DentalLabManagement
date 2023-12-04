@@ -9,5 +9,6 @@ namespace DentalLabManagement.API.Services.Interfaces
         Task<bool> UpdateOrderItemStage(int orderItemStageId, UpdateOrderItemStageRequest request);
         Task<IPaginate<OrderItemStageResponse>> GetOrderItemStages(OrderItemStageFilter filter, int page, int size);
         Task<OrderItemStageResponse> GetOrderItemStageById(int id);
+        Task<bool> TransferStageToAnother(int id, TransferStageRequest request);
     }
 }

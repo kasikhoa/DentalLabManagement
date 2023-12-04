@@ -23,9 +23,9 @@ namespace DentalLabManagement.API.Controllers
         [HttpPost(ApiEndPointConstant.Dental.DentalsEndPoint)]
         [ProducesResponseType(typeof(DentalResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> CreateDentalAccount(DentalRequest dentalRequest)
+        public async Task<IActionResult> CreateDental(DentalRequest dentalRequest)
         {
-            var response = await _dentalService.CreateDentalAccount(dentalRequest);
+            var response = await _dentalService.CreateDental(dentalRequest);
             return Ok(response);
 
         }

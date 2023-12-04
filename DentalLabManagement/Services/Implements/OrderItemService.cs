@@ -28,6 +28,7 @@ namespace DentalLabManagement.API.Services.Implements
             var teethPositionId = filter.teethPositionId;
             var warrantyCardId = filter.warrantyCardId;
             var mode = filter.mode;
+            var productType = filter.productType;
 
             if (orderId.HasValue)
             {
@@ -54,6 +55,11 @@ namespace DentalLabManagement.API.Services.Implements
                 filterQuery = filterQuery.AndAlso(x => x.Mode.Equals(mode.GetDescriptionFromEnum()));
             }
 
+            if (productType != null)
+            {
+                filterQuery = filterQuery.AndAlso(x => x.Product.Type.Equals(productType.GetDescriptionFromEnum()));
+            }
+
             return filterQuery;
         }
 
@@ -74,6 +80,7 @@ namespace DentalLabManagement.API.Services.Implements
                     Mode = EnumUtil.ParseEnum<OrderItemMode>(x.Mode), 
                 },
                 predicate: BuildGetOrderItemsQuery(filter),
+                orderBy: x => x.OrderBy(x => x.Order.InvoiceId),
                 page: page,
                 size: size);
             return result;

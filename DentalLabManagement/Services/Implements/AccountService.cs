@@ -1,6 +1,5 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Utils;
@@ -19,6 +18,7 @@ using DentalLabManagement.API.Extensions;
 using DentalLabManagement.BusinessTier.Payload.Dental;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using DentalLabManagement.BusinessTier.Payload.Account;
 
 namespace DentalLabManagement.API.Services.Implements
 {

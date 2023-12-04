@@ -23,7 +23,7 @@ namespace DentalLabManagement.API.Controllers
 
         [CustomAuthorize(RoleEnum.Reception, RoleEnum.Dental)]
         [HttpPost(ApiEndPointConstant.Order.OrdersEndPoint)]
-        [ProducesResponseType(typeof(CreateOrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateNewOrder(CreateOrderRequest order)
         {
             var response = await _orderService.CreateNewOrder(order);

@@ -13,7 +13,8 @@ namespace DentalLabManagement.BusinessTier.Payload.Product
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double CostPrice { get; set; }       
+        public double CostPrice { get; set; }      
+        public ProductType Type { get; set; }
         public string? Image { get; set; }
     }
 }

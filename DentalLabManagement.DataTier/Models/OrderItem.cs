@@ -7,6 +7,7 @@ namespace DentalLabManagement.DataTier.Models
     {
         public OrderItem()
         {
+            OrderItemHistories = new HashSet<OrderItemHistory>();
             OrderItemStages = new HashSet<OrderItemStage>();
         }
 
@@ -23,6 +24,7 @@ namespace DentalLabManagement.DataTier.Models
         public virtual Product Product { get; set; } = null!;
         public virtual TeethPosition TeethPosition { get; set; } = null!;
         public virtual WarrantyCard? WarrantyCard { get; set; }
+        public virtual ICollection<OrderItemHistory> OrderItemHistories { get; set; }
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
     }
 }

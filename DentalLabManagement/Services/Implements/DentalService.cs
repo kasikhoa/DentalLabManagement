@@ -25,7 +25,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        public async Task<DentalResponse> CreateDentalAccount(DentalRequest request)
+        public async Task<DentalResponse> CreateDental(DentalRequest request)
         {
             Dental newDental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Name.Equals(request.Name)

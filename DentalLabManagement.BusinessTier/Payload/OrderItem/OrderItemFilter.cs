@@ -11,6 +11,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderItem
     {
         public int? orderId { get; set; }
         public int? productId { get; set; }
+        public ProductType? productType { get; set; }
         public int? teethPositionId { get; set; }
         public int? warrantyCardId { get; set; }
         public OrderItemMode? mode { get; set; }

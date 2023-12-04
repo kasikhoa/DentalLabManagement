@@ -13,7 +13,7 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest);
+        Task<int> CreateNewOrder(CreateOrderRequest createOrderRequest);
         Task<GetOrderDetailResponse> GetOrderTeethDetail(int id);
         Task<IPaginate<GetOrdersResponse>> GetOrders(OrderFilter filter, int page, int size);
         Task<bool> UpdateOrderStatus(int orderId, UpdateOrderRequest updateOrderRequest);

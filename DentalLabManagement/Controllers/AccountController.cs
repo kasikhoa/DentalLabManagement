@@ -2,11 +2,11 @@
 using DentalLabManagement.BusinessTier.Constants;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.BusinessTier.Payload.Login;
-using DentalLabManagement.BusinessTier.Payload.Account;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Validators;
 using DentalLabManagement.BusinessTier.Enums;
 using DentalLabManagement.BusinessTier.Payload.Dental;
+using DentalLabManagement.BusinessTier.Payload.Account;
 
 namespace DentalLabManagement.API.Controllers
 {

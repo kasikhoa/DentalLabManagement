@@ -41,6 +41,7 @@ public static class ApiEndPointConstant
         public const string ProductsEndPoint = ApiEndpoint + "/products";
         public const string ProductEndPoint = ProductsEndPoint + "/{id}";
         public const string ProductStageMapping = ProductEndPoint + "/productionStages";
+        public const string ExtraProductEndPoint = ProductEndPoint + "/extra-products";
     }
 
     public static class ProductStage
@@ -77,6 +78,7 @@ public static class ApiEndPointConstant
     {
         public const string OrderItemStagesEndPoint = ApiEndpoint + "/orderItemStages";
         public const string OrderItemStageEndPoint = OrderItemStagesEndPoint + "/{id}";
+        public const string TransferStageEndPoint = OrderItemStageEndPoint + "/transfer";
     }
 
     public static class CardType

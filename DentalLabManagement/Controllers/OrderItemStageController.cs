@@ -27,6 +27,14 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.OrderItemStage.UpdateStatusStageSuccessMessage);
         }
 
+        [HttpPatch(ApiEndPointConstant.OrderItemStage.TransferStageEndPoint)]
+        public async Task<IActionResult> TransferStageToAnother(int id, TransferStageRequest request)
+        {
+            var isSuccessful = await _orderItemStageService.TransferStageToAnother(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.OrderItemStage.TransferStageFailedMessage);
+            return Ok(MessageConstant.OrderItemStage.TransferStageSuccessMessage);
+        }
+
         [HttpGet(ApiEndPointConstant.OrderItemStage.OrderItemStagesEndPoint)]
         [ProducesResponseType(typeof(OrderItemStageResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetOrderItemStages([FromQuery] OrderItemStageFilter filter, int page, int size)

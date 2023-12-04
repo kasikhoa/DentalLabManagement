@@ -232,3 +232,4 @@ D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\AutoMapper.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\bin\Debug\net6.0\LAK.Sdk.Core.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement\obj\Debug\net6.0\DentalLabManagement.API.sourcelink.json

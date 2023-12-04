@@ -87,8 +87,9 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<CategoryResponse> GetCategoryById(int categoryId)
         {
             if (categoryId < 1) throw new BadHttpRequestException(MessageConstant.Category.EmptyCategoryIdMessage);
-            Category category = await _unitOfWork.GetRepository<Category>()
-                .SingleOrDefaultAsync(predicate: x => x.Id.Equals(categoryId));
+            Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
+                predicate: x => x.Id.Equals(categoryId)
+                );
             if (category == null) throw new BadHttpRequestException(MessageConstant.Category.CategoryNotFoundMessage); ;
             return new CategoryResponse(category.Id, category.Name, category.Description, 
                 EnumUtil.ParseEnum<CategoryStatus>(category.Status), category.Image);

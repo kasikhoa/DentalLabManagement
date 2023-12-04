@@ -8,6 +8,7 @@ namespace DentalLabManagement.DataTier.Models
         public int Id { get; set; }
         public int OrderItemId { get; set; }
         public int StageId { get; set; }
+        public int IndexStage { get; set; }
         public int? StaffId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime ExpectedTime { get; set; }

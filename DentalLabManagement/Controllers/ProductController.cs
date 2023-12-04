@@ -24,11 +24,11 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.Product.ProductsEndPoint)]
-        [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
-        public async Task<IActionResult> CreateProduct(ProductRequest productRequest)
+        public async Task<IActionResult> CreateNewProduct(ProductRequest productRequest)
         {
-            var response = await _productService.CreateProduct(productRequest);
+            var response = await _productService.CreateNewProduct(productRequest);
             return Ok(response);
         }
 
@@ -67,11 +67,27 @@ namespace DentalLabManagement.API.Controllers
             return Ok(MessageConstant.Product.StageForProductSuccessfulMessage);
         }
 
+        [HttpPost(ApiEndPointConstant.Product.ExtraProductEndPoint)]
+        public async Task<IActionResult> AddExtraProductsToProduct(int id, [FromBody] List<int> request)
+        {
+            bool isSuccessful = await _productService.AddExtraProductsToProduct(id, request);
+            if (!isSuccessful) return Ok(MessageConstant.Product.UpdateExtraProductFailedMessage);
+            return Ok(MessageConstant.Product.UpdateExtraProductSuccessfulMessage);
+        }
+
         [HttpGet(ApiEndPointConstant.Product.ProductStageMapping)]
         [ProducesResponseType(typeof(IPaginate<StageMappingResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetStageByProduct(int id, string? name, int? indexStage, int page, int size)
         {
             var response = await _productService.GetStageByProduct(id, name, indexStage, page, size);
+            return Ok(response);
+        }
+
+        [HttpGet(ApiEndPointConstant.Product.ExtraProductEndPoint)]
+        [ProducesResponseType(typeof(IPaginate<StageMappingResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetExtraProductsByProductId(int id, int page, int size)
+        {
+            var response = await _productService.GetExtraProductsByProductId(id, page, size);
             return Ok(response);
         }
 

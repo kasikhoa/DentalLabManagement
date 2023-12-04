@@ -30,7 +30,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        public async Task<CreateOrderResponse> CreateNewOrder(CreateOrderRequest createOrderRequest)
+        public async Task<int> CreateNewOrder(CreateOrderRequest createOrderRequest)
         {
             Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(createOrderRequest.DentalId)
@@ -59,7 +59,7 @@ namespace DentalLabManagement.API.Services.Implements
                 CreatedDate = currentTime,
             };
 
-            await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);            
+            await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
             await _unitOfWork.CommitAsync();
 
             OrderHistory orderHistory = new OrderHistory()
@@ -69,12 +69,11 @@ namespace DentalLabManagement.API.Services.Implements
                 CreatedBy = account.Id,
                 Note = newOrder.Note,
                 Status = newOrder.Status,
-                
+
             };
             await _unitOfWork.GetRepository<OrderHistory>().InsertAsync(orderHistory);
 
-            newOrder.InvoiceId = "E" + newOrder.Id.ToString("D6");
-            int count = 0;
+            newOrder.InvoiceId = NameConstant.Company.Name + newOrder.Id.ToString("D6");
 
             List<OrderItem> orderItems = new List<OrderItem>();
             createOrderRequest.ProductsList.ForEach(product =>
@@ -88,16 +87,33 @@ namespace DentalLabManagement.API.Services.Implements
                     TotalAmount = product.TotalAmount,
                     Mode = OrderItemMode.New.GetDescriptionFromEnum(),
                 });
-                count++;
+
+                if (product.Extras.Count > 0)
+                {
+                    product.Extras.ForEach(extra =>
+                    {
+                        orderItems.Add(new OrderItem()
+                        {
+                            OrderId = newOrder.Id,
+                            ProductId = extra.ProductId,
+                            TeethPositionId = product.TeethPositionId,
+                            Note = extra.Note,
+                            TotalAmount = extra.TotalAmount,
+                            Mode = OrderItemMode.New.GetDescriptionFromEnum()
+                        });
+                    });
+                }
             });
-            newOrder.TeethQuantity = count;
+            
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
-            return new CreateOrderResponse(newOrder.Id, newOrder.InvoiceId, dental.Name,
-                newOrder.DentistName, newOrder.DentistNote, newOrder.PatientName,
-                EnumUtil.ParseEnum<PatientGender>(newOrder.PatientGender), newOrder.PatientPhoneNumber,
-                EnumUtil.ParseEnum<OrderStatus>(newOrder.Status), newOrder.TeethQuantity,
-                newOrder.TotalAmount, newOrder.Discount, newOrder.FinalAmount, newOrder.Note, newOrder.CreatedDate);
+
+            var teethQuantity = await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
+                predicate: x => x.OrderId.Equals(newOrder.Id),
+                selector: x => x.TeethPositionId
+                );
+
+            return newOrder.Id;
         }
 
         private Expression<Func<Order, bool>> BuildGetOrdersQuery(OrderFilter filter)
@@ -174,7 +190,7 @@ namespace DentalLabManagement.API.Services.Implements
                     PatientGender = EnumUtil.ParseEnum<PatientGender>(x.PatientGender),
                     PatientPhoneNumber = x.PatientPhoneNumber,
                     Status = EnumUtil.ParseEnum<OrderStatus>(x.Status),
-                    TeethQuantity = x.TeethQuantity,
+                    TeethQuantity = x.OrderItems.Select(x => x.TeethPositionId).Distinct().Count(),
                     TotalAmount = x.TotalAmount,
                     Discount = x.Discount,
                     FinalAmount = x.FinalAmount,
@@ -196,7 +212,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Dental)
+                include: x => x.Include(x => x.Dental).Include(x => x.OrderItems)
                 );
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
@@ -211,16 +227,16 @@ namespace DentalLabManagement.API.Services.Implements
                 PatientGender = EnumUtil.ParseEnum<PatientGender>(order.PatientGender),
                 PatientPhoneNumber = order.PatientPhoneNumber,
                 Status = EnumUtil.ParseEnum<OrderStatus>(order.Status),
-                TeethQuantity = order.TeethQuantity,
+                TeethQuantity = order.OrderItems.Select(x => x.TeethPositionId).Distinct().Count(),
                 TotalAmount = order.TotalAmount,
                 Discount = order.Discount,
                 FinalAmount = order.FinalAmount,
                 CreatedDate = order.CreatedDate,
                 CompletedDate = order.CompletedDate,
                 Note = order.Note,
-            };            
+            };
 
-            orderItemResponse.ToothList = (List<OrderTeethResponse>) await _unitOfWork.GetRepository<OrderItem>()
+            orderItemResponse.ToothList = (List<OrderTeethResponse>)await _unitOfWork.GetRepository<OrderItem>()
                 .GetListAsync(
                     selector: x => new OrderTeethResponse()
                     {
@@ -233,7 +249,7 @@ namespace DentalLabManagement.API.Services.Implements
                     predicate: x => x.OrderId.Equals(id)
                 );
 
-            orderItemResponse.PaymentList = (List<PaymentResponse>) await _unitOfWork.GetRepository<Payment>()
+            orderItemResponse.PaymentList = (List<PaymentResponse>)await _unitOfWork.GetRepository<Payment>()
                 .GetListAsync(
                     selector: x => new PaymentResponse()
                     {
@@ -298,7 +314,7 @@ namespace DentalLabManagement.API.Services.Implements
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         throw new BadHttpRequestException(MessageConstant.Order.CanceledStatusRepeatMessage);
 
-                    List<OrderItemStage> orderItemStageList = new List<OrderItemStage>();
+                    List<OrderItemStage> listOrderItemStage = new List<OrderItemStage>();
 
                     foreach (var item in orderItems)
                     {
@@ -313,17 +329,18 @@ namespace DentalLabManagement.API.Services.Implements
                             {
                                 OrderItemId = item.Id,
                                 StageId = itemStage.Stage.Id,
+                                IndexStage = itemStage.IndexStage,
                                 StartTime = currentTime,
                                 ExpectedTime = currentTime.AddHours(itemStage.Stage.ExecutionTime),
                                 Status = OrderItemStageStatus.Waiting.GetDescriptionFromEnum(),
                                 Mode = OrderItemMode.New.GetDescriptionFromEnum(),
                             };
-                            orderItemStageList.Add(newStage);
+                            listOrderItemStage.Add(newStage);
                         }
 
                     }
 
-                    await _unitOfWork.GetRepository<OrderItemStage>().InsertRangeAsync(orderItemStageList);
+                    await _unitOfWork.GetRepository<OrderItemStage>().InsertRangeAsync(listOrderItemStage);
 
                     updateOrder.Status = updateOrderRequest.Status.GetDescriptionFromEnum();
                     updateOrder.Note = string.IsNullOrEmpty(updateOrderRequest.Note) ? updateOrder.Note : updateOrderRequest.Note;
@@ -339,12 +356,12 @@ namespace DentalLabManagement.API.Services.Implements
                     await _unitOfWork.GetRepository<OrderHistory>().InsertAsync(orderHistory);
                     _unitOfWork.GetRepository<Order>().UpdateAsync(updateOrder);
                     break;
-                    
+
                 case OrderStatus.Completed:
                     if (updateOrder.Status.Equals(OrderStatus.Canceled.GetDescriptionFromEnum()))
                         throw new BadHttpRequestException(MessageConstant.Order.CanceledStatusRepeatMessage);
 
-                    List<int> orderItemIds = (List<int>) await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
+                    List<int> orderItemIds = (List<int>)await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
                         selector: x => x.Id, predicate: x => x.OrderId.Equals(orderId));
 
                     ICollection<OrderItemStage> itemStageList = await _unitOfWork.GetRepository<OrderItemStage>().GetListAsync(
@@ -427,7 +444,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             Payment payment = await _unitOfWork.GetRepository<Payment>().SingleOrDefaultAsync(
                 predicate: x => x.OrderId.Equals(orderId));
-            if (payment != null) throw new BadHttpRequestException(MessageConstant.Order.OrderPaidFullMessage);        
+            if (payment != null) throw new BadHttpRequestException(MessageConstant.Order.OrderPaidFullMessage);
 
             if (!order.Status.Equals(OrderStatus.Completed.GetDescriptionFromEnum()))
                 throw new BadHttpRequestException(MessageConstant.Order.OrderNotCompletedMessage);
@@ -438,7 +455,7 @@ namespace DentalLabManagement.API.Services.Implements
             }
 
             payment = new Payment()
-            {               
+            {
                 OrderId = orderId,
                 Note = paymentRequest.Note,
                 PaymentType = paymentRequest.Type.GetDescriptionFromEnum(),
@@ -446,7 +463,7 @@ namespace DentalLabManagement.API.Services.Implements
                 PaymentTime = TimeUtils.GetCurrentSEATime(),
                 Status = PaymentStatus.Success.GetDescriptionFromEnum()
             };
-                     
+
             await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.Order.PaymentFailedMessage);
@@ -528,7 +545,7 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 OrderId = orderId,
                 CreatedDate = TimeUtils.GetCurrentSEATime(),
-                CreatedBy = account.Id,                
+                CreatedBy = account.Id,
                 Note = request.Note,
                 Status = OrderHistoryStatus.WarrantyRequest.GetDescriptionFromEnum()
             };
@@ -536,7 +553,7 @@ namespace DentalLabManagement.API.Services.Implements
             await _unitOfWork.GetRepository<OrderHistory>().InsertAsync(warrantyRequest);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) throw new BadHttpRequestException(MessageConstant.WarrantyRequest.WarrantyRequestFailedMessage);
-            return new OrderHistoryResponse(warrantyRequest.CreatedDate, account.FullName, warrantyRequest.CompletedDate, 
+            return new OrderHistoryResponse(warrantyRequest.CreatedDate, account.FullName, warrantyRequest.CompletedDate,
                 warrantyRequest.Note, EnumUtil.ParseEnum<OrderHistoryStatus>(warrantyRequest.Status));
         }
 
@@ -564,7 +581,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
             IPaginate<OrderHistoryResponse> result = await _unitOfWork.GetRepository<OrderHistory>().GetPagingListAsync(
-                selector: x => new OrderHistoryResponse(x.CreatedDate, x.CreatedByNavigation.FullName, x.CompletedDate, 
+                selector: x => new OrderHistoryResponse(x.CreatedDate, x.CreatedByNavigation.FullName, x.CompletedDate,
                     x.Note, EnumUtil.ParseEnum<OrderHistoryStatus>(x.Status)),
                 predicate: BuildGetOrderHistoryQuery(orderId, filter),
                 page: page,

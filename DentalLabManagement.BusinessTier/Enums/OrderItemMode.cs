@@ -9,6 +9,7 @@ namespace DentalLabManagement.BusinessTier.Enums
     public enum OrderItemMode
     {
         New,
+        Remake,
         Warranty
     }
 }

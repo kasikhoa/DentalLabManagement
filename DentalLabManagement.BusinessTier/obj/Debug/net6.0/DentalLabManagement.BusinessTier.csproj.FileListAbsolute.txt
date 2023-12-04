@@ -43,3 +43,4 @@ D:\FU\SWD392\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\refint\DentalLabManagement.BusinessTier.dll
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.pdb
 D:\FU\SWD392\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\ref\DentalLabManagement.BusinessTier.dll
+D:\FU\SWD392_Dental Lab\DentalLabManagement\DentalLabManagement.BusinessTier\obj\Debug\net6.0\DentalLabManagement.BusinessTier.sourcelink.json
