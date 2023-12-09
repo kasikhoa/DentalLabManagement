@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DentalLabManagement.DataTier.Models
 {
-    public partial class Dental
+    public partial class Partner
     {
-        public Dental()
+        public Partner()
         {
             Orders = new HashSet<Order>();
         }
@@ -14,6 +14,7 @@ namespace DentalLabManagement.DataTier.Models
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;
         public string Status { get; set; } = null!;
+        public string Type { get; set; } = null!;
         public int? AccountId { get; set; }
 
         public virtual Account? Account { get; set; }

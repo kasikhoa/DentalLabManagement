@@ -19,7 +19,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.WarrantyCard.WarrantyCardsEndPoint)]
-        [ProducesResponseType(typeof(CreateWarrantyCardResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateWarrantyCard(CreateWarrantyCardRequest request)
         {
             var response = await _warrantyCardService.CreateNewWarrantyCard(request);

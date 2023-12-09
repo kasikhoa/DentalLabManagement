@@ -5,7 +5,7 @@ using DentalLabManagement.BusinessTier.Payload.Login;
 using DentalLabManagement.DataTier.Paginate;
 using DentalLabManagement.BusinessTier.Validators;
 using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.BusinessTier.Payload.Dental;
+using DentalLabManagement.BusinessTier.Payload.Partner;
 using DentalLabManagement.BusinessTier.Payload.Account;
 
 namespace DentalLabManagement.API.Controllers
@@ -35,7 +35,7 @@ namespace DentalLabManagement.API.Controllers
 
         [CustomAuthorize(RoleEnum.Admin)]
         [HttpPost(ApiEndPointConstant.Account.AccountsEndPoint)]
-        [ProducesResponseType(typeof(GetAccountsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> CreateAccount(AccountRequest createNewAccountRequest)
         {
@@ -74,7 +74,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpGet(ApiEndPointConstant.Account.DentalAcccountEndPoint)]
-        [ProducesResponseType(typeof(DentalAccountResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PartnerAccountResponse), StatusCodes.Status200OK)]
         [ProducesErrorResponseType(typeof(UnauthorizedObjectResult))]
         public async Task<IActionResult> GetDentalByAccountId(int id)
         {

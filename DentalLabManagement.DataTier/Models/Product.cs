@@ -11,6 +11,7 @@ namespace DentalLabManagement.DataTier.Models
             ExtraProductMappingProducts = new HashSet<ExtraProductMapping>();
             OrderItems = new HashSet<OrderItem>();
             ProductStageMappings = new HashSet<ProductStageMapping>();
+            PromotionProductMappings = new HashSet<PromotionProductMapping>();
         }
 
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace DentalLabManagement.DataTier.Models
         public virtual ICollection<ExtraProductMapping> ExtraProductMappingProducts { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<ProductStageMapping> ProductStageMappings { get; set; }
+        public virtual ICollection<PromotionProductMapping> PromotionProductMappings { get; set; }
     }
 }

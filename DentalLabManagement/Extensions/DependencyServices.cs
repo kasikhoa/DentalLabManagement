@@ -29,13 +29,14 @@ namespace DentalLabManagement.API.Extensions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductionStageService, ProductionStageService>();
-            services.AddScoped<IDentalService, DentalService>();
+            services.AddScoped<IPartnerService, PartnerService>();
             services.AddScoped<ITeethPositionServices, TeethPositionService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderItemStageService, OrderItemStageService>();
             services.AddScoped<IWarrantyCardService, WarrantyCardService>();
             services.AddScoped<IOrderItemService, OrderItemService>();
             services.AddScoped<ICardTypeService, CardTypeService>();
+            services.AddScoped<IMaterialStockService, MaterialStockService>();
             return services;
         }
 

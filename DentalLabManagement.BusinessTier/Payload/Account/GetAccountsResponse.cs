@@ -1,5 +1,4 @@
 ﻿using DentalLabManagement.BusinessTier.Enums;
-using DentalLabManagement.DataTier.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

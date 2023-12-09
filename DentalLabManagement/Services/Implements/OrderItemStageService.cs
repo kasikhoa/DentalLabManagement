@@ -21,7 +21,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        private Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(OrderItemStageFilter filter)
+        private static Expression<Func<OrderItemStage, bool>> BuildGetOrderItemStagesQuery(OrderItemStageFilter filter)
         {
             Expression<Func<OrderItemStage, bool>> filterQuery = x => true;
 
@@ -104,9 +104,9 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Id = x.Id,
                     OrderItemId = x.OrderItemId,
-                    StaffName = x.Staff.FullName,
+                    StaffId = x.StaffId,
                     IndexStage = x.IndexStage,
-                    StageName = x.Stage.Name,
+                    StageId = x.StageId,
                     Description = x.Stage.Description,
                     StartTime = x.StartTime,
                     ExpectedTime = x.ExpectedTime,
@@ -129,8 +129,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (id < 1) throw new BadHttpRequestException(MessageConstant.OrderItemStage.EmptyOrderItemStageIdMessage);
 
             OrderItemStage orderItemStage = await _unitOfWork.GetRepository<OrderItemStage>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Staff).Include(x => x.Stage.ProductStageMappings)
+                predicate: x => x.Id.Equals(id)
                 );
             if (orderItemStage == null) throw new BadHttpRequestException(MessageConstant.OrderItemStage.OrderItemStageNotFoundMessage);
 
@@ -138,9 +137,9 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 Id = orderItemStage.Id,
                 OrderItemId = orderItemStage.OrderItemId,
-                StaffName = orderItemStage.Staff?.FullName,
+                StaffId = orderItemStage.StaffId,
                 IndexStage = orderItemStage.IndexStage,
-                StageName = orderItemStage.Stage.Name,
+                StageId = orderItemStage.StageId,
                 Description = orderItemStage.Stage.Description,
                 StartTime = orderItemStage.StartTime,
                 ExpectedTime = orderItemStage.ExpectedTime,
@@ -277,7 +276,8 @@ namespace DentalLabManagement.API.Services.Implements
             Account staff = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(request.StaffId)
                 );
-            if (!staff.Role.Equals(RoleEnum.Staff.GetDescriptionFromEnum())) throw new BadHttpRequestException(MessageConstant.Account.StaffNotFoundMessage);
+            if (!staff.Role.Equals(RoleEnum.Staff.GetDescriptionFromEnum())) 
+                throw new BadHttpRequestException(MessageConstant.Account.StaffNotFoundMessage);
 
             updateStage.StaffId = request.StaffId;
             updateStage.Status = OrderItemStageStatus.Pending.GetDescriptionFromEnum();

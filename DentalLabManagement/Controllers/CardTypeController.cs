@@ -19,7 +19,7 @@ namespace DentalLabManagement.API.Controllers
         }
 
         [HttpPost(ApiEndPointConstant.CardType.CardTypesEndPoint)]
-        [ProducesResponseType(typeof(CardTypeResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateCardType(CardTypeRequest request)
         {
             var response = await _cardTypeService.CreateCardType(request);

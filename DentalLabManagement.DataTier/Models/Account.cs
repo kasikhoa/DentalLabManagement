@@ -7,9 +7,9 @@ namespace DentalLabManagement.DataTier.Models
     {
         public Account()
         {
-            Dentals = new HashSet<Dental>();
             OrderHistories = new HashSet<OrderHistory>();
             OrderItemStages = new HashSet<OrderItemStage>();
+            Partners = new HashSet<Partner>();
         }
 
         public int Id { get; set; }
@@ -21,8 +21,8 @@ namespace DentalLabManagement.DataTier.Models
         public string Status { get; set; } = null!;
 
         public virtual ProductionStage? CurrentStageNavigation { get; set; }
-        public virtual ICollection<Dental> Dentals { get; set; }
         public virtual ICollection<OrderHistory> OrderHistories { get; set; }
         public virtual ICollection<OrderItemStage> OrderItemStages { get; set; }
+        public virtual ICollection<Partner> Partners { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         public async Task<int> CreateNewOrder(CreateOrderRequest createOrderRequest)
         {
-            Dental dental = await _unitOfWork.GetRepository<Dental>().SingleOrDefaultAsync(
+            Partner dental = await _unitOfWork.GetRepository<Partner>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(createOrderRequest.DentalId)
                 );
             if (dental == null) throw new BadHttpRequestException(MessageConstant.Dental.DentalNotFoundMessage);
@@ -45,7 +45,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             Order newOrder = new Order()
             {
-                DentalId = dental.Id,
+                PartnerId = dental.Id,
                 DentistName = createOrderRequest.DentistName,
                 DentistNote = createOrderRequest.DentistNote,
                 PatientName = createOrderRequest.PatientName,
@@ -61,6 +61,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             await _unitOfWork.GetRepository<Order>().InsertAsync(newOrder);
             await _unitOfWork.CommitAsync();
+            newOrder.InvoiceId = NameConstant.Company.Name + newOrder.Id.ToString("D6");
 
             OrderHistory orderHistory = new OrderHistory()
             {
@@ -72,8 +73,6 @@ namespace DentalLabManagement.API.Services.Implements
 
             };
             await _unitOfWork.GetRepository<OrderHistory>().InsertAsync(orderHistory);
-
-            newOrder.InvoiceId = NameConstant.Company.Name + newOrder.Id.ToString("D6");
 
             List<OrderItem> orderItems = new List<OrderItem>();
             createOrderRequest.ProductsList.ForEach(product =>
@@ -104,19 +103,14 @@ namespace DentalLabManagement.API.Services.Implements
                     });
                 }
             });
-            
+
             await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
             await _unitOfWork.CommitAsync();
-
-            var teethQuantity = await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
-                predicate: x => x.OrderId.Equals(newOrder.Id),
-                selector: x => x.TeethPositionId
-                );
 
             return newOrder.Id;
         }
 
-        private Expression<Func<Order, bool>> BuildGetOrdersQuery(OrderFilter filter)
+        private static Expression<Func<Order, bool>> BuildGetOrdersQuery(OrderFilter filter)
         {
             Expression<Func<Order, bool>> filterQuery = p => true;
 
@@ -136,7 +130,7 @@ namespace DentalLabManagement.API.Services.Implements
 
             if (dentalId != null)
             {
-                filterQuery = filterQuery.AndAlso(p => p.DentalId.Equals(dentalId));
+                filterQuery = filterQuery.AndAlso(p => p.PartnerId.Equals(dentalId));
             }
 
             if (!string.IsNullOrEmpty(dentistName))
@@ -183,7 +177,7 @@ namespace DentalLabManagement.API.Services.Implements
                 {
                     Id = x.Id,
                     InvoiceId = x.InvoiceId,
-                    DentalName = x.Dental.Name,
+                    DentalId = x.PartnerId,
                     DentistName = x.DentistName,
                     DentistNote = x.DentistNote,
                     PatientName = x.PatientName,
@@ -212,7 +206,7 @@ namespace DentalLabManagement.API.Services.Implements
             if (id < 1) throw new BadHttpRequestException(MessageConstant.Order.EmptyOrderIdMessage);
             Order order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(id),
-                include: x => x.Include(x => x.Dental).Include(x => x.OrderItems)
+                include: x => x.Include(x => x.Partner).Include(x => x.OrderItems)
                 );
             if (order == null) throw new BadHttpRequestException(MessageConstant.Order.OrderNotFoundMessage);
 
@@ -220,7 +214,7 @@ namespace DentalLabManagement.API.Services.Implements
             {
                 Id = order.Id,
                 InvoiceId = order.InvoiceId,
-                DentalName = order.Dental.Name,
+                DentalName = order.Partner.Name,
                 DentistName = order.DentistName,
                 DentistNote = order.DentistNote,
                 PatientName = order.PatientName,
@@ -234,9 +228,8 @@ namespace DentalLabManagement.API.Services.Implements
                 CreatedDate = order.CreatedDate,
                 CompletedDate = order.CompletedDate,
                 Note = order.Note,
-            };
 
-            orderItemResponse.ToothList = (List<OrderTeethResponse>)await _unitOfWork.GetRepository<OrderItem>()
+                ToothList = (List<OrderTeethResponse>)await _unitOfWork.GetRepository<OrderItem>()
                 .GetListAsync(
                     selector: x => new OrderTeethResponse()
                     {
@@ -247,9 +240,9 @@ namespace DentalLabManagement.API.Services.Implements
                         TotalAmount = x.TotalAmount
                     },
                     predicate: x => x.OrderId.Equals(id)
-                );
+                ),
 
-            orderItemResponse.PaymentList = (List<PaymentResponse>)await _unitOfWork.GetRepository<Payment>()
+                PaymentList = (List<PaymentResponse>)await _unitOfWork.GetRepository<Payment>()
                 .GetListAsync(
                     selector: x => new PaymentResponse()
                     {
@@ -262,7 +255,8 @@ namespace DentalLabManagement.API.Services.Implements
                         Status = EnumUtil.ParseEnum<PaymentStatus>(x.Status),
                     },
                     predicate: x => x.OrderId.Equals(id)
-                );
+                )
+            };
             return orderItemResponse;
         }
 
@@ -557,7 +551,7 @@ namespace DentalLabManagement.API.Services.Implements
                 warrantyRequest.Note, EnumUtil.ParseEnum<OrderHistoryStatus>(warrantyRequest.Status));
         }
 
-        private Expression<Func<OrderHistory, bool>> BuildGetOrderHistoryQuery(int orderId, OrderHistoryFilter filter)
+        private static Expression<Func<OrderHistory, bool>> BuildGetOrderHistoryQuery(int orderId, OrderHistoryFilter filter)
         {
             Expression<Func<OrderHistory, bool>> filterQuery = p => p.OrderId.Equals(orderId);
 

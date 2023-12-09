@@ -11,7 +11,7 @@ namespace DentalLabManagement.BusinessTier.Payload.Order
     {
         public int Id { get; set; }
         public string? InvoiceId { get; set; }
-        public string DentalName { get; set; }
+        public int DentalId { get; set; }
         public string? DentistName { get; set; }
         public string? DentistNote { get; set; }
         public string? PatientName { get; set; }

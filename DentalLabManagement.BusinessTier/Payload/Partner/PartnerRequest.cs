@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Payload.Dental
+namespace DentalLabManagement.BusinessTier.Payload.Partner
 {
-    public class DentalRequest
+    public class PartnerRequest
     {
         public string Name { get; set; }
         public string Address { get; set; }
+        public PartnerType Type { get; set; }
         
     }
 }

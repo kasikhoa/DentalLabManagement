@@ -19,17 +19,23 @@ namespace DentalLabManagement.DataTier.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
-        public virtual DbSet<Dental> Dentals { get; set; } = null!;
+        public virtual DbSet<ExportMaterial> ExportMaterials { get; set; } = null!;
         public virtual DbSet<ExtraProductMapping> ExtraProductMappings { get; set; } = null!;
+        public virtual DbSet<ImportMaterial> ImportMaterials { get; set; } = null!;
+        public virtual DbSet<MaterialStock> MaterialStocks { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderHistory> OrderHistories { get; set; } = null!;
         public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<OrderItemHistory> OrderItemHistories { get; set; } = null!;
         public virtual DbSet<OrderItemStage> OrderItemStages { get; set; } = null!;
+        public virtual DbSet<Partner> Partners { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductStageMapping> ProductStageMappings { get; set; } = null!;
         public virtual DbSet<ProductionStage> ProductionStages { get; set; } = null!;
+        public virtual DbSet<Promotion> Promotions { get; set; } = null!;
+        public virtual DbSet<PromotionOrderMapping> PromotionOrderMappings { get; set; } = null!;
+        public virtual DbSet<PromotionProductMapping> PromotionProductMappings { get; set; } = null!;
         public virtual DbSet<TeethPosition> TeethPositions { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<WarrantyCard> WarrantyCards { get; set; } = null!;
@@ -111,20 +117,23 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Status).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Dental>(entity =>
+            modelBuilder.Entity<ExportMaterial>(entity =>
             {
-                entity.ToTable("Dental");
+                entity.HasNoKey();
 
-                entity.Property(e => e.Address).HasMaxLength(50);
+                entity.ToTable("ExportMaterial");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.ExportDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Status).HasMaxLength(50);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Dentals)
-                    .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK_Dental_Account");
+                entity.Property(e => e.Note).HasMaxLength(50);
+
+                entity.HasOne(d => d.MaterialStock)
+                    .WithMany()
+                    .HasForeignKey(d => d.MaterialStockId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ExportMaterial_MaterialStock");
             });
 
             modelBuilder.Entity<ExtraProductMapping>(entity =>
@@ -142,6 +151,47 @@ namespace DentalLabManagement.DataTier.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductExtraMapping_Product");
+            });
+
+            modelBuilder.Entity<ImportMaterial>(entity =>
+            {
+                entity.ToTable("ImportMaterial");
+
+                entity.Property(e => e.BillCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ImportDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Note).HasMaxLength(50);
+
+                entity.HasOne(d => d.MaterialStock)
+                    .WithMany(p => p.ImportMaterials)
+                    .HasForeignKey(d => d.MaterialStockId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ImportMaterial_MaterialStock");
+            });
+
+            modelBuilder.Entity<MaterialStock>(entity =>
+            {
+                entity.ToTable("MaterialStock");
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.MaterialStocks)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_Material_Category");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -176,9 +226,9 @@ namespace DentalLabManagement.DataTier.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Dental)
+                entity.HasOne(d => d.Partner)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.DentalId)
+                    .HasForeignKey(d => d.PartnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Dental");
             });
@@ -303,6 +353,26 @@ namespace DentalLabManagement.DataTier.Models
                     .HasConstraintName("FK_OrderItemStage_ProductionStage");
             });
 
+            modelBuilder.Entity<Partner>(entity =>
+            {
+                entity.ToTable("Partner");
+
+                entity.Property(e => e.Address).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Status).HasMaxLength(50);
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Partners)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_Dental_Account");
+            });
+
             modelBuilder.Entity<Payment>(entity =>
             {
                 entity.ToTable("Payment");
@@ -373,6 +443,69 @@ namespace DentalLabManagement.DataTier.Models
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Promotion>(entity =>
+            {
+                entity.ToTable("Promotion");
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PromotionOrderMapping>(entity =>
+            {
+                entity.ToTable("PromotionOrderMapping");
+
+                entity.Property(e => e.EffectType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VoucherCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.PromotionOrderMappings)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_PromotionOrderMapping_Order");
+
+                entity.HasOne(d => d.Promotion)
+                    .WithMany(p => p.PromotionOrderMappings)
+                    .HasForeignKey(d => d.PromotionId)
+                    .HasConstraintName("FK_PromotionOrderMapping_Promotion");
+            });
+
+            modelBuilder.Entity<PromotionProductMapping>(entity =>
+            {
+                entity.ToTable("PromotionProductMapping");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.PromotionProductMappings)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_PromotionProductMapping_Product");
+
+                entity.HasOne(d => d.Promotion)
+                    .WithMany(p => p.PromotionProductMappings)
+                    .HasForeignKey(d => d.PromotionId)
+                    .HasConstraintName("FK_PromotionProductMapping_Promotion");
             });
 
             modelBuilder.Entity<TeethPosition>(entity =>

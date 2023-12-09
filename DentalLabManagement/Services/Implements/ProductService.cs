@@ -1,5 +1,4 @@
 ﻿using DentalLabManagement.BusinessTier.Constants;
-using DentalLabManagement.BusinessTier.Payload.Category;
 using DentalLabManagement.BusinessTier.Payload.Product;
 using DentalLabManagement.API.Services.Interfaces;
 using DentalLabManagement.DataTier.Models;
@@ -17,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using DentalLabManagement.API.Extensions;
 using AutoMapper;
-using DentalLabManagement.BusinessTier.Payload.ProductStage;
 using DentalLabManagement.BusinessTier.Payload.ProductionStage;
 using System.Xml.Linq;
 
@@ -32,7 +30,8 @@ namespace DentalLabManagement.API.Services.Implements
         public async Task<int> CreateNewProduct(ProductRequest productRequest)
         {
             Product newProduct = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync
-                (predicate: x => x.Name.Equals(productRequest.Name));
+                (predicate: x => x.Name.Equals(productRequest.Name)
+                );
             if (newProduct != null) throw new BadHttpRequestException(MessageConstant.Product.ProductNameExisted);
 
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync
@@ -99,7 +98,7 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<ProductResponse> productsResponse = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new ProductResponse(x.Id, x.Category.Name, x.Name, x.Description, x.CostPrice, EnumUtil.ParseEnum<ProductType>(x.Type),
+                selector: x => new ProductResponse(x.Id, x.CategoryId, x.Name, x.Description, x.CostPrice, EnumUtil.ParseEnum<ProductType>(x.Type),
                     EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: BuildGetProductsQuery(filter),
                 page: page,
@@ -113,13 +112,12 @@ namespace DentalLabManagement.API.Services.Implements
         {
             if (productId < 1) throw new BadHttpRequestException(MessageConstant.Product.EmptyProductIdMessage);
             Product product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(productId),
-                include: x => x.Include(x => x.Category)
+                predicate: x => x.Id.Equals(productId)
                 );
             if (product == null) throw new BadHttpRequestException(MessageConstant.Product.ProductNotFoundMessage);
 
-            return new ProductResponse(product.Id, product.Category.Name, product.Name, product.Description, product.CostPrice, EnumUtil.ParseEnum<ProductType>(product.Type),
-                EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
+            return new ProductResponse(product.Id, product.CategoryId, product.Name, product.Description, product.CostPrice,
+                EnumUtil.ParseEnum<ProductType>(product.Type), EnumUtil.ParseEnum<ProductStatus>(product.Status), product.Image);
         }
 
         public async Task<bool> UpdateProduct(int productId, UpdateProductRequest updateProductRequest)
@@ -247,7 +245,6 @@ namespace DentalLabManagement.API.Services.Implements
             return true;
         }
 
-
         public async Task<IPaginate<StageMappingResponse>> GetStageByProduct(int productId, string? name, int? indexStage,
             int page, int size)
         {
@@ -281,7 +278,7 @@ namespace DentalLabManagement.API.Services.Implements
                 );
 
             IPaginate<ProductResponse> response = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
-                selector: x => new ProductResponse(x.Id, x.Category.Name, x.Name, x.Description, x.CostPrice, EnumUtil.ParseEnum<ProductType>(x.Type),
+                selector: x => new ProductResponse(x.Id, x.CategoryId, x.Name, x.Description, x.CostPrice, EnumUtil.ParseEnum<ProductType>(x.Type),
                     EnumUtil.ParseEnum<ProductStatus>(x.Status), x.Image),
                 predicate: x => extraProductIds.Contains(x.Id),
                 orderBy: x => x.OrderBy(x => x.CostPrice),

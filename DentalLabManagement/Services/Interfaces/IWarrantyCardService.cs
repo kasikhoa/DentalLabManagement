@@ -6,7 +6,7 @@ namespace DentalLabManagement.API.Services.Interfaces
 {
     public interface IWarrantyCardService
     {
-        Task<CreateWarrantyCardResponse> CreateNewWarrantyCard(CreateWarrantyCardRequest request);
+        Task<int> CreateNewWarrantyCard(CreateWarrantyCardRequest request);
         Task<IPaginate<WarrantyCardResponse>> GetWarrantyCards(WarrantyCardFilter filter, int page, int size);
         Task<bool> UpdateWarrantyCard(int id, UpdateWarrantyCardRequest request);
         Task<WarrantyCardResponse> GetWarrantyCardById(int id);

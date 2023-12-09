@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DentalLabManagement.DataTier")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a8ff2f76913a7b0a8858ddc9ce863b1c288125f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4279899af06ff73002be114b70f8d303b5b05e6")]
 [assembly: System.Reflection.AssemblyProductAttribute("DentalLabManagement.DataTier")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DentalLabManagement.DataTier")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

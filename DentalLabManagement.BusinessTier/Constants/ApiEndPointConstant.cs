@@ -29,9 +29,9 @@ public static class ApiEndPointConstant
         public const string DentalAcccountEndPoint = AccountEndPoint + "/dental";
     }
 
-    public static class Dental
+    public static class Partner
     {
-        public const string DentalsEndPoint = ApiEndpoint + "/dentals";
+        public const string DentalsEndPoint = ApiEndpoint + "/partners";
         public const string DentalEndPoint = DentalsEndPoint + "/{id}";
         public const string OrdersEndPoint = DentalEndPoint + "/orders";
     }
@@ -94,5 +94,9 @@ public static class ApiEndPointConstant
         public const string WarrantyCardEndPointv2 = ApiEndpoint + "/warrantyCard";
     }
 
-
+    public static class MaterialStock
+    {
+        public const string MaterialStocksEndPoint = ApiEndpoint + "/materialStocks";
+        public const string MaterialStockEndPoint = MaterialStocksEndPoint + "/{id}";
+    }
 }

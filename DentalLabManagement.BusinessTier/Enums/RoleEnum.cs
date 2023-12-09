@@ -13,6 +13,6 @@ namespace DentalLabManagement.BusinessTier.Enums
         Staff,
         Reception,
         Shipper,
-        Dental
+        Partner     
     }
 }

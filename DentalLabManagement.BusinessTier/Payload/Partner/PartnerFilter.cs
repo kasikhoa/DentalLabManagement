@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalLabManagement.BusinessTier.Payload.Dental
+namespace DentalLabManagement.BusinessTier.Payload.Partner
 {
-    public class DentalFilter
+    public class PartnerFilter
     {
         public string? name { get; set; }
         public string? address { get; set; }
-        public DentalStatus? status { get; set; }
+        public PartnerType? type { get; set; }
+        public PartnerStatus? status { get; set; }
     }
 }

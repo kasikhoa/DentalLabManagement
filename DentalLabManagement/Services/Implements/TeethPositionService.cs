@@ -57,7 +57,7 @@ namespace DentalLabManagement.API.Services.Implements
 
         }
 
-        private Expression<Func<TeethPosition, bool>> BuildGetPositionsQuery(TeethPositionFilter filter)
+        private static Expression<Func<TeethPosition, bool>> BuildGetPositionsQuery(TeethPositionFilter filter)
         {
             Expression<Func<TeethPosition, bool>> filterQuery = x => true;
 

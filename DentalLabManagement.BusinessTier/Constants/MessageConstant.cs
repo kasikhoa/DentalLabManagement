@@ -175,5 +175,11 @@ public static class MessageConstant
     {
         public const string WarrantyRequestFailedMessage = "Yêu cầu bảo hành thất bại";
     }
+
+    public static class MaterialStock
+    {
+        public const string MaterialCodeExistedMessage = "Mã sản phảm đã tồn tại";
+        public const string CreateMaterialFailedMessage = "Tạo mới thẻ vật liệu thất bại";
+    }
     
 }

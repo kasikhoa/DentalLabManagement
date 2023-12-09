@@ -1,6 +1,6 @@
 ﻿namespace DentalLabManagement.BusinessTier.Enums;
 	
-public enum DentalStatus
+public enum MaterialStockStatus
 {
     Active,
 	Inactive

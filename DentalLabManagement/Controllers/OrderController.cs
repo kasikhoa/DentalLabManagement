@@ -21,7 +21,7 @@ namespace DentalLabManagement.API.Controllers
             _orderService = orderService;
         }
 
-        [CustomAuthorize(RoleEnum.Reception, RoleEnum.Dental)]
+        [CustomAuthorize(RoleEnum.Reception, RoleEnum.Partner)]
         [HttpPost(ApiEndPointConstant.Order.OrdersEndPoint)]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateNewOrder(CreateOrderRequest order)
@@ -71,7 +71,7 @@ namespace DentalLabManagement.API.Controllers
             return Ok(response);
         }
 
-        [CustomAuthorize(RoleEnum.Dental, RoleEnum.Reception)]
+        [CustomAuthorize(RoleEnum.Partner, RoleEnum.Reception)]
         [HttpPost(ApiEndPointConstant.Order.WarrantyRequestsEndPoint)]
         [ProducesResponseType(typeof(OrderHistoryResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateWarrantyRequest(int id, CreateWarrantyRequest request)

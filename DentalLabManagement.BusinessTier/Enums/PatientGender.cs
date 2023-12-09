@@ -9,6 +9,7 @@ namespace DentalLabManagement.BusinessTier.Enums
     public enum PatientGender
     {
         Male,
-        Female
+        Female,
+        Other
     }
 }

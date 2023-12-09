@@ -15,9 +15,4 @@
     <ProjectReference Include="..\DentalLabManagement.DataTier\DentalLabManagement.DataTier.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Payload\Request\" />
-    <Folder Include="Payload\Response\" />
-  </ItemGroup>
-
 </Project>

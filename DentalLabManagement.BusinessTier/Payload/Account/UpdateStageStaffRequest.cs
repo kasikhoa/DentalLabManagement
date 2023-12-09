@@ -8,6 +8,6 @@ namespace DentalLabManagement.BusinessTier.Payload.Account
 {
     public class UpdateStageStaffRequest
     {
-        public int currentStage { get; set; }
+        public int CurrentStage { get; set; }
     }
 }

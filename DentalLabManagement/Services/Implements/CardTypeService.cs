@@ -19,7 +19,7 @@ namespace DentalLabManagement.API.Services.Implements
         {
         }
 
-        public async Task<CardTypeResponse> CreateCardType(CardTypeRequest request)
+        public async Task<int> CreateCardType(CardTypeRequest request)
         {
             Category category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
                 predicate: x => x.Id.Equals(request.CategoryId));
@@ -45,8 +45,7 @@ namespace DentalLabManagement.API.Services.Implements
             bool isSucessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSucessful) throw new BadHttpRequestException(MessageConstant.CardType.CreateCardFailedMessage);
 
-            return new CardTypeResponse(newCardType.Id, category.Name, newCardType.CodeName, newCardType.CountryOrigin, newCardType.WarrantyYear,
-                newCardType.Description, newCardType.Image, newCardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(newCardType.Status));
+            return newCardType.Id;
         }
 
         public async Task<CardTypeResponse> GetCardTypeById(int id)
@@ -57,11 +56,11 @@ namespace DentalLabManagement.API.Services.Implements
                 include: x => x.Include(x => x.Category)
                 );
             if (cardType == null) throw new BadHttpRequestException(MessageConstant.CardType.CardNotFoundMessage);
-            return new CardTypeResponse(cardType.Id, cardType.Category.Name, cardType.CodeName, cardType.CountryOrigin, cardType.WarrantyYear, 
+            return new CardTypeResponse(cardType.Id, cardType.CategoryId, cardType.CodeName, cardType.CountryOrigin, cardType.WarrantyYear, 
                 cardType.Description, cardType.Image, cardType.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(cardType.Status));
         }
 
-        private Expression<Func<CardType, bool>> BuildGetCardTypesQuery(CardTypeFilter filter)
+        private static Expression<Func<CardType, bool>> BuildGetCardTypesQuery(CardTypeFilter filter)
         {
             Expression<Func<CardType, bool>> filterQuery = x => true;
 
@@ -99,7 +98,7 @@ namespace DentalLabManagement.API.Services.Implements
             size = (size == 0) ? 10 : size;
 
             IPaginate<CardTypeResponse> result = await _unitOfWork.GetRepository<CardType>().GetPagingListAsync(
-                selector: x => new CardTypeResponse(x.Id, x.Category.Name, x.CodeName, x.CountryOrigin, x.WarrantyYear, x.Description,
+                selector: x => new CardTypeResponse(x.Id, x.CategoryId, x.CodeName, x.CountryOrigin, x.WarrantyYear, x.Description,
                 x.Image, x.BrandUrl, EnumUtil.ParseEnum<CardTypeStatus>(x.Status)),
                 predicate: BuildGetCardTypesQuery(filter),
                 page: page,

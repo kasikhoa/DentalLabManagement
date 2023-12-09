@@ -18,6 +18,7 @@ namespace DentalLabManagement.BusinessTier.Payload.OrderHistory
         public OrderHistoryResponse()
         {
         }
+
         public OrderHistoryResponse(DateTime createdDate, string createdBy, DateTime? completedDate, string? note, OrderHistoryStatus status)
         {
             CreatedDate = createdDate;
